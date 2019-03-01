@@ -1,0 +1,43 @@
+{
+    "editor.formatOnSave": true,
+    "save-typing.languages": [
+        ""
+    ],
+    "C_Cpp.clang_format_fallbackStyle": "Google",
+    "C_Cpp.clang_format_sortIncludes": true,
+    "C_Cpp.clang_format_style": "Google",
+    "files.autoSave": "off",
+    "cSpell.enabledLanguageIds": [
+        "asciidoc",
+        "c",
+        "cpp",
+        "csharp",
+        "css",
+        "go",
+        "handlebars",
+        "html",
+        "jade",
+        "javascript",
+        "javascriptreact",
+        "json",
+        "latex",
+        "less",
+        "markdown",
+        "php",
+        "plaintext",
+        "pub",
+        "python",
+        "restructuredtext",
+        "rst",
+        "rust",
+        "scss",
+        "text",
+        "typescript",
+        "typescriptreact",
+        "yml"
+    ],
+    "diffEditor.ignoreTrimWhitespace": false,
+    "restructuredtext.confPath": "${workspaceFolder}",
+    "restructuredtext.builtDocumentationPath": "${workspaceFolder}/build/html",
+    "files.insertFinalNewline": true
+}
