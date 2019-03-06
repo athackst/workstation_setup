@@ -1,6 +1,6 @@
-all: docker
+all: docker example
 
-example: 
+example: docker
 	docker run -it -v /home/$(shell whoami):/home/$(shell whoami) athackst/ros2:crystal-example-dev /build.sh /home/$(shell whoami)/ros2_ws
 
 docker: Dockerfile entrypoint.sh build.sh
