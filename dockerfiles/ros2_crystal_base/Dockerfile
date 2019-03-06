@@ -10,11 +10,6 @@ RUN locale-gen en_US.UTF-8
 RUN update-locale LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8
 ENV LANG en_US.UTF-8
 
-# # setup timezone
-# RUN echo 'Etc/UTC' > /etc/timezone && \
-#   ln -s /usr/share/zoneinfo/Etc/UTC /etc/localtime && \
-#   apt-get update && apt-get install -q -y tzdata && rm -rf /var/lib/apt/lists/*
-
 COPY scripts/install_ros2.sh /setup/install_ros2.sh
 RUN /setup/install_ros2.sh && rm -rf /var/lib/apt/lists/*
 

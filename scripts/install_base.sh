@@ -10,6 +10,7 @@ sudo apt-get install -y \
   curl \
   git \
   pass \
+  snapd \
   wget 
 
 # get chrome
@@ -18,8 +19,11 @@ sudo sh -c 'echo "deb https://dl.google.com/linux/chrome/deb/ stable main" >> /e
 sudo apt-get update
 sudo apt-get install -y google-chrome-stable
 
+# get slack
+sudo snap install slack --classic
+
 # get source gear diffmerge
-# NOTE: diffmerge is no longer supported by debian from sourcegear
+# NOTE: diffmerge is no longer supported by debian from sourcegear in Ubuntu 18.04
 # wget -O - http://debian.sourcegear.com/SOURCEGEAR-GPG-KEY | sudo apt-key add -
 # sudo sh -c 'echo "deb http://debian.sourcegear.com/ubuntu `lsb_release -cs` main" >> /etc/apt/sources.list.d/sourcegear.list'
 # sudo apt-get update

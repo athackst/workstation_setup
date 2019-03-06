@@ -23,5 +23,3 @@ export ROS_DISTRO=crystal  # or bouncy or ardent
 sudo apt-get update && sudo apt-get install -y \
   ros-$ROS_DISTRO-ros-base \
   python3-argcomplete
-
-echo "source /opt/ros/$ROS_DISTRO/setup.bash" >> ~/.bash_aliases
