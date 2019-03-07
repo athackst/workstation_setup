@@ -19,7 +19,15 @@ code --install-extensions \
     ms-python.python \
     ms-vscode.cpptools \
     PeterJausovec.vscode-docker \
-    Zignd.html-css-class-completion
+    Zignd.html-css-class-completion \
+    DotJoshJohnson.xml \
+    marlon407.code-groovy \
+    redhat.vscode-yaml \
+    secanis.jenkinsfile-support \
+    smilerobotics.urdf \
+    twxs.cmake \
+    vector-of-bool.cmake-tools \
+    yzhang.markdown-all-in-one
 
 # install user preferences
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
