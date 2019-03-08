@@ -8,7 +8,7 @@ install_base: scripts/install_base.sh config/.gitconfig config/.bash_aliases
 install_docker: scripts/install_docker.sh
 	bash scripts/install_docker.sh
 
-install_vscode: scripts/install_vscode.sh config/Code/User/settings.json
+install_vscode: scripts/install_vscode.sh
 	bash scripts/install_vscode.sh
 
 install_ros2_crystal: scripts/install_ros2.sh scripts/install_ros2_dev.sh
