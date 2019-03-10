@@ -1,7 +1,7 @@
 all: example
 
-example: Dockerfile scripts/get_code.sh 
-	bash scripts/get_code.sh
+example: Dockerfile get_code.sh 
+	bash get_code.sh
 	docker build -f Dockerfile -t athackst/ros2:crystal-example .
 
 uninstall:
