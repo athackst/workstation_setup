@@ -1,6 +1,4 @@
-all: install_workstation ros2_crystal
-
-install_workstation: install_base install_docker install_vscode
+install: install_base install_docker install_vscode
 
 install_base: scripts/install_base.sh config/.gitconfig config/.bash_aliases
 	bash scripts/install_base.sh
@@ -16,11 +14,11 @@ install_ros2_crystal: scripts/install_ros2.sh scripts/install_ros2_dev.sh
 	bash scripts/install_ros2.sh
 	bash scripts/install_ros2_dev.sh
 
-ros2_crystal: install_docker dockerfiles/ros2_crystal_base/Dockerfile dockerfiles/ros2_crystal_dev/Dockerfile 
+ros2_crystal: dockerfiles/ros2_crystal_base/Dockerfile dockerfiles/ros2_crystal_dev/Dockerfile 
 	docker build -f dockerfiles/ros2_crystal_base/Dockerfile -t athackst/ros2:crystal-base .
 	docker build -f dockerfiles/ros2_crystal_dev/Dockerfile -t athackst/ros2:crystal-dev .
 
-push_ros2_crystal: install_docker
+push_ros2_crystal:
 	docker login
 	docker push athackst/ros2:crystal-base
 	docker push athackst/ros2:crystal-dev
