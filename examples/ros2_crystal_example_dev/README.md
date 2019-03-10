@@ -1,4 +1,4 @@
-# ros2_crystal_example_dev
+# {DEPRECATED} ros2_crystal_example_dev
 
 This is an example of how to create a docker development workflow
 
@@ -6,7 +6,7 @@ This is an example of how to create a docker development workflow
 
 Create a directory to put your source code.
 
-example: 
+example:
 
 ```bash
 mkdir -p ~/ros2_ws/src
@@ -36,5 +36,5 @@ Run the docker image with the build function
 
 ```bash
 cd ~/ros2_ws
-docker run athackst/ros2:crystal-example-dev build `pwd`
+docker run -v $HOME:$HOME athackst/ros2:crystal-example-dev /build.sh `pwd`
 ```
