@@ -2,10 +2,8 @@
 FROM athackst/ros2:crystal-dev
 
 # install any extra required packages
-RUN apt-get update && apt-get install -y \
-    ros-crystal-example-interfaces \ 
-    ros-crystal-rclcpp-action \
-    && rm -rf /var/lib/apt/lists/*
+COPY install_depends.sh /setup/install_depends.sh
+RUN /setup/install_depends.sh && rm -rf /var/lib/apt/lists/*
 
 # add your user parameters
 ARG UNAME=docker
@@ -23,4 +21,3 @@ WORKDIR /home/$UNAME
 ENV USER=$UNAME
 
 ENTRYPOINT [ "/setup/entrypoint.sh" ]
-# CMD ["$@"]

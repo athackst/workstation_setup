@@ -1,4 +1,4 @@
 #!/bin/bash
 
-source /opt/ros/crystal/setup.bash
+source /opt/docker/setup.bash
 exec "$@"

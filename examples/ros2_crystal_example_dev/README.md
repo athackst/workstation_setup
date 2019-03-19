@@ -1,6 +1,32 @@
-# {DEPRECATED} ros2_crystal_example_dev
+# ros2_crystal_example_dev
 
 This is an example of how to create a docker development workflow
+
+## Quickstart
+
+Run all the steps to get the code, build the development docker and build your code.
+
+```bash
+make
+```
+
+Set up your workspace
+
+```bash
+make setup
+```
+
+Make the development docker
+
+```bash
+make docker
+```
+
+Make the workspace using the development docker
+
+```bash
+make example
+```
 
 ## Set up your workspace
 
