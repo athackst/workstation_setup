@@ -11,5 +11,6 @@ setup: get_code.sh
 	bash ./get_code.sh
 
 uninstall:
+	bash rm -fr build install log src
 	docker rmi athackst/ros2:crystal-example-dev
 	docker system prune -f
