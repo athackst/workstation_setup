@@ -25,7 +25,7 @@ sudo add-apt-repository \
 sudo apt-get update
 
 # install the latest version of Docker CE
-sudo apt-get install docker-ce docker-ce-cli containerd.io
+sudo apt-get install -y docker-ce docker-ce-cli containerd.io
 
 # update user permisions
 user="$(id -un 2>/dev/null || true)"

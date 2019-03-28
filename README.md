@@ -4,6 +4,14 @@ Scripts to capture how to set up my workstation
 
 ## Usage
 
+Install prereqs:
+
+```
+sudo apt install -y git make
+git clone git@github.com:athackst/workstation_setup.git
+
+```
+
 ### Install and setup workstation
 
 This installs the basics of my workstation including:
@@ -17,7 +25,7 @@ make install_workstation
 This builds basic and development environments for ros2 without extra dependencies.
 
 ```bash
-make ros2_crystal
+make docker_ros2_crystal
 ```
 
 Use them as a reference to create the development and base docker files for docker-based ros development
