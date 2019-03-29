@@ -1,6 +1,8 @@
 #/bin/sh
 set -e
 
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+
 # setup sources
 sudo apt-get update
 
@@ -36,6 +38,5 @@ sudo apt-get install -f -y
 # sudo apt-get install -y diffmerge
 
 # set up git
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 cp $DIR/../config/.gitconfig $HOME/.gitconfig
 cp $DIR/../config/.bash_aliases $HOME/
