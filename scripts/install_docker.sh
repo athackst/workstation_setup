@@ -10,7 +10,8 @@ sudo apt-get install -y \
     ca-certificates \
     curl \
     gnupg-agent \
-    software-properties-common
+    software-properties-common \
+    python-pip
 
 # add Docker's official GPG key
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
@@ -30,3 +31,6 @@ sudo apt-get install -y docker-ce docker-ce-cli containerd.io
 # update user permisions
 user="$(id -un 2>/dev/null || true)"
 sudo usermod -aG docker $user
+
+# install docker-compose
+pip install docker-compose --user
