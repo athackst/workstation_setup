@@ -9,5 +9,13 @@ install_docker: scripts/install_docker.sh
 install_vscode: scripts/install_vscode.sh
 	bash scripts/install_vscode.sh
 
+install_aws: scripts/install_aws.sh
+	bash scripts/install_aws.sh
+
+install_ros_melodic: scripts/install_ros_melodic.sh scripts/install_ros_melodic_dev.sh
+	bash scripts/install_ros_melodic.sh
+	bash scripts/install_ros_melodic_dev.sh
+
 install_ros2_crystal: scripts/install_ros2_crystal.sh
 	bash scripts/install_ros2_crystal.sh
+
