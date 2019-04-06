@@ -30,3 +30,5 @@ sudo apt-get install -y docker-ce docker-ce-cli containerd.io
 # update user permisions
 user="$(id -un 2>/dev/null || true)"
 sudo usermod -aG docker $user
+
+echo "******You will need to log out and back in for changes to apply*******"

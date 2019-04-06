@@ -1,6 +1,6 @@
 all: setup example
 
-example: docker
+example: docker release.dockerfile
 	docker run -it -v /home/$(shell whoami):/home/$(shell whoami) athackst/ros2:crystal-example-dev /build.sh `pwd`
 	docker build -f release.dockerfile -t athackst/ros2:crystal-example-release .
 

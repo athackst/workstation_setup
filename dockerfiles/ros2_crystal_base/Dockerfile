@@ -11,10 +11,10 @@ RUN locale-gen en_US.UTF-8
 RUN update-locale LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8
 ENV LANG en_US.UTF-8
 
-COPY scripts/install_ros2.sh /setup/install_ros2.sh
+COPY install_ros2.sh /setup/install_ros2.sh
 RUN /setup/install_ros2.sh && rm -rf /var/lib/apt/lists/*
 
-COPY scripts/ros_crystal_entrypoint.sh /setup/ros_crystal_entrypoint.sh
+COPY ros_crystal_entrypoint.sh /setup/ros_crystal_entrypoint.sh
 
 ENV AMENT_PREFIX_PATH=/opt/ros/crystal
 ENV COLCON_PREFIX_PATH=/opt/ros/crystal
