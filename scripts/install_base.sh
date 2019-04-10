@@ -13,6 +13,7 @@ sudo apt-get install -y \
   git \
   pass \
   snapd \
+  ssh \
   wget 
 
 # get chrome
