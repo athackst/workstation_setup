@@ -26,3 +26,4 @@ ENV ROS_PYTHON_VERSION=3
 ENV ROS_VERSION=2
 
 ENTRYPOINT [ "/setup/ros_crystal_entrypoint.sh" ]
+CMD ["bash"]
