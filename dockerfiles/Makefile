@@ -13,7 +13,7 @@ ros_melodic:
 	docker build -f ros_melodic_base/Dockerfile -t athackst/ros:melodic-base ros_melodic_base/
 	docker build -f ros_melodic_dev/Dockerfile -t athackst/ros:melodic-dev ros_melodic_dev/
 
-push_ros2_crystal:
+push_ros_melodic:
 	docker login
 	docker push athackst/ros:melodic-base
 	docker push athackst/ros:melodic-dev
