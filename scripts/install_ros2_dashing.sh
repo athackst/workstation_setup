@@ -18,7 +18,7 @@ export LANG=en_US.UTF-8
 
 # install ROS2 (crystal)
 sudo apt-get update && sudo apt-get install -y \
-  ros-crystal-desktop \
+  ros-dashing-desktop \
   python3-argcomplete
 
 # install ROS2 development tools

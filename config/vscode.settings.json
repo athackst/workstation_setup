@@ -37,5 +37,5 @@
     "diffEditor.ignoreTrimWhitespace": false,
     "restructuredtext.confPath": "${workspaceFolder}",
     "restructuredtext.builtDocumentationPath": "${workspaceFolder}/build/html",
-    "xmlTools.enforcePrettySelfClosingTagOnFormat": true
+    "xmlTools.enforcePrettySelfClosingTagOnFormat": false
 }

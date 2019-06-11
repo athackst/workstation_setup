@@ -6,6 +6,9 @@ install_base: scripts/install_base.sh config/.gitconfig config/.bash_aliases
 install_docker: scripts/install_docker.sh
 	bash scripts/install_docker.sh
 
+install_jekyll: scripts/install_jekyll.sh
+	bash scripts/install_jekyll.sh
+
 install_vscode: scripts/install_vscode.sh
 	bash scripts/install_vscode.sh
 
@@ -17,3 +20,6 @@ install_ros_melodic: scripts/install_ros_melodic.sh
 
 install_ros2_crystal: scripts/install_ros2_crystal.sh
 	bash scripts/install_ros2_crystal.sh
+
+install_ros2_dashing: scripts/install_ros2_dashing.sh
+	bash scripts/install_ros2_dashing.sh
