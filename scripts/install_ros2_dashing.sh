@@ -22,7 +22,7 @@ sudo apt-get update && sudo apt-get install -y \
   python3-argcomplete
 
 # install ROS2 development tools
-apt-get update && apt-get install -y \
+sudo apt-get update && sudo apt-get install -y \
   bash-completion \
   build-essential \
   cmake \
@@ -42,10 +42,10 @@ fi
 rosdep update
 
 # add to .bash_aliases if not already there
-if ! grep -Fxq "source /opt/ros/crystal/setup.bash" ~/.bash_aliases
+if ! grep -Fxq "source /opt/ros/dashing/setup.bash" ~/.bash_aliases
 then
-  echo "adding /opt/ros/crystal/setup.bash to bash_aliases"
-  echo "source /opt/ros/crystal/setup.bash" >> ~/.bash_aliases
+  echo "adding /opt/ros/dashing/setup.bash to bash_aliases"
+  echo "source /opt/ros/dashing/setup.bash" >> ~/.bash_aliases
 fi
 
 source ~/.bashrc
