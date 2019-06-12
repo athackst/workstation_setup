@@ -18,5 +18,5 @@ rosdep update
 if ! grep -Fxq "source /opt/ros/melodic/setup.bash" ~/.bash_aliases
 then
   echo "adding /opt/ros/melodic/setup.bash to bash_aliases"
-  echo "source /opt/ros/melodic/setup.bash" >> ~/.bashrc
+  echo "source /opt/ros/melodic/setup.bash" >> ~/.bash_aliases
 fi

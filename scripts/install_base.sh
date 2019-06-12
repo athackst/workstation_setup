@@ -43,4 +43,9 @@ fi
 
 # set up git
 cp $DIR/../config/.gitconfig $HOME/.gitconfig
+
+# set up aliases
 cp $DIR/../config/.bash_aliases $HOME/
+
+# copy example workspace
+cp -r $DIR/../config/ws_example $HOME/.ros/

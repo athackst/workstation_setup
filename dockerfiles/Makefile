@@ -18,6 +18,15 @@ push_ros_melodic:
 	docker push athackst/ros:melodic-base
 	docker push athackst/ros:melodic-dev
 
+ros2_dashing:
+	docker build -f ros2_dashing_base/Dockerfile -t athackst/ros2:dashing-base ros2_dashing_base/
+	docker build -f ros2_dashing_dev/Dockerfile -t athackst/ros2:dashing-dev ros2_dashing_dev/
+
+push_ros2_dashing:
+	docker login
+	docker push athackst/ros2:dashing-base
+	docker push athackst/ros2:dashing-dev
+
 clean:
 	docker rmi athackst/ros2:crystal_base
 	docker rmi athackst/ros2:crystal_dev
