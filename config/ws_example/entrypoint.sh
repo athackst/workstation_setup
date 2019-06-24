@@ -1,4 +1,4 @@
 #!/bin/bash
 
-source /opt/docker/setup.bash
+source /opt/ros/dashing/setup.bash
 exec "$@"

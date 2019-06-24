@@ -6,7 +6,9 @@ apt-get update && apt-get install -y \
   bash-completion \
   build-essential \
   cmake \
+  gdb \
   git \
+  pylint \
   python3-colcon-common-extensions \
   python3-pip \
   python-rosdep \
