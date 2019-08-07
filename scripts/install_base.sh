@@ -48,5 +48,5 @@ cp $DIR/../config/.gitconfig $HOME/.gitconfig
 cp $DIR/../config/.bash_aliases $HOME/
 
 # copy example workspace
-rm -fr $HOME/.ros/ws_example
-cp -r $DIR/../config/ws_example $HOME/.ros/
+rm -fr $HOME/.ros/dashing_ws
+cp -r $DIR/../config/dashing_ws $HOME/.ros/

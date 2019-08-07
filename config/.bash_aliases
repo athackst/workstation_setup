@@ -4,13 +4,13 @@ set-title(){
   PS1=${ORIG}${TITLE}
 }
 
-function create_ws() {
+function create_dashing_ws() {
   if [ $# -eq 0 ]
     then
       echo "Usage: create_ws <name>"
       exit 1
   fi
-  cp -r $HOME/.ros/ws_example $1
+  cp -r $HOME/.ros/dashing_ws $1
 }
 
 function create_website() {
