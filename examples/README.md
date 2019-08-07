@@ -2,7 +2,7 @@
 
 Here are 2 examples of how to set up your docker development workflow
 
-## 1. Multi stage docker build (ros2_crystal_example)
+## 1. Multi stage docker build (ros2_crystal_multistage)
 
 This will build and compile your code into a small output image by building your code during dockerfile creation.  
 
@@ -15,7 +15,7 @@ __Cons:__
 
 * Takes longer to compile when a file changes (about the same as building from scratch)
 
-## 2. Docker development environment copied into final image (ros2_crystal_exaple_dev)
+## 2. Docker development environment copied into final image (ros2_crystal_dev_release)
 
 This will build the workspace on your host machine using a docker image as the development environment.
 
