@@ -19,3 +19,12 @@ sudo apt-get install -y \
     libxml2 \
     libxml2-dev
     # libxslt
+
+cp $DIR/../config/.bash_jekyll $HOME/
+
+# add to .bash_aliases if not already there
+if ! grep -Fxq "source ~/.bash_jekyll" ~/.bash_aliases
+then
+  echo "adding .bash_jekyll to bash_aliases"
+  echo "source ~/.bash_jekyll" >> ~/.bash_aliases
+fi

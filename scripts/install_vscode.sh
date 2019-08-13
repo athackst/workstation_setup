@@ -10,15 +10,17 @@ sudo apt-get update
 sudo apt-get install code # or code-insiders
 
 # configure code with exensions
+## jekyll
 code --install-extension aeschli.vscode-css-formatter
-code --install-extension DavidAnson.vscode-markdownlint
 code --install-extension ginfuru.ginfuru-vscode-jekyll-syntax 
 code --install-extension ginfuru.vscode-jekyll-snippets
+code --install-extension Zignd.html-css-class-completion
+# coding
+code --install-extension bazelbuild.vscode-bazel
 code --install-extension mitaki28.vscode-clang
 code --install-extension ms-python.python
 code --install-extension ms-vscode.cpptools
-code --install-extension PeterJausovec.vscode-docker
-code --install-extension Zignd.html-css-class-completion
+code --install-extension ms-azuretools.vscode-docker 
 code --install-extension DotJoshJohnson.xml
 code --install-extension marlon407.code-groovy
 code --install-extension redhat.vscode-yaml
@@ -27,6 +29,7 @@ code --install-extension smilerobotics.urdf
 code --install-extension twxs.cmake
 code --install-extension vector-of-bool.cmake-tools
 code --install-extension yzhang.markdown-all-in-one
+code --instadll-extension DavidAnson.vscode-markdownlint
 
 # install user preferences
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
