@@ -35,18 +35,25 @@ then
   sudo apt-get install -f -y
 else
   # Original 16.04 instructions
-  wget -O - http://debian.sourcegear.com/SOURCEGEAR-GPG-KEY | sudo apt-key add -
-  sudo sh -c 'echo "deb http://debian.sourcegear.com/ubuntu `lsb_release -cs` main" > /etc/apt/sources.list.d/sourcegear.list'
-  sudo apt-get update
-  sudo apt-get install -y diffmerge
+  wget http://download.sourcegear.com/DiffMerge/4.2.0/diffmerge_4.2.0.697.stable_amd64.deb
+  sudo dpkg -i diffmerge_4.2.0.*.deb
+  rm diffmerge_4.2.0.*.deb 
 fi
 
-# set up git
-cp $DIR/../config/.gitconfig $HOME/.gitconfig
-
 # set up aliases
-cp $DIR/../config/.bash_aliases $HOME/
+while true; do
+  read -p "Replace .bash_aliases? (y/n): " yn
+  case $yn in
+    [Yy]* ) cp $DIR/../config/.bash_aliases $HOME/.bash_aliases;;
+    [Nn]* ) exit;;
+  esac
+done
 
-# copy example workspace
-rm -fr $HOME/.ros/dashing_ws
-cp -r $DIR/../config/dashing_ws $HOME/.ros/
+# set up gitconfig
+while true; do
+  read -p "Replace .gitconfig? (y/n): " yn
+  case $yn in
+    [Yy]* ) cp $DIR/../config/.gitconfig $HOME/.gitconfig;;
+    [Nn]* ) exit;;
+  esac
+done
