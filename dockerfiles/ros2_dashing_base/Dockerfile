@@ -1,5 +1,5 @@
 FROM ubuntu:18.04
-LABEL version="ROS2 Dashing - 2019-06-14"
+LABEL version="ROS2 Dashing - 2019-08-06"
 
 ENV ROS_DISTRO=dashing
 

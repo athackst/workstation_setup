@@ -11,7 +11,7 @@ WORKDIR /home/docker/ros2_ws
 
 RUN colcon build --install-base /opt/docker
 
-####################################
+###################################
 # Clean output image
 ###################################
 FROM athackst/ros2:crystal-base
