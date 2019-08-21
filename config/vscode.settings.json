@@ -1,41 +1,15 @@
 {
     "editor.formatOnSave": true,
-    "C_Cpp.clang_format_fallbackStyle": "Google",
+    "editor.fontFamily": "'Ubuntu Mono', 'monospace', monospace, 'Droid Sans Fallback'",
+    "editor.rulers": [
+        80
+    ],
+    "C_Cpp.clang_format_fallbackStyle": "file",
     "C_Cpp.clang_format_sortIncludes": true,
     "C_Cpp.clang_format_style": "Google",
-    "files.autoSave": "off",
-    "files.insertFinalNewline": true,
-    "cSpell.enabledLanguageIds": [
-        "asciidoc",
-        "c",
-        "cpp",
-        "csharp",
-        "css",
-        "go",
-        "handlebars",
-        "html",
-        "jade",
-        "javascript",
-        "javascriptreact",
-        "json",
-        "latex",
-        "less",
-        "markdown",
-        "php",
-        "plaintext",
-        "pub",
-        "python",
-        "restructuredtext",
-        "rst",
-        "rust",
-        "scss",
-        "text",
-        "typescript",
-        "typescriptreact",
-        "yml"
-    ],
     "diffEditor.ignoreTrimWhitespace": false,
-    "restructuredtext.confPath": "${workspaceFolder}",
-    "restructuredtext.builtDocumentationPath": "${workspaceFolder}/build/html",
-    "xmlTools.enforcePrettySelfClosingTagOnFormat": false
+    "files.associations": {
+        "*.sdf": "xml",
+        "*.world": "xml"
+    }
 }

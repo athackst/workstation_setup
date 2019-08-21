@@ -17,6 +17,7 @@
             "request": "launch",
             "program": "${workspaceFolder}/install/examples_rclcpp_minimal_publisher/lib/examples_rclcpp_minimal_publisher/publisher_member_function",
             "args": [],
+            "preLaunchTask": "build (debug)",
             "stopAtEntry": true,
             "cwd": "${workspaceFolder}",
             "environment": [],

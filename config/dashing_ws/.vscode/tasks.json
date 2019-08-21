@@ -6,12 +6,28 @@
         {
             "label": "build",
             "type": "shell",
-            "command": "colcon build --cmake-args '-DCMAKE_BUILD_TYPE=Debug'"
+            "command": "colcon build --cmake-args '-DCMAKE_BUILD_TYPE=Release'",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": "$gcc"
+        },
+        {
+            "label": "build (debug)",
+            "type": "shell",
+            "command": "colcon build --cmake-args '-DCMAKE_BUILD_TYPE=Debug'",
+            "group": "build",
+            "problemMatcher": "$gcc"
         },
         {
             "label": "test",
             "type": "shell",
-            "command": "colcon test && colcon test-result"
+            "command": "colcon test && colcon test-result",
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            }
         }
     ]
 }

@@ -14,6 +14,15 @@ then
 fi
 rosdep update
 
+# install code extensions
+if [ -x "$(command -v code)" ]
+then
+  code --install-extension ms-iot.vscode-ros
+  code --install-extension smilerobotics.urdf
+  code --install-extension twxs.cmake
+  code --install-extension vector-of-bool.cmake-tools
+fi
+
 # add to .bash_aliases if not already there
 if ! grep -Fxq "source /opt/ros/melodic/setup.bash" ~/.bash_aliases
 then
