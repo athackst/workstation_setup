@@ -1,0 +1,11 @@
+// See https://aka.ms/vscode-remote/devcontainer.json for format details.
+{
+	"dockerFile": "Dockerfile",
+	"runArgs": [
+		"-u", "vscode"
+	],
+	"extensions": [
+		"bazelbuild.vscode-bazel",
+		"ms-azuretools.vscode-docker"
+	]
+}
