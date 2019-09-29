@@ -1,6 +1,8 @@
 #/bin/sh
 set -e
 
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+
 # setup sources
 sudo apt-get update && sudo apt-get install -y \
   curl \
@@ -16,7 +18,7 @@ sudo locale-gen en_US en_US.UTF-8
 sudo update-locale LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8
 export LANG=en_US.UTF-8
 
-# install ROS2 (crystal)
+# install ROS2 (dashing)
 sudo apt-get update && sudo apt-get install -y \
   ros-dashing-desktop \
   python3-argcomplete

@@ -18,7 +18,7 @@ sudo apt-get install -y tzdata
 sudo ln -fs /usr/share/zoneinfo/America/New_York /etc/localtime
 sudo dpkg-reconfigure --frontend noninteractive tzdata
 
-# install ROS2 (crystal)
+# install ROS2
 sudo apt-get update && sudo apt-get install -y \
   ros-$ROS_DISTRO-ros-base \
   python3-argcomplete
