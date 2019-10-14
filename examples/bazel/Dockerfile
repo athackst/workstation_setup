@@ -56,3 +56,5 @@ RUN groupadd --gid $USER_GID $USERNAME \
     && chmod 0440 /etc/sudoers.d/$USERNAME \
     # Cleanup
     && rm -rf /var/lib/apt/lists/*
+
+RUN echo "source /usr/local/lib/bazel/bin/bazel-complete.bash" >> /home/$USERNAME/.bashrc
