@@ -1,0 +1,43 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build stage1",
+            "type": "shell",
+            "options": {
+                "cwd": "${workspaceRoot}/cpp-tutorial/stage1"
+            },
+            "command": "bazel build //main:hello-world",
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": "build"
+        },
+        {
+            "label": "build stage2",
+            "type": "shell",
+            "options": {
+                "cwd": "${workspaceRoot}/cpp-tutorial/stage2"
+            },
+            "command": "bazel build //main:hello-world",
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": "build"
+        },
+        {
+            "label": "build stage3",
+            "type": "shell",
+            "options": {
+                "cwd": "${workspaceRoot}/cpp-tutorial/stage3"
+            },
+            "command": "bazel build //main:hello-world",
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": "build"
+        }
+    ]
+}
