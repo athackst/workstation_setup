@@ -25,10 +25,8 @@ sudo apt-get install -y \
 # install code extensions
 if [ -x "$(command -v code)" ]
 then
-  code --install-extension aeschli.vscode-css-formatter
   code --install-extension ginfuru.ginfuru-vscode-jekyll-syntax 
   code --install-extension ginfuru.vscode-jekyll-snippets
-  code --install-extension Zignd.html-css-class-completion
 fi
 
 cp $DIR/../config/.bash_jekyll $HOME/
