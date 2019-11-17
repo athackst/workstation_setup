@@ -43,17 +43,13 @@ then
 fi
 rosdep update
 
-# copy example workspace
-rm -fr $HOME/.ros/dashing_ws
-cp -r $DIR/../config/dashing_ws $HOME/.ros/
-
 cp $DIR/../config/.bash_dashing $HOME/
 
 # add to .bash_aliases if not already there
-if ! grep -Fxq "source ~/.bash_dashing" ~/.bash_aliases
+if ! grep -Fxq "source /opt/ros/dashing/setup.bash" ~/.bash_aliases
 then
-  echo "adding .bash_dashing to bash_aliases"
-  echo "source ~/.bash_dashing" >> ~/.bash_aliases
+  echo "adding ros dashing to bash_aliases"
+  echo "source /opt/ros/dashing/setup.bash" >> ~/.bash_aliases
 fi
 
 source ~/.bashrc

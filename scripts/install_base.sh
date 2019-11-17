@@ -40,20 +40,22 @@ else
   rm diffmerge_4.2.0.*.deb 
 fi
 
+# copy example workspace
+rm -fr $HOME/.ros/dashing_ws
+cp -r $DIR/../config/dashing_ws $HOME/.ros/
+
 # set up aliases
-while true; do
-  read -p "Replace .bash_aliases? (y/n): " yn
-  case $yn in
-    [Yy]* ) cp $DIR/../config/.bash_aliases $HOME/.bash_aliases;;
-    [Nn]* ) exit;;
-  esac
-done
+read -p "Replace .bash_aliases? (y/N): " yn
+case $yn in
+  [Yy]* ) cp $DIR/../config/.bash_aliases $HOME/.bash_aliases;;
+  [Nn]* ) ;;
+  * )     ;; 
+esac
 
 # set up gitconfig
-while true; do
-  read -p "Replace .gitconfig? (y/n): " yn
-  case $yn in
-    [Yy]* ) cp $DIR/../config/.gitconfig $HOME/.gitconfig;;
-    [Nn]* ) exit;;
-  esac
-done
+read -p "Replace .gitconfig? (y/N): " yn
+case $yn in
+  [Yy]* ) cp $DIR/../config/.gitconfig $HOME/.gitconfig;;
+  [Nn]* ) ;;
+  * )     ;;
+esac

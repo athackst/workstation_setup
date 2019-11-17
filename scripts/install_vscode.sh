@@ -31,7 +31,7 @@ code --install-extension yzhang.markdown-all-in-one
 code --install-extension BazelBuild.vscode-bazel
 # compiler (cmake)
 code --install-extension twxs.cmake
-code --install-extension vector-of-bool.cmake-tools
+code --install-extension ms-vscode.cmake-tools
 # code spellchecker
 code --install-extension streetsidesoftware.code-spell-checker
 # proto3
@@ -40,6 +40,12 @@ code --install-extension zxh404.vscode-proto3
 code --install-extension ms-vscode.go
 # css
 code --install-extension ecmel.vscode-html-css
+# jekyll
+code --install-extension ginfuru.ginfuru-vscode-jekyll-syntax 
+code --install-extension ginfuru.vscode-jekyll-snippets
+# ros
+code --install-extension ms-iot.vscode-ros
+code --install-extension smilerobotics.urdf
 
 # install user preferences
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"

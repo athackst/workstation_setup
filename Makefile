@@ -1,4 +1,4 @@
-install: install_base install_docker install_vscode
+install: install_base install_vscode install_docker 
 
 install_base: scripts/install_base.sh config/.gitconfig config/.bash_aliases
 	bash scripts/install_base.sh

@@ -41,7 +41,7 @@ b()
     if [ "$rule_binary" == "$binary" ]
     then
       echo "Running bazel binary $rule ..."
-      path=$NURO_WS/bazel-bin/$(echo $rule | sed -e 's|:|/|' -e 's|//||')
+      path=$BAZEL_WS/bazel-bin/$(echo $rule | sed -e 's|:|/|' -e 's|//||')
       $path "$@"
       return $?
     fi
@@ -186,3 +186,12 @@ _g_custom_autocomplete()
 }
 
 complete -o nospace -o default -F _g_custom_autocomplete g
+
+function create_dashing_ws() {
+  if [ $# -eq 0 ]
+    then
+      echo "Usage: create_ws <name>"
+      exit 1
+  fi
+  cp -r $HOME/.ros/dashing_ws $1
+}
