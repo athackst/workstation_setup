@@ -57,7 +57,7 @@ _my_bb_alias_autocomplete() {
 export BASE_BRANCH="origin/develop"
 g() {
   usage() {
-    echo "g [[feature] [push] [delete] [fetch]]"
+    echo "g [[start] [push] [delete] [update]]"
   }
   if [[ "$#" -eq 0 ]]
   then
@@ -65,8 +65,8 @@ g() {
     return 0
   fi
   case $1 in
-      feature )               shift
-                              _g_feature $@
+      start )                 shift
+                              _g_start $@
                               ;;
       push )                  shift
                               _g_push $@
@@ -74,8 +74,8 @@ g() {
       delete )                shift
                               _g_delete $@
                               ;;
-      fetch )                 shift
-                              _g_fetch $@
+      update )                 shift
+                              _g_update $@
                               ;;
       -h | --help )           shift
                               usage
@@ -85,10 +85,10 @@ g() {
   esac
 }
 
-_g_feature() {
+_g_start() {
   usage() {
     echo "Creates a new branch based off of $BASE_BRANCH"
-    echo "Usage: g feature <feature_name>"
+    echo "Usage: g start <branch_name>"
   }
   if [[ "$#" -eq 0 ]]
   then
@@ -118,7 +118,7 @@ _g_push() {
                             return 0
                             ;;
     * )                     feature_name=`git branch --show-current`
-                            git push origin $feature_game -u $@
+                            git push origin $feature_name -u $@
                             ;;
   esac
 }
@@ -143,10 +143,10 @@ _g_delete() {
   git push -d origin $1
 }
 
-_g_fetch() {
+_g_update() {
   usage() {
-    echo "Fetch the latest from the remote and prune."
-    echo "Usage: g fetch"
+    echo "Update the latest from the remote and prune."
+    echo "Usage: g update"
   }
   case $1 in
     -h | --help )           shift
