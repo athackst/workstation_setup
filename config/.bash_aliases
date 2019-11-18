@@ -169,7 +169,7 @@ _g_custom_autocomplete()
 
     case ${COMP_CWORD} in
         1)
-            COMPREPLY=($(compgen -W "feature push delete fetch" -- ${cur}))
+            COMPREPLY=($(compgen -W "delete push start update" -- ${cur}))
             ;;
         2)
             case ${prev} in
