@@ -59,3 +59,5 @@ case $yn in
   [Nn]* ) ;;
   * )     ;;
 esac
+
+source ~/.bashrc
