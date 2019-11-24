@@ -33,7 +33,7 @@ __Cons:__
 
 This will use the VS Code docker container [plugin](https://code.visualstudio.com/docs/remote/containers) as the basis of development.  
 
-Under-the-hood, vscode is running a docker container and mounting your source code into it. This gives you all the tooling you need to build your code and can enable standardization of tooling including linters.  It also seemlessly integrates with IntelliSense (which is all sorts of awesome) and enables debugging through traditional debuggers ie gdb.  
+Under-the-hood, vscode is running a docker container and mounting your source code into it. This gives you all the tooling you need to build your code and can enable standardization of tooling including linters.  It also seamlessly integrates with IntelliSense (which is all sorts of awesome) and enables debugging through traditional debuggers ie gdb.  
 
 It seems to follow the develop-release pattern with docker, where a develop container is created for compiling and a then the built assets can be copied into a deployment container.  It is also possible to support multi-stage, but development would be in a docker-in-docker configuration.
 
@@ -44,4 +44,4 @@ __Pros:__
 
 __Cons:__
 
-* Built targets have "root" permissions unless you've updated your base docker image to have your user name/group (which is difficult, but not impossible to do).
+* Built targets have "root" permissions unless you've updated your base docker image to have your user name/group.
