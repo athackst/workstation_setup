@@ -3,5 +3,41 @@
     {
         "key": "ctrl+;",
         "command": "workbench.action.tasks.runTask"
+    },
+    {
+        "key": "ctrl+alt+1",
+        "command": "workbench.action.terminal.focusAtIndex1"
+    },
+    {
+        "key": "ctrl+alt+2",
+        "command": "workbench.action.terminal.focusAtIndex2"
+    },
+    {
+        "key": "ctrl+alt+3",
+        "command": "workbench.action.terminal.focusAtIndex3"
+    },
+    {
+        "key": "ctrl+alt+4",
+        "command": "workbench.action.terminal.focusAtIndex4"
+    },
+    {
+        "key": "ctrl+alt+5",
+        "command": "workbench.action.terminal.focusAtIndex5"
+    },
+    {
+        "key": "ctrl+alt+6",
+        "command": "workbench.action.terminal.focusAtIndex6"
+    },
+    {
+        "key": "ctrl+alt+7",
+        "command": "workbench.action.terminal.focusAtIndex7"
+    },
+    {
+        "key": "ctrl+alt+8",
+        "command": "workbench.action.terminal.focusAtIndex8"
+    },
+    {
+        "key": "ctrl+alt+9",
+        "command": "workbench.action.terminal.focusAtIndex9"
     }
 ]
