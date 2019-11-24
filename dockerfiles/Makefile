@@ -1,35 +1,28 @@
-all: ros2_crystal ros_melodic
-
-ros2_crystal:
-	docker build -f ros2_crystal_base/Dockerfile -t athackst/ros2:crystal-base ros2_crystal_base/
-	docker build -f ros2_crystal_dev/Dockerfile -t athackst/ros2:crystal-dev ros2_crystal_dev/
-
-push_ros2_crystal:
-	docker login
-	docker push athackst/ros2:crystal-base
-	docker push athackst/ros2:crystal-dev
+all: ros2_dashing ros_melodic
 
 ros_melodic:
-	docker build -f ros_melodic_base/Dockerfile -t athackst/ros:melodic-base ros_melodic_base/
-	docker build -f ros_melodic_dev/Dockerfile -t athackst/ros:melodic-dev ros_melodic_dev/
+	docker build -f melodic-base/Dockerfile -t athackst/ros:melodic-base melodic-base/
+	docker build -f melodic-dev/Dockerfile -t athackst/ros:melodic-dev melodic-dev/
 
-push_ros_melodic:
-	docker login
-	docker push athackst/ros:melodic-base
-	docker push athackst/ros:melodic-dev
+ros2_crystal:
+	docker build -f crystal-base/Dockerfile -t athackst/ros2:crystal-base crystal-base/
+	docker build -f crystal-dev/Dockerfile -t athackst/ros2:crystal-dev crystal-dev/
 
 ros2_dashing:
-	docker build -f ros2_dashing_base/Dockerfile -t athackst/ros2:dashing-base ros2_dashing_base/
-	docker build -f ros2_dashing_dev/Dockerfile -t athackst/ros2:dashing-dev ros2_dashing_dev/
+	docker build -f dashing-base/Dockerfile -t athackst/ros2:dashing-base dashing-base/
+	docker build -f dashing-dev/Dockerfile -t athackst/ros2:dashing-dev dashing-dev/
 
-push_ros2_dashing:
-	docker login
-	docker push athackst/ros2:dashing-base
-	docker push athackst/ros2:dashing-dev
+ros2_eloquent:
+	docker build -f eloquent-base/Dockerfile -t athackst/ros2:eloquent-base eloquent-base/
+	docker build -f eloquent-dev/Dockerfile -t athackst/ros2:eloquent-dev eloquent-dev/
 
 clean:
-	docker rmi athackst/ros2:crystal_base
-	docker rmi athackst/ros2:crystal_dev
 	docker rmi athackst/ros:melodic-base
 	dpcler rmi athackst/ros:melodic-dev
+	docker rmi athackst/ros2:crystal-base
+	docker rmi athackst/ros2:crystal-dev
+	docker rmi athackst/ros2:dashing-base
+	docker rmi athackst/ros2:dashing-dev
+	docker rmi athackst/ros2:eloquent-base
+	docker rmi athackst/ros2:eloquent-dev
 	docker system prune -f

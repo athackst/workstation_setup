@@ -1,6 +1,6 @@
 # examples
 
-Here are 2 examples of how to set up your docker development workflow
+Here are 3 examples of how to set up your docker development workflow
 
 ## 1. Multi stage docker build (ros2_crystal_multistage)
 

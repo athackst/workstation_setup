@@ -1,7 +1,7 @@
 FROM ubuntu:18.04
-LABEL version="ROS2 Dashing-2019-11-17"
+LABEL version="ROS2 Dashing-2019-11-23"
 
-ENV ROS_DISTRO=dashing
+ENV ROS_DISTRO=eloquent
 
 RUN apt-get update && apt-get install -y \
   curl \

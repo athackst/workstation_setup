@@ -16,4 +16,4 @@ Use them as a reference to create the development and base docker files for dock
 
 __Q: Why build code inside a docker?__
 
-> Recreatable building environment that can be duplicated in Continuous Integration or sent to others to duplicate issues.
+> Re-creatable building environment that can be duplicated in Continuous Integration or sent to others to duplicate issues.
