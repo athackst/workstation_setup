@@ -1,0 +1,9 @@
+{
+    "uncrustify.configPath.linux": "uncrustify.cfg",
+    "C_Cpp.default.intelliSenseMode": "clang-x64",
+    "C_Cpp.formatting": "Disabled",
+    "editor.tabSize": 2,
+    "files.associations": {
+        ".rosinstall": "yaml"
+    }
+}

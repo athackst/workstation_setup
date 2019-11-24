@@ -41,8 +41,8 @@ else
 fi
 
 # copy example workspace
-rm -fr $HOME/.ros/dashing_ws
-cp -r $DIR/../config/dashing_ws $HOME/.ros/
+rm -fr $HOME/.workspace
+cp -r $DIR/../config/.workspace/ $HOME/.workspace/
 
 # set up aliases
 read -p "Replace .bash_aliases? (y/N): " yn

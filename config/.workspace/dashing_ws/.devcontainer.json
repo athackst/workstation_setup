@@ -10,9 +10,12 @@
 	"postCreateCommand": "sudo cp -r /root/.ssh-localhost ~ && sudo chown -R $(id -u):$(id -g) ~/.ssh-localhost && mv ~/.ssh-localhost ~/.ssh && chmod 700 ~/.ssh && chmod 600 ~/.ssh/*",
 	"extensions": [
 		"laurenttreguier.uncrustify",
-		"ms-azuretools.vscode-docker",
 		"ms-python.python",
 		"ms-vscode.cpptools",
-		"twxs.cmake"
+		"twxs.cmake",
+		"ms-vscode.cmake-tools",
+		"ms-iot.vscode-ros",
+		"smilerobotics.urdf",
+		"yzhang.markdown-all-in-one"
 	]
 }
