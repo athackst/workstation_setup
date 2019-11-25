@@ -117,7 +117,7 @@ _g_push() {
                             usage
                             return 0
                             ;;
-    * )                     feature_name=`git branch --show-current`
+    * )                     feature_name=`git name-rev --name-only HEAD`
                             git push origin $feature_name -u $@
                             ;;
   esac
