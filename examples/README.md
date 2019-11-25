@@ -1,6 +1,6 @@
 # examples
 
-Here are 3 examples of how to set up your docker development workflow
+Here are 3 examples of how to set up your docker development workflow with ROS.
 
 ## 1. Multi stage docker build (ros2_crystal_multistage)
 
@@ -45,3 +45,7 @@ __Pros:__
 __Cons:__
 
 * Built targets have "root" permissions unless you've updated your base docker image to have your user name/group.
+
+## 4. Bazel workspace with VS Code
+
+This will use a VS Code docker container [plugin](https://code.visualstudio.com/docs/remote/containers) as the basis of development for a bazel environment.
