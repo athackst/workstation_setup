@@ -54,7 +54,10 @@ _my_bb_alias_autocomplete() {
   _bazel__complete_target_stdout "build"
 }
 
-export BASE_BRANCH="origin/develop"
+alias bb="bazel build"
+complete -F _my_bb_alias_autocomplete -o nospace bb
+
+export BASE_BRANCH="origin/master"
 g() {
   usage() {
     echo "g [[start] [push] [delete] [update]]"
@@ -74,7 +77,7 @@ g() {
       delete )                shift
                               _g_delete $@
                               ;;
-      update )                 shift
+      update )                shift
                               _g_update $@
                               ;;
       -h | --help )           shift
@@ -100,8 +103,7 @@ _g_start() {
                             usage
                             return 0
                             ;;
-    * )                     shift
-                            git branch $1 $BASE_BRANCH --no-track
+    * )                     git branch $1 $BASE_BRANCH --no-track
                             git checkout $1
                             ;;
   esac
@@ -138,9 +140,11 @@ _g_delete() {
                             usage
                             return 0
                             ;;
+    * )                     git branch -D $1 
+                            git push -d origin $1
+                            ;;
   esac
-  git branch -D $1 
-  git push -d origin $1
+  
 }
 
 _g_update() {
@@ -186,6 +190,12 @@ _g_custom_autocomplete()
 }
 
 complete -o nospace -o default -F _g_custom_autocomplete g
+
+alias gb="g start"
+alias gp="g push"
+alias gd="g delete"
+alias gu="g update"
+
 
 function create_dashing_ws() {
   if [ $# -eq 0 ]
