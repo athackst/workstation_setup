@@ -60,7 +60,7 @@ complete -F _my_bb_alias_autocomplete -o nospace bb
 export BASE_BRANCH="origin/master"
 g() {
   usage() {
-    echo "g [[start] [push] [delete] [update]]"
+    echo "g [[begin] [delete] [push] [update]]"
   }
   if [[ "$#" -eq 0 ]]
   then
@@ -68,14 +68,14 @@ g() {
     return 0
   fi
   case $1 in
-      start )                 shift
-                              _g_start $@
-                              ;;
-      push )                  shift
-                              _g_push $@
+      begin )                 shift
+                              _g_begin $@
                               ;;
       delete )                shift
                               _g_delete $@
+                              ;;
+      push )                  shift
+                              _g_push $@
                               ;;
       update )                shift
                               _g_update $@
@@ -88,10 +88,10 @@ g() {
   esac
 }
 
-_g_start() {
+_g_begin() {
   usage() {
     echo "Creates a new branch based off of $BASE_BRANCH"
-    echo "Usage: g start <branch_name>"
+    echo "Usage: g begin <branch_name>"
   }
   if [[ "$#" -eq 0 ]]
   then
@@ -105,22 +105,6 @@ _g_start() {
                             ;;
     * )                     git branch $1 $BASE_BRANCH --no-track
                             git checkout $1
-                            ;;
-  esac
-}
-
-_g_push() {
-  usage() {
-    echo "Pushes the current branch to the remote origin with the same name."
-    echo "Usage: g push"
-  }
-  case $1 in
-    -h | --help )           shift
-                            usage
-                            return 0
-                            ;;
-    * )                     feature_name=`git name-rev --name-only HEAD`
-                            git push origin $feature_name -u $@
                             ;;
   esac
 }
@@ -145,6 +129,22 @@ _g_delete() {
                             ;;
   esac
   
+}
+
+_g_push() {
+  usage() {
+    echo "Pushes the current branch to the remote origin with the same name."
+    echo "Usage: g push"
+  }
+  case $1 in
+    -h | --help )           shift
+                            usage
+                            return 0
+                            ;;
+    * )                     feature_name=`git name-rev --name-only HEAD`
+                            git push origin $feature_name -u $@
+                            ;;
+  esac
 }
 
 _g_update() {
@@ -173,7 +173,7 @@ _g_custom_autocomplete()
 
     case ${COMP_CWORD} in
         1)
-            COMPREPLY=($(compgen -W "delete push start update" -- ${cur}))
+            COMPREPLY=($(compgen -W "begin delete push update" -- ${cur}))
             ;;
         2)
             case ${prev} in
@@ -191,9 +191,9 @@ _g_custom_autocomplete()
 
 complete -o nospace -o default -F _g_custom_autocomplete g
 
-alias gb="g start"
-alias gp="g push"
+alias gb="g begin"
 alias gd="g delete"
+alias gp="g push"
 alias gu="g update"
 
 
