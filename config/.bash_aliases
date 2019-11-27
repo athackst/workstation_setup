@@ -131,6 +131,11 @@ _g_delete() {
   
 }
 
+_g_delete_autocomplete() {
+  branches=$(git branch -l | cut -c3-)
+  COMPREPLY=($(compgen -W "$branches" -- "$2"))
+}
+
 _g_push() {
   usage() {
     echo "Pushes the current branch to the remote origin with the same name."
@@ -164,7 +169,7 @@ _g_update() {
   esac
 }
 
-_g_custom_autocomplete()
+_g_autocomplete()
 {
     local cur prev
 
@@ -178,8 +183,7 @@ _g_custom_autocomplete()
         2)
             case ${prev} in
                 delete)
-                    branches=$(git branch -l | cut -c3-)
-                    COMPREPLY=($(compgen -W "$branches" -- "$2"))
+                    _g_delete_autocomplete
                     ;;
             esac
             ;;
@@ -188,12 +192,15 @@ _g_custom_autocomplete()
             ;;
     esac
 }
-
-complete -o nospace -o default -F _g_custom_autocomplete g
+complete -o nospace -o default -F _g_autocomplete g
 
 alias gb="g begin"
+
 alias gd="g delete"
+complete -F _g_delete_autocomplete -o nospace gd
+
 alias gp="g push"
+
 alias gu="g update"
 
 
