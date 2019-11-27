@@ -11,50 +11,57 @@ sudo apt-get install -y \
     code # or code-insiders
 
 # configure code with exensions
+# remote tools
+code --install-extension ms-vscode-remote.vscode-remote-extensionpack
+# docker
+code --install-extension ms-azuretools.vscode-docker
+# python
+code --install-extension ms-python.python
+# c++
+code --install-extension ms-vscode.cpptools
+# xml
+code --install-extension DotJoshJohnson.xml
+# yaml
+code --install-extension redhat.vscode-yaml
+# spellchecker
+code --install-extension streetsidesoftware.code-spell-checker
+# markdown (for README.md)
+code --install-extension yzhang.markdown-all-in-one
 
 # set up gitconfig
-read -p "Install vscode extensions? (y/N): " yn
+read -p "Install extra vscode extensions? (y/N): " yn
 case $yn in
   [Yy]* ) 
-        # coding
-        # remote tools
-        code --install-extension ms-vscode-remote.vscode-remote-extensionpack
-        # docker
-        code --install-extension ms-azuretools.vscode-docker
-        # python
-        code --install-extension ms-python.python
-        # c++
-        code --install-extension ms-vscode.cpptools
-        # xml
-        code --install-extension DotJoshJohnson.xml
-        # yaml
-        code --install-extension redhat.vscode-yaml
-        # markdown (for README.md)
-        code --install-extension yzhang.markdown-all-in-one
-        # compiler (bazel)
-        code --install-extension BazelBuild.vscode-bazel
-        # compiler (cmake)
-        code --install-extension twxs.cmake
-        code --install-extension ms-vscode.cmake-tools
-        # code spellchecker
-        code --install-extension streetsidesoftware.code-spell-checker
-        # proto3
-        code --install-extension zxh404.vscode-proto3
-        # go
-        code --install-extension ms-vscode.go
-        # css
-        code --install-extension ecmel.vscode-html-css
-        # jekyll
-        code --install-extension ginfuru.ginfuru-vscode-jekyll-syntax 
-        code --install-extension ginfuru.vscode-jekyll-snippets
-        # ros
-        code --install-extension ms-iot.vscode-ros
-        code --install-extension smilerobotics.urdf
-        ;;
+          # coding
+          # compiler (bazel)
+          code --install-extension BazelBuild.vscode-bazel
+          # compiler (cmake)
+          code --install-extension twxs.cmake
+          code --install-extension ms-vscode.cmake-tools
+          # proto3
+          code --install-extension zxh404.vscode-proto3
+          # go
+          code --install-extension ms-vscode.go
+          # css
+          code --install-extension ecmel.vscode-html-css
+          # jekyll
+          code --install-extension ginfuru.ginfuru-vscode-jekyll-syntax 
+          code --install-extension ginfuru.vscode-jekyll-snippets
+          # ros
+          code --install-extension ms-iot.vscode-ros
+          code --install-extension smilerobotics.urdf
+          ;;
   [Nn]* ) ;;
   * )     ;;
 esac
 
 # install user preferences
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
-cp -r $DIR/../config/.config/Code/ $HOME/.config/Code/
+read -p "Update user preferences? (y/N): " yn
+case $yn in
+  [Yy]* ) 
+          DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+          cp -r $DIR/../config/.config/Code/ $HOME/.config/Code/
+          ;;
+  [Nn]* ) ;;
+  * )     ;;
+esac

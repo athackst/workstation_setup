@@ -5,6 +5,10 @@
         "command": "workbench.action.tasks.runTask"
     },
     {
+        "key": "ctrl+\\",
+        "command": "workbench.action.tasks.terminate"
+    },
+    {
         "key": "ctrl+alt+1",
         "command": "workbench.action.terminal.focusAtIndex1"
     },
