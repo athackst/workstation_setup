@@ -11,11 +11,12 @@
             "program": "${file}",
             "console": "integratedTerminal"
         },
+        // Example gdb launch of a ros executable
         {
             "name": "(gdb) Launch",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/install/examples_rclcpp_minimal_publisher/lib/examples_rclcpp_minimal_publisher/publisher_member_function",
+            "program": "${workspaceFolder}/install/${input:package}/lib/${input:package}/${input:program}",
             "args": [],
             "preLaunchTask": "build (debug)",
             "stopAtEntry": true,
@@ -31,5 +32,19 @@
                 }
             ]
         }
+    ],
+    "inputs": [
+      {
+        "id": "package",
+        "type": "promptString",
+        // type specific configuration attributes
+        "description": "Package name"
+      },
+      {
+        "id": "program",
+        "type": "promptString",
+        // type specific configuration attributes
+        "description": "Program name"
+      }
     ]
 }

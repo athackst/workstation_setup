@@ -24,7 +24,10 @@
             "label": "test",
             "type": "shell",
             "command": "colcon test && colcon test-result",
-            "group": "test"
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            }
         }
     ]
 }
