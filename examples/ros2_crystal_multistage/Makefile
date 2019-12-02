@@ -1,6 +1,6 @@
-all: example
+all: build
 
-example: Dockerfile get_code.sh 
+build: Dockerfile get_code.sh 
 	bash get_code.sh
 	docker build -f Dockerfile -t athackst/ros2:crystal-example .
 

@@ -1,6 +1,10 @@
 {
-    "cSpell.words": [
+    "cSpell.ignoreWords": [
         "cmake",
-        "dockerfiles"
+        "colcon",
+        "dockerfiles",
+        "releasecontainer",
+        "rosinstall",
+        "struct"
     ]
 }
