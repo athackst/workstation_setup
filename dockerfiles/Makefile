@@ -18,7 +18,7 @@ ros2_eloquent:
 
 clean:
 	docker rmi athackst/ros:melodic-base
-	dpcler rmi athackst/ros:melodic-dev
+	docker rmi athackst/ros:melodic-dev
 	docker rmi athackst/ros2:crystal-base
 	docker rmi athackst/ros2:crystal-dev
 	docker rmi athackst/ros2:dashing-base

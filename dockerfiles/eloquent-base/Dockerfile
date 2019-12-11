@@ -1,4 +1,5 @@
 FROM ubuntu:18.04
+
 LABEL version="ROS2 Dashing-2019-11-23"
 
 ENV ROS_DISTRO=eloquent

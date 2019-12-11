@@ -12,17 +12,7 @@ Build the current LTS ROS docker images.
 make all
 ```
 
-### Update your built docker image on dockerhub
-
-Run the update script to update the docker image and push it to docker hub.
-
-```bash
-./update.sh
-```
-
-You will be prompted for the name of the remote and the name of the image.
-
-## Build the docker images
+or make a specific docker image
 
 ### ros melodic
 
@@ -47,6 +37,18 @@ make ros2_dashing
 ```bash
 make ros2_eloquent
 ```
+
+## Update your built docker image on dockerhub
+
+Run the update script to update the docker image and push it to docker hub.
+
+```bash
+./update.sh
+```
+
+You will be prompted for the name of the remote and the name of the image.
+
+-----
 
 ## FAQ
 

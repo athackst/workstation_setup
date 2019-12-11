@@ -73,7 +73,7 @@ in the current working directory.
 
 The deployment steps for this workflow are similar dev/release workflow.  Development is performed in a different container than the release, where the build outputs are copied into the release container.
 
-Run the release script.
+Run the release script on the host computer.
 
 ```bash
 ./release.sh

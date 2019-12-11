@@ -1,5 +1,7 @@
 FROM ubuntu:18.04
 
+LABEL version="2019-12-10"
+
 # setup timezone
 RUN echo 'Etc/UTC' > /etc/timezone && \
     ln -s /usr/share/zoneinfo/Etc/UTC /etc/localtime && \
