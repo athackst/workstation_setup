@@ -1,6 +1,6 @@
 FROM ubuntu:18.04
 
-LABEL version="2019-12-10"
+LABEL version="2019-12-21"
 
 # setup timezone
 RUN echo 'Etc/UTC' > /etc/timezone && \
