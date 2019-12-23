@@ -20,7 +20,7 @@ export LANG=en_US.UTF-8
 
 # install ROS2 (dashing)
 sudo apt-get update && sudo apt-get install -y \
-  ros-dashing-desktop \
+  ros-$ROS_DISTRO-desktop \
   python3-argcomplete
 
 # install ROS2 development tools
@@ -43,13 +43,11 @@ then
 fi
 rosdep update
 
-cp $DIR/../config/.bash_dashing $HOME/
-
 # add to .bash_aliases if not already there
-if ! grep -Fxq "source /opt/ros/dashing/setup.bash" ~/.bash_aliases
+if ! grep -Fxq "source /opt/ros/$ROS_DISTRO/setup.bash" ~/.bash_aliases
 then
-  echo "adding ros dashing to bash_aliases"
-  echo "source /opt/ros/dashing/setup.bash" >> ~/.bash_aliases
+  echo "adding ros $ROS_DISTRO to bash_aliases"
+  echo "source /opt/ros/$ROS_DISTRO/setup.bash" >> ~/.bash_aliases
 fi
 
 source ~/.bashrc
