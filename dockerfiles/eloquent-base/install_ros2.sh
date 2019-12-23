@@ -15,10 +15,12 @@ sudo sh -c 'echo "deb [arch=amd64,arm64] http://packages.ros.org/ros2/ubuntu `ls
 export DEBIAN_FRONTEND=noninteractive
 
 sudo apt-get install -y tzdata
-sudo ln -fs /usr/share/zoneinfo/America/New_York /etc/localtime
+sudo ln -fs /usr/share/zoneinfo/UTC /etc/localtime
 sudo dpkg-reconfigure --frontend noninteractive tzdata
 
 # install ROS2
 sudo apt-get update && sudo apt-get install -y \
   ros-$ROS_DISTRO-ros-base \
   python3-argcomplete
+
+export DEBIAN_FRONTEND=

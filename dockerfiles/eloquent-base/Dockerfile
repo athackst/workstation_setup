@@ -5,7 +5,6 @@ LABEL version="ROS2 Dashing-2019-11-23"
 ENV ROS_DISTRO=eloquent
 
 RUN apt-get update && apt-get install -y \
-  curl \
   locales \
   sudo \
   && rm -rf /var/lib/apt/lists/*

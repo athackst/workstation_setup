@@ -1,6 +1,6 @@
 FROM ubuntu:18.04
 
-LABEL version="ROS2 Crystal Clemmys - Patch Release 3"
+LABEL version="2019-12-23"
 
 RUN apt-get update && apt-get install -y \
   curl \
