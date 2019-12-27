@@ -14,7 +14,8 @@ apt-get update && apt-get install -y \
   python-rosdep \
   python3-vcstool \
   sudo \
-  wget
+  vim \
+  wget 
 
 rosdep init && rosdep update
 
