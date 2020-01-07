@@ -1,6 +1,6 @@
 FROM ubuntu:16.04
 
-LABEL version="2019-12-31"
+LABEL version="2020-01-06"
 
 # install packages
 RUN apt-get update && apt-get install -q -y \
