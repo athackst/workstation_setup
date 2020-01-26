@@ -2,7 +2,8 @@
 set -e
 
 # install ROS2 development tools
-apt-get update && apt-get install -y \
+sudo apt-get update
+sudo apt-get install -y \
   bash-completion \
   build-essential \
   cmake \
@@ -13,9 +14,13 @@ apt-get update && apt-get install -y \
   python3-pip \
   python-rosdep \
   python3-vcstool \
-  sudo \
   vim \
   wget
+
+sudo apt-get install -y \
+  ros-$ROS_DISTRO-launch-testing \
+  ros-$ROS_DISTRO-launch-testing-ament-cmake \
+  ros-$ROS_DISTRO-launch-testing-ros 
 
 rosdep init && rosdep update
 

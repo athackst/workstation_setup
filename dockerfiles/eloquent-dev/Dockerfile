@@ -1,6 +1,6 @@
 FROM athackst/ros2:eloquent-base 
 
-LABEL version="2019-12-15"
+LABEL version="2020-01-25"
 
 COPY install_ros2_dev.sh /setup/install_ros2_dev.sh
 RUN /setup/install_ros2_dev.sh
