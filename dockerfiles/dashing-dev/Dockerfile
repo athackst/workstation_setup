@@ -1,6 +1,6 @@
 FROM athackst/ros2:dashing-base 
 
-LABEL version="ROS2 Dashing-2019-11-23"
+LABEL version="2020-02-15"
 
 COPY install_ros2_dev.sh /setup/install_ros2_dev.sh
 RUN /setup/install_ros2_dev.sh

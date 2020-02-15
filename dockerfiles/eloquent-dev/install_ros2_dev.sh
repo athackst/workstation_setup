@@ -22,5 +22,7 @@ sudo apt-get install -y \
   ros-$ROS_DISTRO-launch-testing-ament-cmake \
   ros-$ROS_DISTRO-launch-testing-ros 
 
+python3 -m pip install -U pylint
+
 rosdep init && rosdep update
 
