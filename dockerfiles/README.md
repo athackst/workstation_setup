@@ -6,47 +6,17 @@ You can use them as a base image for development with VSCode using container bas
 
 ## Quick start
 
-Build the current LTS ROS docker images.
+Create the docker images
 
 ```bash
-make all
+./update.sh all
 ```
 
-or make a specific docker image
-
-### ros melodic
+To see help information on the update script
 
 ```bash
-make ros_melodic
+./update.sh -h
 ```
-
-### ros2 crystal
-
-```bash
-make ros2_crystal
-```
-
-### ros2 dashing
-
-```bash
-make ros2_dashing
-```
-
-### ros2 eloquent
-
-```bash
-make ros2_eloquent
-```
-
-## Update your built docker image on dockerhub
-
-Run the update script to update the docker image and push it to docker hub.
-
-```bash
-./update.sh
-```
-
-You will be prompted for the name of the remote and the name of the image.
 
 -----
 
