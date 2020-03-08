@@ -7,6 +7,7 @@ push=1
 update() {
   # Update the base image
   docker pull ubuntu:18.04
+  docker pull ubuntu:16.04
   DOCKER_BASE_NAME=$1
   DOCKER_IMG_NAME=$2
   
