@@ -1,16 +1,19 @@
-install: install_base install_vscode install_docker install_config
-
-install_config: scripts/install_config.sh config/.gitconfig config/.bash_aliases
-	bash scripts/install_config.sh
+install: install_base install_programs install_user install_vscode install_docker 
 
 install_base: scripts/install_base.sh 
 	bash scripts/install_base.sh
+
+install_user: scripts/install_user.sh config/.bash_aliases
+	bash scripts/install_user.sh
 
 install_docker: scripts/install_docker.sh
 	bash scripts/install_docker.sh
 
 install_jekyll: scripts/install_jekyll.sh
 	bash scripts/install_jekyll.sh
+
+install_programs: scripts/install_programs.sh config/.gitconfig
+	bash scripts/install_programs.sh
 
 install_vscode: scripts/install_vscode.sh
 	bash scripts/install_vscode.sh
