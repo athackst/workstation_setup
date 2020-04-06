@@ -18,17 +18,18 @@ install_vscode: scripts/install_vscode.sh
 install_aws: scripts/install_aws.sh
 	bash scripts/install_aws.sh
 
-install_ros_melodic: scripts/install_ros_melodic.sh
-	bash scripts/install_ros_melodic.sh
+install_ros_melodic: scripts/install_ros_desktop.sh
+	export ROS_DISTRO="melodic"
+	bash scripts/install_ros_desktop.sh
 
-install_ros2_crystal: scripts/install_ros2.sh
+install_ros2_crystal: scripts/install_ros2_desktop.sh
 	export ROS_DISTRO="crystal"
-	bash scripts/install_ros2.sh
+	bash scripts/install_ros2_desktop.sh
 
-install_ros2_dashing: scripts/install_ros2.sh
+install_ros2_dashing: scripts/install_ros2_desktop.sh
 	export ROS_DISTRO="dashing"
-	bash scripts/install_ros2.sh
+	bash scripts/install_ros2_desktop.sh
 
-install_ros2_eloquent: scripts/install_ros2.sh
+install_ros2_eloquent: scripts/install_ros2_desktop.sh
 	export ROS_DISTRO="eloquent"
-	bash scripts/install_ros2.sh
+	bash scripts/install_ros2_desktop.sh
