@@ -2,8 +2,8 @@
 set -e
 
 # install ROS2 development tools
-sudo apt-get update
-sudo apt-get install -y \
+apt-get update
+apt-get install -y \
   bash-completion \
   build-essential \
   cmake \
@@ -17,12 +17,12 @@ sudo apt-get install -y \
   vim \
   wget
 
-sudo apt-get install -y \
+apt-get install -y \
   ros-$ROS_DISTRO-launch-testing \
   ros-$ROS_DISTRO-launch-testing-ament-cmake \
   ros-$ROS_DISTRO-launch-testing-ros 
 
 python3 -m pip install -U pylint
 
-rosdep init && rosdep update
+rosdep init
 

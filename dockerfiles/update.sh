@@ -1,5 +1,4 @@
 #!/bin/bash
-
 set -e
 
 push=1
@@ -8,25 +7,29 @@ update() {
   # Update the base image
   docker pull ubuntu:18.04
   docker pull ubuntu:16.04
+  USERNAME=athackst
   DOCKER_BASE_NAME=$1
   DOCKER_IMG_NAME=$2
+  DOCKER_FILE=$DOCKER_BASE_NAME/$DOCKER_IMG_NAME.Dockerfile
+  CONTEXT=$DOCKER_BASE_NAME
+  DOCKER_TAG=$USERNAME/$DOCKER_BASE_NAME:$DOCKER_IMG_NAME
   
   # Modify the label to todays date.
   TODAY=$(date +'%Y-%m-%d')
-  sed -i "/LABEL/c\LABEL version=\"${TODAY}\"" $DOCKER_IMG_NAME/Dockerfile
+  sed -i "/LABEL/c\LABEL version=\"${TODAY}\"" $DOCKER_FILE
   
   # Build the image.
-  docker build -f $DOCKER_IMG_NAME/Dockerfile -t $DOCKER_BASE_NAME:$DOCKER_IMG_NAME $DOCKER_IMG_NAME/
-  docker tag $DOCKER_BASE_NAME:$DOCKER_IMG_NAME $DOCKER_BASE_NAME:$DOCKER_IMG_NAME-$TODAY
+  docker build -f $DOCKER_FILE -t $DOCKER_TAG $CONTEXT
+  docker tag $DOCKER_TAG $DOCKER_TAG-$TODAY
   
   # Push the image to the remote.
   if [ "$push" = "1" ]; then
     docker login
-    docker push $DOCKER_BASE_NAME:$DOCKER_IMG_NAME
-    docker push $DOCKER_BASE_NAME:$DOCKER_IMG_NAME-$TODAY
+    docker push $DOCKER_TAG
+    docker push $DOCKER_TAG-$TODAY
   fi
   
-  docker rmi $DOCKER_BASE_NAME:$DOCKER_IMG_NAME-$TODAY
+  docker rmi $DOCKER_TAG-$TODAY
   docker system prune -f
 }
 
@@ -42,29 +45,29 @@ update_crystal() {
   echo    # (optional) move to a new line
   if [[ $REPLY =~ ^[Yy]$ ]]
   then
-    update athackst/ros2 crystal-base
-    update athackst/ros2 crystal-dev
+    update ros2 crystal-base
+    update ros2 crystal-dev
   fi
 }
 
 update_dashing() {
-  update athackst/ros2 dashing-base
-  update athackst/ros2 dashing-dev
+  update ros2 dashing-base
+  update ros2 dashing-dev
 }
 
 update_eloquent() {
-  update athackst/ros2 eloquent-base
-  update athackst/ros2 eloquent-dev
+  update ros2 eloquent-base
+  update ros2 eloquent-dev
 }
 
 update_kinetic() {
-  update athackst/ros kinetic-base
-  update athackst/ros kinetic-dev
+  update ros kinetic-base
+  update ros kinetic-dev
 }
 
 update_melodic() {
-  update athackst/ros melodic-base
-  update athackst/ros melodic-dev
+  update ros melodic-base
+  update ros melodic-dev
 }
 
 update_all() {

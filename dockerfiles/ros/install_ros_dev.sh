@@ -1,9 +1,9 @@
 #!/bin/bash
-
 set -e
 
-sudo apt-get update
-sudo apt-get install -y \
+apt-get update
+apt-get install -y \
+    python-rosdep \
     python-rosinstall \
     python-rosinstall-generator \
     python-wstool \
@@ -12,7 +12,4 @@ sudo apt-get install -y \
     git \
     vim
 
-sudo rosdep init
-rosdep update
-
-
+rosdep init

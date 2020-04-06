@@ -1,28 +1,30 @@
 FROM ubuntu:18.04
 
-LABEL version="2020-02-15"
+LABEL version="2020-04-06"
 
-# setup timezone
-RUN echo 'Etc/UTC' > /etc/timezone && \
-    ln -s /usr/share/zoneinfo/Etc/UTC /etc/localtime && \
-    apt-get update && apt-get install -q -y tzdata && rm -rf /var/lib/apt/lists/*
-
-# install packages
-RUN apt-get update && apt-get install -q -y \
-    dirmngr \
-    gnupg2 \
-    lsb-release \
-    sudo \
-    && rm -rf /var/lib/apt/lists/*
-
-# install script
 ENV ROS_DISTRO="melodic"
-COPY install_ros.sh /setup/install_ros.sh
-RUN /setup/install_ros.sh && rm -rf /var/lib/apt/lists/*
+
+# Install language
+RUN apt-get update && apt-get install -y \
+  locales \
+  && locale-gen en_US.UTF-8 \
+  && update-locale LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8 \
+  && rm -rf /var/lib/apt/lists/*
+ENV LANG en_US.UTF-8
+
+# Install timezone
+RUN ln -fs /usr/share/zoneinfo/UTC /etc/localtime \
+  && export DEBIAN_FRONTEND=noninteractive \
+  && apt-get update \
+  && apt-get install -y tzdata \
+  && dpkg-reconfigure --frontend noninteractive tzdata \
+  && rm -rf /var/lib/apt/lists/*
+
+# install ROS
+COPY install_ros_base.sh /setup/install_ros_base.sh
+RUN /setup/install_ros_base.sh && rm -rf /var/lib/apt/lists/*
 
 # setup environment
-ENV LANG C.UTF-8
-ENV LC_ALL C.UTF-8
 ENV LD_LIBRARY_PATH=/opt/ros/$ROS_DISTRO/lib:$LD_LIBRARY_PATH
 ENV ROS_ROOT=/opt/ros/$ROS_DISTRO/share/ros
 ENV ROS_PACKAGE_PATH=/opt/ros/$ROS_DISTRO/share
