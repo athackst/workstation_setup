@@ -15,12 +15,4 @@ case $yn in
   * )     ;; 
 esac
 
-# set up gitconfig
-read -p "Replace .gitconfig? (y/N): " yn
-case $yn in
-  [Yy]* ) cp $DIR/../config/.gitconfig $HOME/.gitconfig;;
-  [Nn]* ) ;;
-  * )     ;;
-esac
-
 source ~/.bashrc
