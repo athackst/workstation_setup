@@ -15,4 +15,17 @@ case $yn in
   * )     ;; 
 esac
 
+# install user preferences
+read -p "Update user config? (y/N): " yn
+case $yn in
+    [Yy]* )
+        DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+        cp -r $DIR/../config/.config/ $HOME/.config/
+        cp -r $DIR/../config/.ignition/ $HOME/.ignition/
+    ;;
+    [Nn]* ) ;;
+    * )     ;;
+esac
+
+
 source ~/.bashrc

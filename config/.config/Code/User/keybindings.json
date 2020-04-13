@@ -43,5 +43,9 @@
     {
         "key": "ctrl+alt+9",
         "command": "workbench.action.terminal.focusAtIndex9"
+    },
+    {
+        "key": "ctrl+alt+`",
+        "command": "workbench.action.terminal.focus"
     }
 ]
