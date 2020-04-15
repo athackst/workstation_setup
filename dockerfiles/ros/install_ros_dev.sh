@@ -12,4 +12,4 @@ apt-get install -y \
     git \
     vim
 
-rosdep init
+rosdep init || echo "rosdep already initialized"

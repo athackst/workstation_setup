@@ -24,5 +24,5 @@ apt-get install -y \
 
 python3 -m pip install -U pylint
 
-rosdep init
+rosdep init || echo "rosdep already initialized"
 
