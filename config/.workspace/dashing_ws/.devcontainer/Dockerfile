@@ -1,8 +1,8 @@
 # This is the development environment
 FROM athackst/ros2:dashing-dev 
 
-COPY install_depends.sh /setup/install_depends.sh
-RUN /setup/install_depends.sh && rm -rf /var/lib/apt/lists/*
+# Avoid warnings by switching to noninteractive
+ENV DEBIAN_FRONTEND=noninteractive
 
 # This Dockerfile adds a non-root 'vscode' user with sudo access. However, for Linux,
 # this user's GID/UID must match your local user UID/GID to avoid permission issues
@@ -23,5 +23,7 @@ RUN groupadd --gid $USER_GID $USERNAME \
     # Cleanup
     && rm -rf /var/lib/apt/lists/*
 
-COPY entrypoint.sh /setup/entrypoint.sh
-ENTRYPOINT [ "/setup/entrypoint.sh" ]
+# Switch back to dialog for any ad-hoc use of apt-get
+ENV DEBIAN_FRONTEND=dialog
+
+CMD ["bash"]

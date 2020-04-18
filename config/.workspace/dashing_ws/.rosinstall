@@ -1,6 +1,0 @@
-# put ros source packages here:
-# example:
-# - git:
-#     local-name: examples
-#     uri: https://github.com/ros2/examples.git
-#     version: dashing
