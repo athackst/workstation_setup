@@ -48,5 +48,5 @@ esac
 read -p "Replace .gitconfig? (Y/n): " yn
 case $yn in
   [Nn]* ) ;;
-  * )     cp $DIR/../config/.gitconfig $HOME/.gitconfig;;
+  * )     cp $DIR/../user/.gitconfig $HOME/.gitconfig;;
 esac

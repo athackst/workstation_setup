@@ -1,0 +1,34 @@
+[diff]
+	tool = diffmerge
+[difftool "diffmerge"]
+	cmd = diffmerge \"$LOCAL\" \"$REMOTE\"
+[merge]
+	tool = diffmerge
+[mergetool "diffmerge"]
+	cmd = "diffmerge --merge --result=\"$MERGED\" \"$LOCAL\" \"$(if test -f \"$BASE\"; then echo \"$BASE\"; else echo \"$LOCAL\"; fi)\" \"$REMOTE\""
+	trustExitCode = true
+[alias]
+	begin = "!f() { \
+		. $HOME/.bash_aliases_git; \
+		 _g_begin $@; \
+		}; f"
+	delete = "!f() { \
+		. $HOME/.bash_aliases_git; \
+		_g_delete $@; \
+		}; f"
+	pr = "!f() { \
+		. $HOME/.bash_aliases_git; \
+		_g_pr $@; \
+		}; f"
+	sync = "!f() { \
+		. $HOME/.bash_aliases_git; \
+		_g_sync $@; \
+		}; f"
+	scan = "!f() { \
+		. $HOME/.bash_aliases_git; \
+		_g_scan $@; \
+		}; f"
+	dsquashed = "!f() { \
+		. $HOME/.bash_aliases_git; \
+		_g_dsquashed $@; \
+		}; f"

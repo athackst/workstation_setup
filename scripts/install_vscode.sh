@@ -59,7 +59,7 @@ read -p "Update user preferences? (y/N): " yn
 case $yn in
     [Yy]* )
         DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
-        cp -r $DIR/../config/.config/Code/ $HOME/.config/Code/
+        cp -r $DIR/../user/.config/Code/ $HOME/.config/Code/
     ;;
     [Nn]* ) ;;
     * )     ;;

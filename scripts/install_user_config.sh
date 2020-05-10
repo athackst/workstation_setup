@@ -5,27 +5,32 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 # copy example workspace
 rm -fr $HOME/.workspace
-cp -r $DIR/../config/.workspace/ $HOME/.workspace/
+cp -r $DIR/../user/.workspace/ $HOME/.workspace/
 
 # set up aliases
-read -p "Replace .bash_aliases? (y/N): " yn
+read -p "Replace .bash_aliases? (Y/n): " yn
 case $yn in
-  [Yy]* ) cp $DIR/../config/.bash_aliases $HOME/.bash_aliases;;
-  [Nn]* ) ;;
-  * )     ;; 
+  "" | [Yy]* )
+    cp $DIR/../user/.bash_aliases* $HOME/
+  ;;
+esac
+
+# set up git
+read -p "Replace .gitconfig? (Y/n): " yn
+case $yn in
+  "" | [Yy]* )
+    cp $DIR/../user/.gitconfig $HOME/
+  ;;
 esac
 
 # install user preferences
-read -p "Update user config? (y/N): " yn
+read -p "Update user preferences? (Y/n): " yn
 case $yn in
-    [Yy]* )
-        DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
-        cp -r $DIR/../config/.config/ $HOME/.config/
-        cp -r $DIR/../config/.ignition/ $HOME/.ignition/
-    ;;
-    [Nn]* ) ;;
-    * )     ;;
+  "" | [Yy]* )
+    DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+    cp -r $DIR/../user/.config/ $HOME/.config/
+    cp -r $DIR/../user/.ignition/ $HOME/.ignition/
+  ;;
 esac
-
 
 source ~/.bashrc

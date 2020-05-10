@@ -28,6 +28,10 @@
         "typescriptreact",
         "yml"
     ],
+    "cSpell.enableFiletypes": [
+        "!plaintext",
+        "dockerfile"
+    ],
     "diffEditor.ignoreTrimWhitespace": false,
     "editor.multiCursorModifier": "alt",
     "[cpp]": {
@@ -36,6 +40,10 @@
             80
         ]
     },
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.python"
+    },
+    "workbench.colorTheme": "Visual Studio Dark",
     "terminal.integrated.fontFamily": "monospace",
     "terminal.integrated.scrollback": 10000,
     "typescript.tsc.autoDetect": "off",
