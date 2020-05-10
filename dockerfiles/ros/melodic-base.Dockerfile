@@ -1,6 +1,6 @@
 FROM ubuntu:18.04
 
-LABEL version="2020-04-06"
+LABEL version="2020-05-04"
 
 ENV ROS_DISTRO="melodic"
 

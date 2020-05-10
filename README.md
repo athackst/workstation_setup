@@ -22,3 +22,5 @@ make install
 ## Develop
 
 I have recently been playing with the idea of doing all/most development inside of docker containers.
+
+See [examples](examples/README.md) for more information.

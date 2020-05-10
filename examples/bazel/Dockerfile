@@ -18,7 +18,7 @@ RUN apt-get update \
 ##############################
 # The version of bazel to use
 ##############################
-ARG BAZEL_VERSION=0.28.1
+ARG BAZEL_VERSION=2.2.0
 
 RUN wget https://github.com/bazelbuild/bazel/releases/download/${BAZEL_VERSION}/bazel-${BAZEL_VERSION}-installer-linux-x86_64.sh \
   && chmod +x bazel-${BAZEL_VERSION}-installer-linux-x86_64.sh \
@@ -32,7 +32,7 @@ RUN wget https://github.com/bazelbuild/bazel/releases/download/${BAZEL_VERSION}/
 # The more "bazel" way of doing this would be to add the buildifier through bazel
 # rules and build the tool with the rest of your project.
 ##############################
-ARG BUILDIFIER_VERSION=0.28.0
+ARG BUILDIFIER_VERSION=2.2.1
 
 RUN wget https://github.com/bazelbuild/buildtools/releases/download/${BUILDIFIER_VERSION}/buildifier \
   && chmod +x buildifier \
