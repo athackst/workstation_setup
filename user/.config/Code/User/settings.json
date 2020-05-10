@@ -1,10 +1,11 @@
 {
-    "cSpell.enabledLanguageIds": [
+    "cSpell.enableFiletypes": [
         "asciidoc",
         "c",
         "cpp",
         "csharp",
         "css",
+        "dockerfile",
         "go",
         "handlebars",
         "html",
@@ -28,10 +29,6 @@
         "typescriptreact",
         "yml"
     ],
-    "cSpell.enableFiletypes": [
-        "!plaintext",
-        "dockerfile"
-    ],
     "diffEditor.ignoreTrimWhitespace": false,
     "editor.multiCursorModifier": "alt",
     "[cpp]": {
@@ -50,6 +47,6 @@
     "gulp.autoDetect": "off",
     "grunt.autoDetect": "off",
     "jake.autoDetect": "off",
-    "npm.autoDetect": "off"
+    "npm.autoDetect": "off",
     "editor.tabSize": 2,
 }
