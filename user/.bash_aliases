@@ -26,24 +26,28 @@ fi
 ########################
 # git shortcus
 ########################
-if [ -f ~/.bash_aliases_git ]; then
-  . ~/.bash_aliases_git
-  
+if [ -f /usr/share/bash-completion/completions/git ]; then
+  . /usr/share/bash-completion/completions/git
+
   alias g="git"
   complete -o default -o nospace -F _git g
-  
-  _git_delete() {
-    _git_branch
-  }
-  
-  alias gb="_g_begin"
-  
-  alias gd="_g_delete"
-  complete -o default -o nospace -F _git_delete gd
-  
-  alias gp="_g_pr"
-  
-  alias gu="_g_sync"
+
+  if [ -f ~/.bash_aliases_git ]; then
+    . ~/.bash_aliases_git
+
+    _git_delete() {
+      _git_branch
+    }
+
+    alias gb="_g_begin"
+
+    alias gd="_g_delete"
+    complete -o default -o nospace -F _git_delete gd
+
+    alias gp="_g_pr"
+
+    alias gu="_g_sync"
+  fi
 fi
 
 ########################

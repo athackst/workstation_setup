@@ -127,10 +127,9 @@ _g_dsquashed() {
   do
     mergeBase=$(git merge-base $BASE_BRANCH $branch)
     mergeStatus=$(git cherry $BASE_BRANCH $(git commit-tree $(git rev-parse $branch^{tree}) -p $mergeBase -m _))
-    # echo "$branch mergeStatus: $mergeStatus mergeBase: $mergeBase"
     case $mergeStatus in
       "-"*) 
-        i=$((i+1))
+        i=$(expr $i + 1)
         echo "squashed: $branch is merged into $BASE_BRANCH and can be deleted"
         ;;
       *)    echo "not squashed: $branch is not merged into $BASE_BRANCH" ;;

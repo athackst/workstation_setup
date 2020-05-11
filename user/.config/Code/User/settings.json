@@ -35,10 +35,12 @@
         "editor.defaultFormatter": "ms-vscode.cpptools",
         "editor.rulers": [
             80
-        ]
+        ],
+        "editor.tabSize": 2,
     },
     "[python]": {
-        "editor.defaultFormatter": "ms-python.python"
+        "editor.defaultFormatter": "ms-python.python",
+        "editor.tabSize": 2,
     },
     "workbench.colorTheme": "Visual Studio Dark",
     "terminal.integrated.fontFamily": "monospace",
@@ -48,5 +50,5 @@
     "grunt.autoDetect": "off",
     "jake.autoDetect": "off",
     "npm.autoDetect": "off",
-    "editor.tabSize": 2,
+
 }
