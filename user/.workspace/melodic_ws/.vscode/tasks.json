@@ -1,0 +1,43 @@
+{
+  // See https://go.microsoft.com/fwlink/?LinkId=733558
+  // for the documentation about the tasks.json format
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "c: build",
+      "type": "shell",
+      "command": "catkin build",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": [
+        "$catkin-gcc"
+      ]
+    },
+    {
+      "label": "c: test",
+      "type": "shell",
+      "command": "catkin run_tests && catkin_test_results --verbose",
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      },
+      "problemMatcher": [
+        "$catkin-gcc"
+      ]
+    },
+    {
+      "label": "c: clean",
+      "type": "shell",
+      "command": "catkin clean --yes",
+      "problemMatcher": []
+    },
+    {
+      "label": "ws: get deps",
+      "type": "shell",
+      "command": "rosdep install -y --from-paths src --ignore-src",
+      "problemMatcher": []
+    }
+  ]
+}
