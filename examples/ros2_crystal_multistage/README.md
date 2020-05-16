@@ -1,8 +1,8 @@
-# ros2_crystal_example
+# ros2_crystal_multistage
 
 This is an example of a multi-stage dockerfile to produce a target image with custom built targets.
 
-## Quickstart
+## Quick start
 
 ### Build
 

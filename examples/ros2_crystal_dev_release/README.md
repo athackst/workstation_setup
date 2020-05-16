@@ -1,8 +1,8 @@
-# ros2_crystal_example_dev
+# ros2_crystal_dev_release
 
 This is an example of how to create a docker development workflow
 
-## Quickstart
+## Quick start
 
 Run all the steps to get the code, build the development docker and build your code.
 

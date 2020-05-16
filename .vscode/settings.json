@@ -1,10 +1,18 @@
 {
-    "cSpell.ignoreWords": [
+    "cSpell.words": [
+        "UNAME",
+        "athackst",
+        "bazel",
         "cmake",
         "colcon",
         "dockerfiles",
+        "mkdir",
         "releasecontainer",
         "rosinstall",
-        "struct"
-    ]
+        "struct",
+        "whoami",
+        "wstool"
+    ],
+    "files.trimFinalNewlines": true,
+    "files.insertFinalNewline": true
 }

@@ -50,5 +50,6 @@
     "grunt.autoDetect": "off",
     "jake.autoDetect": "off",
     "npm.autoDetect": "off",
+    "search.useIgnoreFiles": false,
 
 }

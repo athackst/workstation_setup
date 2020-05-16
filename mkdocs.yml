@@ -1,0 +1,14 @@
+site_name: Workstation Setup
+theme: readthedocs
+plugins:
+  - simple:
+      ignore_folders: ["src"]
+
+markdown_extensions:
+  - admonition
+  - smarty
+  - toc:
+      permalink: True
+  - pymdownx.superfences
+  - pymdownx.emoji:
+       emoji_generator: !!python/name:pymdownx.emoji.to_png

@@ -2,7 +2,7 @@
 
 Scripts to capture my workstation setups
 
-## Prereqs
+## Prerequisites
 
 Install pre-requirements:
 
@@ -23,4 +23,5 @@ make install
 
 I have recently been playing with the idea of doing all/most development inside of docker containers.
 
-See [examples](examples/README.md) for more information.
+- [examples](examples/README.md) for example development processes
+- [dockerfiles](dockerfiles/README.md) for dockerfiles
