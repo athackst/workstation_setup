@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  
+  <link rel="shortcut icon" href="../../img/favicon.ico">
+  <title>ros_melodic_vscode - Workstation Setup</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700" />
+
+  <link rel="stylesheet" href="../../css/theme.css" />
+  <link rel="stylesheet" href="../../css/theme_extra.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" />
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "ros_melodic_vscode";
+    var mkdocs_page_input_path = "examples/ros_melodic_vscode/README.md";
+    var mkdocs_page_url = null;
+  </script>
+  
+  <script src="../../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+        <a href="../.." class="icon icon-home"> Workstation Setup</a>
+        
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../..">workstation_setup</a>
+                    </li>
+                </ul>
+                <p class="caption"><span class="caption-text">Dockerfiles</span></p>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../../dockerfiles/">dockerfiles</a>
+                    </li>
+                </ul>
+                <p class="caption"><span class="caption-text">Examples</span></p>
+                <ul class="current">
+                    <li class="toctree-l1"><a class="reference internal" href="../">Example workspaces</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="#">Bazel</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../bazel/">bazel</a>
+                </li>
+    </ul>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="#">Ros2 crystal dev release</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../ros2_crystal_dev_release/">ros2_crystal_dev_release</a>
+                </li>
+    </ul>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="#">Ros2 crystal multistage</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../ros2_crystal_multistage/">ros2_crystal_multistage</a>
+                </li>
+    </ul>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="#">Ros2 dashing vscode</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../ros2_dashing_vscode/">ros2_dashing_vscode</a>
+                </li>
+    </ul>
+                    </li>
+                    <li class="toctree-l1 current"><a class="reference internal current" href="#">Ros melodic vscode</a>
+    <ul class="current">
+                <li class="toctree-l2 current"><a class="reference internal current" href="./">ros_melodic_vscode</a>
+    <ul class="current">
+    <li class="toctree-l3"><a class="reference internal" href="#about">About</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#installation">Installation</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#usage">Usage</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#set-up-your-workspace">Set up your workspace</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#build">Build</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#run">Run</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
+                </li>
+    </ul>
+                    </li>
+                </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../..">Workstation Setup</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../..">Docs</a> &raquo;</li>
+    
+      
+        
+          <li>Ros melodic vscode &raquo;</li>
+        
+      
+        
+          <li>Examples &raquo;</li>
+        
+      
+    
+    <li>ros_melodic_vscode</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="ros_melodic_vscode">ros_melodic_vscode<a class="headerlink" href="#ros_melodic_vscode" title="Permanent link">&para;</a></h1>
+<p>This is an example/test workspace for ros melodic.</p>
+<h2 id="about">About<a class="headerlink" href="#about" title="Permanent link">&para;</a></h2>
+<p>This workspace is set up to test using a ros melodic dev container using the beginners tutorials from ROS.</p>
+<h2 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h2>
+<p>You&rsquo;ll need the following packages installed:</p>
+<ul>
+<li><a href="https://code.visualstudio.com/">vscode</a></li>
+<li><a href="https://docs.docker.com/get-docker/">docker</a></li>
+</ul>
+<h2 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">&para;</a></h2>
+<p>Open this directory in vscode</p>
+<pre class="highlight"><code class="language-bash">code workstation_setup/examples/ros_melodic_vscode</code></pre>
+
+<p>It will ask you if you&rsquo;d like to open using a container.  Hit yes!</p>
+<h3 id="set-up-your-workspace">Set up your workspace<a class="headerlink" href="#set-up-your-workspace" title="Permanent link">&para;</a></h3>
+<p>The first thing you&rsquo;re going to want to do is set up your workspace.</p>
+<pre class="highlight"><code class="language-bash">wstool up</code></pre>
+
+<p>This will download the beginner tutorial code into your workspace.</p>
+<p>See <a href="http://wiki.ros.org/ROS/Tutorials/WritingPublisherSubscriber%28c%2B%2B%29">ros beginner tutorials</a>.</p>
+<h3 id="build">Build<a class="headerlink" href="#build" title="Permanent link">&para;</a></h3>
+<h4 id="tasks">Tasks<a class="headerlink" href="#tasks" title="Permanent link">&para;</a></h4>
+<p>Go to Terminal-&gt;Run Build Task or type the shortcut command.</p>
+<h4 id="command-line">Command line<a class="headerlink" href="#command-line" title="Permanent link">&para;</a></h4>
+<p>Alternatively, you can build from the command line.</p>
+<pre class="highlight"><code class="language-bash">catkin build</code></pre>
+
+<h3 id="run">Run<a class="headerlink" href="#run" title="Permanent link">&para;</a></h3>
+<p>In order to run the tutorials, first you&rsquo;ll need to source your workspace.</p>
+<pre class="highlight"><code class="language-bash">source devel/setup.bash</code></pre>
+
+<p>Then run the tutorial you&rsquo;re interested in, for example</p>
+<pre class="highlight"><code class="language-bash">roslaunch roscpp_tutorials talker_listener.launch</code></pre>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="../ros2_dashing_vscode/" class="btn btn-neutral" title="ros2_dashing_vscode"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href="../ros2_dashing_vscode/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+    </span>
+</div>
+    <script>var base_url = '../..';</script>
+    <script src="../../js/theme.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>
