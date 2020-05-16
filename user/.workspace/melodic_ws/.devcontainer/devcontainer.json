@@ -24,6 +24,9 @@
 	"postCreateCommand": "rosdep update",
 	// Uncomment to use the Docker CLI from inside the container. See https://aka.ms/vscode-remote/samples/docker-in-docker.
 	// "mounts": [ "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind" ],
+	"mounts": [
+		"source=/${env:HOME}/.bash_aliases,target=/home/vscode/.bash_aliases,type=bind,consistency=cached"
+	],
 	// Uncomment when using a ptrace-based debugger like C++, Go, and Rust
 	"runArgs": [
 		"--cap-add=SYS_PTRACE",
