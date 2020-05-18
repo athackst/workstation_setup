@@ -9,10 +9,10 @@
 	trustExitCode = true
 [alias]
 	mk = !bash -c 'source $HOME/.bash_aliases && g_mk \"$@\"' g_mk
-	delete = !bash -c 'source $HOME/.bash_aliases && g_delete \"$@\"' g_delete
+	ls = !bash -c 'source $HOME/.bash_aliases && g_ls'
 	cd = !bash -c 'source $HOME/.bash_aliases && g_cd \"$@\"' g_cd
-	ls = !bash -c 'source $HOME/.bash_aliases && g_ls' 
-	pr = !bash -c 'source $HOME/.bash_aliases && g_push'
+	del = !bash -c 'source $HOME/.bash_aliases && g_del \"$@\"' g_del
+	pr = !bash -c 'source $HOME/.bash_aliases && g_pr'
 	sync = !bash -c 'source $HOME/.bash_aliases && g_sync'
 	scan = !bash -c 'source $HOME/.bash_aliases && g_scan'
 	dsquashed = !bash -c 'source $HOME/.bash_aliases && g_dsquashed'

@@ -94,12 +94,12 @@ if [ -f /usr/share/bash-completion/completions/git ]; then
     _git_branch
   }
   # Remove a branch from local nad remote
-  g_delete() {
+  g_del() {
     git branch -D $1 2>/dev/null && echo "Deleted local branch $1"
     git push -d origin $1 2>/dev/null && echo "Deleted remote branch $1"
   }
-  __git_complete g_delete _git_branch
-  _git_delete() {
+  __git_complete g_del _git_branch
+  _git_del() {
     _git_branch
   }
   # Get the status of the current branch
@@ -109,7 +109,7 @@ if [ -f /usr/share/bash-completion/completions/git ]; then
   # Commit the changes in the changeref
   alias g_commit="git commit"
   # Push the current changes to a remote branch, matching names
-  g_push() {
+  g_pr() {
     feature_name=`git name-rev --name-only HEAD`
     git push origin $feature_name -u
   }
