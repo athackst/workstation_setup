@@ -4,5 +4,5 @@ devel/
 install/
 log/
 logs/
-src/
+src/*
 !.rosinstall
