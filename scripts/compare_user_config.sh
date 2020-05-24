@@ -1,4 +1,6 @@
 #!/bin/bash
+# This script compares the files in user with those in the home directory 
+# by opening up diffmerge so that changes can be captured in this repo.
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 

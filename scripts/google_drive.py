@@ -1,3 +1,4 @@
+#!/usr/bin/python
 import requests
 
 def download_file_from_google_drive(id, destination):
