@@ -9,11 +9,13 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        ros_distro: ["kinetic", "melodic", "dashing", "eloquent"]
+        ros_distro: ["kinetic", "melodic", "noetic", "dashing", "eloquent"]
         include:
           - ros_distro: "kinetic"
             ros_base: "ros"
           - ros_distro: "melodic"
+            ros_base: "ros"
+          - ros_distro: "noetic"
             ros_base: "ros"
           - ros_distro: "dashing"
             ros_base: "ros2"
@@ -79,3 +81,12 @@ jobs:
           context: dockerfiles/gh-pages-dev
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Push changes
+        uses: github-actions-x/commit@v2.6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          name: Github Action
+          email: action@github.com 
+          files: dockerfiles/gh-pages-dev/Dockerfile
+          commit-message: "updated gh-pages-dev on ${{ env.TODAY }}"
+          rebase: 'true' # pull and rebase before commit

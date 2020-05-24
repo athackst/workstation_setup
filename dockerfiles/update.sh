@@ -105,11 +105,18 @@ update_melodic() {
   update ros melodic-dev
 }
 
+update_noetic() {
+  docker pull ubuntu:20.04
+  update ros noetic-base
+  update ros noetic-dev
+}
+
 update_all() {
   update_dashing
   update_eloquent
   update_kinetic
   update_melodic
+  update_noetic
 }
 
 while [ "$1" != "" ]; do
@@ -128,6 +135,9 @@ while [ "$1" != "" ]; do
     ;;
     melodic )
       update_melodic
+    ;;
+    noetic )
+      update_noetic
     ;;
     gh-pages-dev )
       update_gh_pages_dev
