@@ -1,13 +1,15 @@
 // See https://aka.ms/vscode-remote/devcontainer.json for format details.
 {
 	"dockerFile": "Dockerfile",
-	"remoteUser": "vscode",
+	"remoteUser": "ros",
 	"runArgs": [
 		"--network=host",
 		"--cap-add=SYS_PTRACE",
 		"--security-opt",
-		"seccomp=unconfined",
+		"seccomp=unconfined"
 	],
+	"postCreateCommand": "rosdep update",
+	// Set *default* container specific settings.json values on container create.
 	"settings": {
 		"terminal.integrated.shell.linux": "/bin/bash"
 	},
@@ -24,6 +26,6 @@
 		"yzhang.markdown-all-in-one"
 	],
 	"mounts": [
-		"source=/${env:HOME}/.bash_aliases,target=/home/vscode/.bash_aliases,type=bind,consistency=cached"
+		"source=/${env:HOME}/.bash_aliases,target=/home/ros/.bash_aliases,type=bind,consistency=cached"
 	]
 }

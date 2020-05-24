@@ -1,8 +1,44 @@
-title(){
+title() {
   ORIG=$PS1
   TITLE="\e]2;$@\a"
   PS1=${ORIG}${TITLE}
 }
+
+zipall() {
+  for dir in *
+  do
+    if [[ -d $dir ]]
+    then
+      zip -r $dir.zip $dir
+    fi
+  done
+}
+
+maxlength() {
+  maxlen=0
+  for dir in $@
+  do
+    curlen=${#dir}
+    if [[ $curlen -gt $maxlen ]]
+    then
+      maxlen=$curlen
+    fi
+  done
+  echo $maxlen
+}
+
+BLACK="\e[30m"
+RED="\e[31m"
+GREEN="\e[32m"
+LTGREEN="\e[92m"
+YELLOW="\e[33m"
+BLUE="\e[34m"
+LTBLUE="\e[94m"
+MAGENTA="\e[35m"
+CYAN="\e[36m"
+WHITE="\e[37m"
+UNSET="\e[0m"
+
 ########################
 # bazel shortcus
 ########################
@@ -103,7 +139,7 @@ if [ -f /usr/share/bash-completion/completions/git ]; then
     _git_branch
   }
   # Get the status of the current branch
-  alias g_status="git status"
+  alias g_status="git status -s"
   # Add changes into the current branch
   alias g_add="git add -u"
   # Commit the changes in the changeref
@@ -121,54 +157,159 @@ if [ -f /usr/share/bash-completion/completions/git ]; then
   }
   # Scan all local branches for changes
   g_scan() {
+    branchname=$(git rev-parse --abbrev-ref HEAD)
+    # get max length of branch name
+    local maxlen=$(maxlength $(git for-each-ref --format="%(refname:short)" refs/heads))
+    maxlen=$(($maxlen+2))
     git for-each-ref --format="%(refname:short) %(upstream:short)" refs/heads | \
     while read local_ref remote_ref
     do
       remote_status=""
       if [ -z "$remote_ref" ]
       then
-        remote_status=" !! "
+        remote_status="${RED}!!${UNSET}"
         remote_ref="${BASE_BRANCH}"
       fi
-      status=""
       git rev-list --left-right ${local_ref}...${remote_ref} -- 2>/dev/null >/tmp/git_upstream_status_delta || continue
       RIGHT_AHEAD=$(grep -c '^>' /tmp/git_upstream_status_delta)
+      status=""
       if [ $RIGHT_AHEAD -ne 0 ]
       then
-        status="$status($RIGHT_AHEAD)<--|"
+        status="$status${RED}($RIGHT_AHEAD)<--|${UNSET}"
       fi
       LEFT_AHEAD=$(grep -c '^<' /tmp/git_upstream_status_delta)
       if [ $LEFT_AHEAD -ne 0 ]
       then
-        status="${status}|-->($LEFT_AHEAD)"
+        status="$status${YELLOW}|-->($LEFT_AHEAD)${UNSET}"
       fi
       if [ -z "$status" ]
       then
-        status="ok"
+        status="${LTGREEN}ok${UNSET}"
       fi
-      echo "$local_ref <--> $remote_ref $remote_status [ $status ]"
+      branch_status=""
+      if [[ $local_ref == $branchname ]]
+      then
+        local_ref="*"$local_ref
+        branch_status="$(g_status)"
+      fi
+      printf "%-${maxlen}s [$status] $remote_status\n" $local_ref
+      if [ ! -z "$branch_status" ]
+      then
+        printf "${RED}%s${UNSET} %s\n" $branch_status
+      fi
     done
   }
+  
   # Remove branches that have been squashed on the remote
   g_dsquashed() {
-    echo "**WIP**"
     i=0
     git fetch
-    git for-each-ref refs/heads/ "--format=%(refname:short)" | \
-    while read branch
+    for branch in $(git for-each-ref refs/heads/ "--format=%(refname:short)")
     do
       mergeBase=$(git merge-base $BASE_BRANCH $branch)
+      if [ -z $mergeBase ]
+      then
+        continue
+      fi
       mergeStatus=$(git cherry $BASE_BRANCH $(git commit-tree $(git rev-parse $branch^{tree}) -p $mergeBase -m _))
       case $mergeStatus in
         "-"*)
           i=$(expr $i + 1)
-          echo "squashed: $branch is merged into $BASE_BRANCH and can be deleted"
+          git branch -D $branch
         ;;
-        *)    echo "not squashed: $branch is not merged into $BASE_BRANCH" ;;
       esac
     done
     echo "Deleted $i branches"
   }
+  
+  # Scan the branches of all repositories in a folder
+  g_scanall() {
+    vcs custom -n --git --args fetch . >/dev/null
+    for dir in $(find . -name '.git' -printf "%h\n" | sort -u)
+    do
+      if [[ -d $dir ]]
+      then
+        printf "${LTBLUE}=== ${dir} ===${UNSET}\n"
+        (cd $dir; g_scan)
+        printf "\n"
+      fi
+    done
+  }
+  
+  g_fetchall() {
+    vcs custom -n --git --args fetch . >/dev/null
+  }
+  
+  # Get a short status of all repositories in a folder.
+  g_statusall() {
+    detail=0
+    case $1 in
+      "-d")  detail=1;;
+      *)  ;;
+    esac
+    g_fetchall
+    # Find the longest directory name
+    maxlen=$(maxlength $(find . -name '.git' -printf "%h\n" | sort -u))
+    
+    # Print the current branch of each directory
+    for dir in $(find . -name '.git' -printf "%h\n" | sort -u)
+    do
+      if [[ -d $dir ]]
+      then
+        branchname=$(git -C $dir rev-parse --abbrev-ref HEAD)
+        status=$(git -C $dir status -s)
+        printf "%-${maxlen}s: ${branchname} " $dir
+        if [[ -z $status ]]
+        then
+          printf "[${LTGREEN}ok${UNSET}]"
+        else
+          printf "[${RED}!!${UNSET}]"
+          if [ $detail -ne 0 ]
+          then
+            printf "\n\t${RED}%s${UNSET} %s" $status
+          fi
+        fi
+        printf "\n"
+      fi
+    done
+  }
+  
+  g_setall() {
+    if [[ $# -ne 1 ]]
+    then
+      echo "Usage: `basename $0` <branchname>"
+      return
+    fi
+    desired=$1
+    # Get the latest refs from remote
+    g_fetchall
+    # Find the longest directory name
+    maxlen=$(maxlength $(find . -name '.git' -printf "%h\n" | sort -u))
+    # Checkout the desired branch, if it exists
+    for dir in $(find . -name '.git' -printf "%h\n" | sort -u)
+    do
+      current=$(git -C $dir rev-parse --abbrev-ref HEAD)
+      error=""
+      # If branch exists
+      if [[ $(git -C $dir branch -a | grep "$desired" | wc -l) -ne 0 ]]
+      then
+        # If not already on desired branch
+        if [[ $current != $desired ]]
+        then
+          git -C $dir checkout -q $desired
+          # If the checkout was not successful
+          if [[ $(git -C $dir rev-parse --abbrev-ref HEAD) != $desired ]]
+          then
+            error="${RED}!!${UNSET}"
+          fi
+        fi
+      fi
+      # print the branches
+      branchname=$(git -C $dir rev-parse --abbrev-ref HEAD)
+      printf "%-${maxlen}s: ${branchname} ${error}\n" $dir
+    done
+  }
+  
 fi
 
 ########################
@@ -193,5 +334,5 @@ fi
 # mkdocs
 ########################
 function mkdocs_simple() {
-  docker run --rm -it --network=host -v ${PWD}:/docs --user $(id -u):$(id -g) -e HOME=/tmp -e PATH=/tmp/.local/bin:$PATH athackst/mkdocs-simple-plugin $@
+  docker run --rm -it --network=host -v ${PWD}:/docs --user $(id -u):$(id -g) -e HOME=/tmp -e PATH=/tmp/.local/bin:$PATH --name mkdocs_simple athackst/mkdocs-simple-plugin $@
 }

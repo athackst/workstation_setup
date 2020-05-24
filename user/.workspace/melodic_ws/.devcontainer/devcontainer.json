@@ -7,7 +7,6 @@
 	"settings": {
 		"terminal.integrated.shell.linux": "/bin/bash"
 	},
-	// Add the IDs of extensions you want installed when the container is created.
 	"extensions": [
 		"laurenttreguier.uncrustify",
 		"ms-azuretools.vscode-docker",
@@ -18,22 +17,16 @@
 		"dotjoshjohnson.xml",
 		"streetsidesoftware.code-spell-checker"
 	],
-	// Use 'forwardPorts' to make a list of ports inside the container available locally.
-	// "forwardPorts": [],
-	// Use 'postCreateCommand' to run commands after the container is created.
 	"postCreateCommand": "rosdep update",
-	// Uncomment to use the Docker CLI from inside the container. See https://aka.ms/vscode-remote/samples/docker-in-docker.
-	// "mounts": [ "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind" ],
 	"mounts": [
-		"source=/${env:HOME}/.bash_aliases,target=/home/vscode/.bash_aliases,type=bind,consistency=cached"
+		"source=/${env:HOME}/.bash_aliases,target=/home/ros/.bash_aliases,type=bind,consistency=cached"
 	],
-	// Uncomment when using a ptrace-based debugger like C++, Go, and Rust
 	"runArgs": [
 		"--cap-add=SYS_PTRACE",
 		"--security-opt",
 		"seccomp=unconfined",
-		"--network", "host",
+		"--network",
+		"host",
 	],
-	// Uncomment to connect as a non-root user. See https://aka.ms/vscode-remote/containers/non-root.
 	"remoteUser": "ros"
 }

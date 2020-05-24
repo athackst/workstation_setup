@@ -2,17 +2,20 @@
 // https://github.com/microsoft/vscode-dev-containers/tree/master/containers/ubuntu-18.04-git
 {
 	"name": "Github Pages",
-	"dockerFile": "Dockerfile",
+	"image": "athackst/gh-pages-dev",
 	"context": "../",
 	"remoteUser": "jekyll",
 	"mounts": [
 		"source=/${env:HOME}/.bash_aliases,target=/home/vscode/.bash_aliases,type=bind,consistency=cached"
 	],
-	"settings": { 
+	"settings": {
 		"terminal.integrated.shell.linux": "/bin/bash"
 	},
 	// Uncomment the next line if you want to publish any ports.
-	"appPort": [4000],
+	"appPort": [
+		4000
+	],
+	"postCreateCommand": "bundle install",
 	// Add the IDs of extensions you want installed when the container is created in the array below.
 	"extensions": [
 		// yaml for data files
@@ -30,6 +33,5 @@
 		"aeschli.vscode-css-formatter",
 		// spelling
 		"streetsidesoftware.code-spell-checker"
-		
 	]
 }

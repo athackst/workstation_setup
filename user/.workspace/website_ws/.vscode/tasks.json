@@ -12,7 +12,7 @@
         {
             "label": "u: update",
             "type": "shell",
-            "command": "bundle install && bundle update",
+            "command": "bundle update",
             "problemMatcher": []
         }
     ]
