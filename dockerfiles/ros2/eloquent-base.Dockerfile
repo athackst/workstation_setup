@@ -1,6 +1,6 @@
 FROM ubuntu:18.04
 
-LABEL version="2020-05-04"
+LABEL version="2020-05-23"
 
 ENV ROS_DISTRO=eloquent
 

@@ -9,6 +9,7 @@ sudo apt-get install -y \
   cmake \
   curl \
   git \
+  git-lfs \
   pass \
   snapd \
   ssh \

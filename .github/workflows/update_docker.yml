@@ -59,3 +59,23 @@ jobs:
           files: ${{ env.DOCKER_BASE }} ${{ env.DOCKER_DEV }}
           commit-message: "updated ${{ matrix.ros_distro }} on ${{ env.TODAY }}"
           rebase: 'true' # pull and rebase before commit
+  gh-pages-dev:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Update date
+        run: |
+          echo "::set-env name=TODAY::$(date +'%Y-%m-%d')"
+      - name: Update label
+        run: |
+          echo "${{ env.TODAY }}"
+          sed -i "/LABEL/c\LABEL version=\"${{ env.TODAY }}\"" dockerfiles/gh-pages-dev/Dockerfile
+      - name: Build and publish gh-pages dev
+        uses: elgohr/Publish-Docker-Github-Action@2.14
+        with:
+          name: athackst/gh-pages-dev
+          tags: latest, ${{ env.TODAY }}
+          dockerfile: dockerfiles/gh-pages-dev/Dockerfile
+          context: dockerfiles/gh-pages-dev
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
