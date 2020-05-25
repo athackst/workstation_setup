@@ -1,0 +1,13 @@
+name: Test site
+on: [push]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2.7 # Not needed with a .ruby-version file
+      - run: bundle install
+      - run: bundle exec jekyll build
+      - run: bundle exec htmlproofer ./_site

@@ -14,6 +14,12 @@
             "type": "shell",
             "command": "bundle update",
             "problemMatcher": []
+        },
+        {
+            "label": "t: test",
+            "type": "shell",
+            "command": "bundle exec htmlproofer ./_site",
+            "problemMatcher": []
         }
     ]
 }

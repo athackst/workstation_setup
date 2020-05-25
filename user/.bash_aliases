@@ -318,13 +318,15 @@ fi
 if [ -d $HOME/.workspace ]; then
   for d in $HOME/.workspace/*/; do
     ws=$(basename $d)
+    input='$1'
+    num_input='$#'
     source /dev/stdin << EOF
 function create_${ws}() {
-  if [ $# -eq 0 ]; then
-    echo "Usage: create_dashing_ws <name>";
-    exit 1;
+  if [ ${num_input} -eq 0 ]; then
+    echo "Usage: create_${ws} <name>";
+    return 1;
   fi
-  cp -r $d/. $1;
+  cp -r $d/. ${input};
 };
 EOF
   done
@@ -333,6 +335,6 @@ fi
 ########################
 # mkdocs
 ########################
-function mkdocs_simple() {
+function mkdocs_start() {
   docker run --rm -it --network=host -v ${PWD}:/docs --user $(id -u):$(id -g) -e HOME=/tmp -e PATH=/tmp/.local/bin:$PATH --name mkdocs_simple athackst/mkdocs-simple-plugin $@
 }

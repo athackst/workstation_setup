@@ -1,6 +1,6 @@
 FROM jekyll/jekyll:pages
 
-LABEL version="2020-05-23"
+LABEL version="2020-05-24"
 
 RUN apk update && apk add \
     # development packages
@@ -28,7 +28,8 @@ RUN apk update && apk add \
 ARG USERNAME=jekyll
 RUN echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME \
   && chmod 0440 /etc/sudoers.d/$USERNAME \
-  && echo "source /usr/share/bash-completion/completions/git" >> /home/$USERNAME/.bashrc
+  && echo "source /usr/share/bash-completion/completions/git" >> /home/$USERNAME/.bashrc \
+  && echo -e "if [ -f ~/.bash_aliases ]; then\n    . ~/.bash_aliases\nfi" >> /home/$USERNAME/.bashrc
 
 EXPOSE 4000
 

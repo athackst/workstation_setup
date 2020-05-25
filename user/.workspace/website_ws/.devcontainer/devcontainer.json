@@ -2,11 +2,10 @@
 // https://github.com/microsoft/vscode-dev-containers/tree/master/containers/ubuntu-18.04-git
 {
 	"name": "Github Pages",
-	"image": "athackst/gh-pages-dev",
-	"context": "../",
+	"image": "athackst/gh-pages-dev:latest",
 	"remoteUser": "jekyll",
 	"mounts": [
-		"source=/${env:HOME}/.bash_aliases,target=/home/vscode/.bash_aliases,type=bind,consistency=cached"
+		"source=/${env:HOME}/.bash_aliases,target=/home/jekyll/.bash_aliases,type=bind,consistency=cached"
 	],
 	"settings": {
 		"terminal.integrated.shell.linux": "/bin/bash"
@@ -15,6 +14,7 @@
 	"appPort": [
 		4000
 	],
+	"forwardPorts": [80, 443],
 	"postCreateCommand": "bundle install",
 	// Add the IDs of extensions you want installed when the container is created in the array below.
 	"extensions": [
@@ -31,7 +31,8 @@
 		// html/css
 		"ecmel.vscode-html-css",
 		"aeschli.vscode-css-formatter",
-		// spelling
-		"streetsidesoftware.code-spell-checker"
+		// editing
+		"streetsidesoftware.code-spell-checker",
+		"ms-vscode.wordcount"
 	]
 }
