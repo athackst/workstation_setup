@@ -7,6 +7,7 @@ on:
 jobs:
   ros:
     runs-on: ubuntu-latest
+    continue-on-error: true
     strategy:
       matrix:
         ros_distro: ["kinetic", "melodic", "noetic", "dashing", "eloquent"]
