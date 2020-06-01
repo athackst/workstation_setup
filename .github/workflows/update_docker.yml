@@ -4,11 +4,12 @@ on:
   schedule:
     # * is a special character in YAML so you have to quote this string
     - cron:  '0 0 1 * *'
+
 jobs:
   ros:
     runs-on: ubuntu-latest
-    continue-on-error: true
     strategy:
+      fail-fast: false
       matrix:
         ros_distro: ["kinetic", "melodic", "noetic", "dashing", "eloquent"]
         include:
@@ -27,30 +28,30 @@ jobs:
       - name: Update date
         run: |
           echo "::set-env name=TODAY::$(date +'%Y-%m-%d')"
-          echo "::set-env name=DOCKER_BASE::dockerfiles/${{ matrix.ros_base }}/${{ matrix.ros_distro }}-base.Dockerfile"
-          echo "::set-env name=DOCKER_DEV::dockerfiles/${{ matrix.ros_base }}/${{ matrix.ros_distro }}-dev.Dockerfile"
-          echo "::set-env name=DOCKER_CONTEXT::dockerfiles/${{ matrix.ros_base }}"
+          echo "::set-env name=BUILD_BASE::dockerfiles/${{ matrix.ros_base }}/${{ matrix.ros_distro }}-base.Dockerfile"
+          echo "::set-env name=BUILD_DEV::dockerfiles/${{ matrix.ros_base }}/${{ matrix.ros_distro }}-dev.Dockerfile"
+          echo "::set-env name=BUILD_CONTEXT::dockerfiles/${{ matrix.ros_base }}"
       - name: Update label
         run: |
           echo "${{ env.TODAY }}"
-          sed -i "/LABEL/c\LABEL version=\"${{ env.TODAY }}\"" ${{ env.DOCKER_BASE }}
-          sed -i "/LABEL/c\LABEL version=\"${{ env.TODAY }}\"" ${{ env.DOCKER_DEV }}
+          sed -i "/LABEL/c\LABEL version=\"${{ env.TODAY }}\"" ${{ env.BUILD_BASE }}
+          sed -i "/LABEL/c\LABEL version=\"${{ env.TODAY }}\"" ${{ env.BUILD_DEV }}
       - name: Build and publish base image
-        uses: elgohr/Publish-Docker-Github-Action@2.14
+        uses: docker/build-push-action@v1.1.0
         with:
-          name: athackst/${{ matrix.ros_base }}
-          tags: "${{ matrix.ros_distro }}-base, ${{ matrix.ros_distro }}-base-${{ env.TODAY }}"
-          dockerfile: ${{ env.DOCKER_BASE }}
-          context: ${{ env.DOCKER_CONTEXT }}
+          repository: athackst/${{ matrix.ros_base }}
+          tags: ${{ matrix.ros_distro }}-base,${{ matrix.ros_distro }}-base-${{ env.TODAY }}
+          dockerfile: ${{ env.BUILD_BASE }}
+          path: ${{ env.BUILD_CONTEXT }}/
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
       - name: Build and publish dev image
-        uses: elgohr/Publish-Docker-Github-Action@2.14
+        uses: docker/build-push-action@v1
         with:
-          name: athackst/${{ matrix.ros_base }}
-          tags: "${{ matrix.ros_distro }}-dev, ${{ matrix.ros_distro }}-dev-${{ env.TODAY }}"
-          dockerfile: ${{ env.DOCKER_DEV }}
-          context: ${{ env.DOCKER_CONTEXT }}
+          repository: athackst/${{ matrix.ros_base }}
+          tags: ${{ matrix.ros_distro }}-dev,${{ matrix.ros_distro }}-dev-${{ env.TODAY }}
+          dockerfile: ${{ env.BUILD_DEV }}
+          path: ${{ env.BUILD_CONTEXT }}
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
       - name: Push changes
@@ -59,7 +60,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           name: Github Action
           email: action@github.com 
-          files: ${{ env.DOCKER_BASE }} ${{ env.DOCKER_DEV }}
+          files: ${{ env.BUILD_BASE }} ${{ env.BUILD_DEV }}
           commit-message: "updated ${{ matrix.ros_distro }} on ${{ env.TODAY }}"
           rebase: 'true' # pull and rebase before commit
   gh-pages-dev:
@@ -74,12 +75,12 @@ jobs:
           echo "${{ env.TODAY }}"
           sed -i "/LABEL/c\LABEL version=\"${{ env.TODAY }}\"" dockerfiles/gh-pages-dev/Dockerfile
       - name: Build and publish gh-pages dev
-        uses: elgohr/Publish-Docker-Github-Action@2.14
+        uses: docker/build-push-action@v1
         with:
-          name: athackst/gh-pages-dev
-          tags: latest, ${{ env.TODAY }}
+          repository: athackst/gh-pages-dev
+          tags: latest,${{ env.TODAY }}
           dockerfile: dockerfiles/gh-pages-dev/Dockerfile
-          context: dockerfiles/gh-pages-dev
+          path: dockerfiles/gh-pages-dev
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
       - name: Push changes
