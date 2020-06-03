@@ -1,7 +1,5 @@
 FROM ubuntu:16.04
 
-LABEL version="2019-12-23"
-
 ENV ROS_DISTRO=crystal
 
 # Install language

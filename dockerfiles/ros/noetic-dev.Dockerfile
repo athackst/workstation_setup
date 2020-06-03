@@ -1,7 +1,5 @@
 FROM athackst/ros:noetic-base
 
-LABEL version="2020-05-24"
-
 COPY install_ros_dev3.sh /setup/install_ros_dev3.sh
 RUN /setup/install_ros_dev3.sh && rm -rf /var/lib/apt/lists/*
 

@@ -1,7 +1,5 @@
 FROM jekyll/jekyll:pages
 
-LABEL version="2020-06-01"
-
 RUN apk update && apk add \
     # development packages
     ruby-dev \

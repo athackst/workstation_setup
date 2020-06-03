@@ -3,7 +3,12 @@ name: dockerfiles
 on:
   schedule:
     # * is a special character in YAML so you have to quote this string
-    - cron:  '0 0 1 * *'
+    - cron: "0 0 1 * *"
+  push:
+    branches:
+      - "master"
+    paths:
+      - "dockerfiles/**"
 
 jobs:
   ros:
@@ -31,38 +36,26 @@ jobs:
           echo "::set-env name=BUILD_BASE::dockerfiles/${{ matrix.ros_base }}/${{ matrix.ros_distro }}-base.Dockerfile"
           echo "::set-env name=BUILD_DEV::dockerfiles/${{ matrix.ros_base }}/${{ matrix.ros_distro }}-dev.Dockerfile"
           echo "::set-env name=BUILD_CONTEXT::dockerfiles/${{ matrix.ros_base }}"
-      - name: Update label
-        run: |
-          echo "${{ env.TODAY }}"
-          sed -i "/LABEL/c\LABEL version=\"${{ env.TODAY }}\"" ${{ env.BUILD_BASE }}
-          sed -i "/LABEL/c\LABEL version=\"${{ env.TODAY }}\"" ${{ env.BUILD_DEV }}
       - name: Build and publish base image
         uses: docker/build-push-action@v1.1.0
         with:
           repository: athackst/${{ matrix.ros_base }}
-          tags: ${{ matrix.ros_distro }}-base,${{ matrix.ros_distro }}-base-${{ env.TODAY }}
           dockerfile: ${{ env.BUILD_BASE }}
           path: ${{ env.BUILD_CONTEXT }}/
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
+          tags: ${{ matrix.ros_distro }}-base,${{ matrix.ros_distro }}-base-${{ env.TODAY }}
+          labels: version=${{ env.TODAY }}
       - name: Build and publish dev image
-        uses: docker/build-push-action@v1
+        uses: docker/build-push-action@v1.1.0
         with:
           repository: athackst/${{ matrix.ros_base }}
-          tags: ${{ matrix.ros_distro }}-dev,${{ matrix.ros_distro }}-dev-${{ env.TODAY }}
           dockerfile: ${{ env.BUILD_DEV }}
           path: ${{ env.BUILD_CONTEXT }}
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-      - name: Push changes
-        uses: github-actions-x/commit@v2.6
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          name: Github Action
-          email: action@github.com 
-          files: ${{ env.BUILD_BASE }} ${{ env.BUILD_DEV }}
-          commit-message: "updated ${{ matrix.ros_distro }} on ${{ env.TODAY }}"
-          rebase: 'true' # pull and rebase before commit
+          tags: ${{ matrix.ros_distro }}-dev,${{ matrix.ros_distro }}-dev-${{ env.TODAY }}
+          labels: version=${{ env.TODAY }}
   gh-pages-dev:
     runs-on: ubuntu-latest
     steps:
@@ -70,25 +63,13 @@ jobs:
       - name: Update date
         run: |
           echo "::set-env name=TODAY::$(date +'%Y-%m-%d')"
-      - name: Update label
-        run: |
-          echo "${{ env.TODAY }}"
-          sed -i "/LABEL/c\LABEL version=\"${{ env.TODAY }}\"" dockerfiles/gh-pages-dev/Dockerfile
       - name: Build and publish gh-pages dev
-        uses: docker/build-push-action@v1
+        uses: docker/build-push-action@v1.1.0
         with:
           repository: athackst/gh-pages-dev
-          tags: latest,${{ env.TODAY }}
           dockerfile: dockerfiles/gh-pages-dev/Dockerfile
           path: dockerfiles/gh-pages-dev
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-      - name: Push changes
-        uses: github-actions-x/commit@v2.6
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          name: Github Action
-          email: action@github.com 
-          files: dockerfiles/gh-pages-dev/Dockerfile
-          commit-message: "updated gh-pages-dev on ${{ env.TODAY }}"
-          rebase: 'true' # pull and rebase before commit
+          tags: latest,${{ env.TODAY }}
+          labels: version=${{ env.TODAY }}

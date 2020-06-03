@@ -1,7 +1,5 @@
 FROM ubuntu:20.04
 
-LABEL version="2020-05-24"
-
 ENV ROS_DISTRO="noetic"
 
 # Install language

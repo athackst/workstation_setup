@@ -1,7 +1,5 @@
 FROM ubuntu:16.04
 
-LABEL version="2020-05-23"
-
 ENV ROS_DISTRO="kinetic"
 
 # Install language
