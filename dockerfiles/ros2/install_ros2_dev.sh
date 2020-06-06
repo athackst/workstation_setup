@@ -12,7 +12,7 @@ apt-get install -y \
   pylint \
   python3-colcon-common-extensions \
   python3-pip \
-  python-rosdep \
+  python3-rosdep \
   python3-vcstool \
   vim \
   wget
@@ -25,4 +25,3 @@ apt-get install -y \
 python3 -m pip install -U pylint
 
 rosdep init || echo "rosdep already initialized"
-
