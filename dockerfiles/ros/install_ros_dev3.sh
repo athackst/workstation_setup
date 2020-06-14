@@ -7,6 +7,8 @@ apt-get install -y \
     python3-rosinstall \
     python3-rosinstall-generator \
     python3-wstool \
+    python3-pip \
+    pylint3 \
     build-essential \
     bash-completion \
     git \
