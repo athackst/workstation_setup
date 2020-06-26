@@ -28,6 +28,8 @@ jobs:
             ros_base: "ros2"
           - ros_distro: "eloquent"
             ros_base: "ros2"
+          - ros_distro: "foxy"
+            ros_base: "ros2"
     steps:
       - uses: actions/checkout@v2
       - name: Update date
