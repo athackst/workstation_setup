@@ -16,7 +16,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ros_distro: ["kinetic", "melodic", "noetic", "dashing", "eloquent"]
+        ros_distro: ["kinetic", "melodic", "noetic", "dashing", "eloquent", "foxy"]
         include:
           - ros_distro: "kinetic"
             ros_base: "ros"
