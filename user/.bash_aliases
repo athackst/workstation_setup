@@ -146,14 +146,15 @@ if [ -f /usr/share/bash-completion/completions/git ]; then
   alias g_commit="git commit"
   # Push the current changes to a remote branch, matching names
   g_pr() {
-    feature_name=`git name-rev --name-only HEAD`
-    git push origin $feature_name -u
+    branch=`git name-rev --name-only HEAD`
+    remote=`git config "branch.${branch}.remote" || echo "origin"`
+    echo "pushing to: $remote $branch"
+    git push $remote $branch -u
   }
   # Sync the local branches with the remote
   g_sync() {
     git fetch -p
     git prune
-    git merge
   }
   # Scan all local branches for changes
   g_scan() {
@@ -204,6 +205,7 @@ if [ -f /usr/share/bash-completion/completions/git ]; then
   g_dsquashed() {
     i=0
     git fetch
+    git remote prune origin
     for branch in $(git for-each-ref refs/heads/ "--format=%(refname:short)")
     do
       mergeBase=$(git merge-base $BASE_BRANCH $branch)

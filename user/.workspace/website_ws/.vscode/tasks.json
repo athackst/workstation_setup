@@ -10,6 +10,12 @@
             "problemMatcher": []
         },
         {
+            "label": "b: build website",
+            "type": "shell",
+            "command": "bundle exec jekyll build",
+            "problemMatcher": []
+        },
+        {
             "label": "u: update",
             "type": "shell",
             "command": "bundle update",
