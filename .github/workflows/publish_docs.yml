@@ -11,4 +11,4 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: MkDocs Simple action
-        uses: athackst/mkdocs-simple-plugin@workflows/test-action
+        uses: athackst/mkdocs-simple-plugin@v0.1.0
