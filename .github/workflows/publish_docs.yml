@@ -9,4 +9,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: MkDocs Simple action
-        uses: athackst/mkdocs-simple-plugin@v0.1.0
+        uses: athackst/mkdocs-simple-plugin@workflows/test-action
