@@ -22,6 +22,6 @@ apt-get install -y \
   ros-$ROS_DISTRO-launch-testing-ament-cmake \
   ros-$ROS_DISTRO-launch-testing-ros 
 
-python3 -m pip install -U pylint
+python3 -m pip install -U pylint autopep8
 
 rosdep init || echo "rosdep already initialized"
