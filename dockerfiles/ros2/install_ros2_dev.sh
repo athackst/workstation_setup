@@ -9,6 +9,7 @@ apt-get install -y \
   cmake \
   gdb \
   git \
+  pylint3 \
   python3-colcon-common-extensions \
   python3-pip \
   python3-rosdep \
@@ -22,6 +23,10 @@ apt-get install -y \
   ros-$ROS_DISTRO-launch-testing-ament-cmake \
   ros-$ROS_DISTRO-launch-testing-ros 
 
-python3 -m pip install -U autopep8
+case $ROS_DISTRO in
+  dashing) apt-get install -y python-autopep8;;
+  eloquent) apt-get install -y python-autopep8;;
+  *) apt-get install -y python3-autopep8;;
+esac
 
 rosdep init || echo "rosdep already initialized"
