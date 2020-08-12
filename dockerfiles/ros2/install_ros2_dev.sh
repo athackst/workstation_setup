@@ -9,7 +9,6 @@ apt-get install -y \
   cmake \
   gdb \
   git \
-  pylint \
   python3-colcon-common-extensions \
   python3-pip \
   python3-rosdep \
@@ -18,10 +17,11 @@ apt-get install -y \
   wget
 
 apt-get install -y \
+  ros-$ROS_DISTRO-ament-lint \
   ros-$ROS_DISTRO-launch-testing \
   ros-$ROS_DISTRO-launch-testing-ament-cmake \
   ros-$ROS_DISTRO-launch-testing-ros 
 
-python3 -m pip install -U pylint autopep8
+python3 -m pip install -U autopep8
 
 rosdep init || echo "rosdep already initialized"
