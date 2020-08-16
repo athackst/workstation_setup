@@ -1,4 +1,4 @@
-FROM jekyll/jekyll:pages
+FROM jekyll/jekyll:pages AS dev
 
 RUN apk update && apk add \
     # development packages
