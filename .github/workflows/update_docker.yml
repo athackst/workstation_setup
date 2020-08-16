@@ -7,71 +7,49 @@ on:
   push:
     branches:
       - "master"
+      - "feature/docker*"
     paths:
       - "dockerfiles/**"
 
 jobs:
-  ros:
+  docker:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        ros_distro: ["kinetic", "melodic", "noetic", "dashing", "eloquent", "foxy"]
+        docker_image:
+          ["kinetic", "melodic", "noetic", "dashing", "eloquent", "foxy"]
+        docker_target: ["base", "dev"]
         include:
-          - ros_distro: "kinetic"
-            ros_base: "ros"
-          - ros_distro: "melodic"
-            ros_base: "ros"
-          - ros_distro: "noetic"
-            ros_base: "ros"
-          - ros_distro: "dashing"
-            ros_base: "ros2"
-          - ros_distro: "eloquent"
-            ros_base: "ros2"
-          - ros_distro: "foxy"
-            ros_base: "ros2"
+          - docker_image: "kinetic"
+            docker_repo: "ros"
+          - docker_image: "melodic"
+            docker_repo: "ros"
+          - docker_image: "noetic"
+            docker_repo: "ros"
+          - docker_image: "dashing"
+            docker_repo: "ros2"
+          - docker_image: "eloquent"
+            docker_repo: "ros2"
+          - docker_image: "foxy"
+            docker_repo: "ros2"
+          - docker_image: "pages"
+            docker_repo: "github"
+            docker_target: "dev"
+
     steps:
       - uses: actions/checkout@v2
       - name: Update date
         run: |
           echo "::set-env name=TODAY::$(date +'%Y-%m-%d')"
-          echo "::set-env name=BUILD_BASE::dockerfiles/${{ matrix.ros_base }}/${{ matrix.ros_distro }}-base.Dockerfile"
-          echo "::set-env name=BUILD_DEV::dockerfiles/${{ matrix.ros_base }}/${{ matrix.ros_distro }}-dev.Dockerfile"
-          echo "::set-env name=BUILD_CONTEXT::dockerfiles/${{ matrix.ros_base }}"
-      - name: Build and publish base image
+      - name: Build and publish image
         uses: docker/build-push-action@v1.1.0
         with:
-          repository: athackst/${{ matrix.ros_base }}
-          dockerfile: ${{ env.BUILD_BASE }}
-          path: ${{ env.BUILD_CONTEXT }}/
+          path: dockerfiles/${{ matrix.docker_repo }}
+          dockerfile: dockerfiles/${{ matrix.docker_repo}}/${{ matrix.docker_image }}.Dockerfile
+          target: ${{ matrix.docker_target }}
+          repository: athackst/${{ matrix.docker_repo }}
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-          tags: ${{ matrix.ros_distro }}-base,${{ matrix.ros_distro }}-base-${{ env.TODAY }}
-          labels: version=${{ env.TODAY }}
-      - name: Build and publish dev image
-        uses: docker/build-push-action@v1.1.0
-        with:
-          repository: athackst/${{ matrix.ros_base }}
-          dockerfile: ${{ env.BUILD_DEV }}
-          path: ${{ env.BUILD_CONTEXT }}
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-          tags: ${{ matrix.ros_distro }}-dev,${{ matrix.ros_distro }}-dev-${{ env.TODAY }}
-          labels: version=${{ env.TODAY }}
-  gh-pages-dev:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Update date
-        run: |
-          echo "::set-env name=TODAY::$(date +'%Y-%m-%d')"
-      - name: Build and publish gh-pages dev
-        uses: docker/build-push-action@v1.1.0
-        with:
-          repository: athackst/gh-pages-dev
-          dockerfile: dockerfiles/gh-pages-dev/Dockerfile
-          path: dockerfiles/gh-pages-dev
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-          tags: latest,${{ env.TODAY }}
+          tags: ${{ matrix.docker_image }}-${{ matrix.docker_target }},${{ matrix.docker_image }}-${{ matrix.docker_target }}-${{ env.TODAY }}
           labels: version=${{ env.TODAY }}
