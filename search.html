@@ -5,26 +5,19 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="None">
   
   
-  <link rel="shortcut icon" href="img/favicon.ico">
+  
+  <link rel="shortcut icon" href="./img/favicon.ico">
   <title>Workstation Setup</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700" />
 
-  <link rel="stylesheet" href="css/theme.css" />
-  <link rel="stylesheet" href="css/theme_extra.css" />
+  <link rel="stylesheet" href="./css/theme.css" />
+  <link rel="stylesheet" href="./css/theme_extra.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" />
   
-  <script>
-    // Current page data
-    var mkdocs_page_name = "workstation_setup";
-    var mkdocs_page_input_path = "README.md";
-    var mkdocs_page_url = null;
-  </script>
-  
-  <script src="js/jquery-2.1.1.min.js" defer></script>
-  <script src="js/modernizr-2.8.3.min.js" defer></script>
+  <script src="./js/jquery-2.1.1.min.js" defer></script>
+  <script src="./js/modernizr-2.8.3.min.js" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
   <script>hljs.initHighlightingOnLoad();</script> 
   
@@ -38,7 +31,7 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
     <div class="wy-side-scroll">
       <div class="wy-side-nav-search">
-        <a href="." class="icon icon-home"> Workstation Setup</a>
+        <a href="./." class="icon icon-home"> Workstation Setup</a>
         <div role="search">
   <form id ="rtd-search-form" class="wy-form" action="./search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
@@ -47,54 +40,46 @@
       </div>
 
       <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-                <ul class="current">
-                    <li class="toctree-l1 current"><a class="reference internal current" href=".">workstation_setup</a>
-    <ul class="current">
-    <li class="toctree-l2"><a class="reference internal" href="#prerequisites">Prerequisites</a>
-    </li>
-    <li class="toctree-l2"><a class="reference internal" href="#install-and-setup-workstation">Install and setup workstation</a>
-    </li>
-    <li class="toctree-l2"><a class="reference internal" href="#develop">Develop</a>
-    </li>
-    </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="./.">workstation_setup</a>
                     </li>
                 </ul>
                 <p class="caption"><span class="caption-text">Dockerfiles</span></p>
                 <ul>
-                    <li class="toctree-l1"><a class="reference internal" href="dockerfiles/">dockerfiles</a>
+                    <li class="toctree-l1"><a class="reference internal" href="./dockerfiles/">dockerfiles</a>
                     </li>
                 </ul>
                 <p class="caption"><span class="caption-text">Examples</span></p>
                 <ul>
-                    <li class="toctree-l1"><a class="reference internal" href="examples/">Example workspaces</a>
+                    <li class="toctree-l1"><a class="reference internal" href="./examples/">Example workspaces</a>
                     </li>
                     <li class="toctree-l1"><a class="reference internal" href="#">Bazel</a>
     <ul>
-                <li class="toctree-l2"><a class="reference internal" href="examples/bazel/">bazel</a>
+                <li class="toctree-l2"><a class="reference internal" href="./examples/bazel/">bazel</a>
                 </li>
     </ul>
                     </li>
                     <li class="toctree-l1"><a class="reference internal" href="#">Ros2 crystal dev release</a>
     <ul>
-                <li class="toctree-l2"><a class="reference internal" href="examples/ros2_crystal_dev_release/">ros2_crystal_dev_release</a>
+                <li class="toctree-l2"><a class="reference internal" href="./examples/ros2_crystal_dev_release/">ros2_crystal_dev_release</a>
                 </li>
     </ul>
                     </li>
                     <li class="toctree-l1"><a class="reference internal" href="#">Ros2 crystal multistage</a>
     <ul>
-                <li class="toctree-l2"><a class="reference internal" href="examples/ros2_crystal_multistage/">ros2_crystal_multistage</a>
+                <li class="toctree-l2"><a class="reference internal" href="./examples/ros2_crystal_multistage/">ros2_crystal_multistage</a>
                 </li>
     </ul>
                     </li>
                     <li class="toctree-l1"><a class="reference internal" href="#">Ros2 dashing vscode</a>
     <ul>
-                <li class="toctree-l2"><a class="reference internal" href="examples/ros2_dashing_vscode/">ros2_dashing_vscode</a>
+                <li class="toctree-l2"><a class="reference internal" href="./examples/ros2_dashing_vscode/">ros2_dashing_vscode</a>
                 </li>
     </ul>
                     </li>
                     <li class="toctree-l1"><a class="reference internal" href="#">Ros melodic vscode</a>
     <ul>
-                <li class="toctree-l2"><a class="reference internal" href="examples/ros_melodic_vscode/">ros_melodic_vscode</a>
+                <li class="toctree-l2"><a class="reference internal" href="./examples/ros_melodic_vscode/">ros_melodic_vscode</a>
                 </li>
     </ul>
                     </li>
@@ -108,7 +93,7 @@
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
         <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href=".">Workstation Setup</a>
+        <a href="./.">Workstation Setup</a>
       </nav>
 
       
@@ -116,11 +101,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href=".">Docs</a> &raquo;</li>
+    <li><a href="./.">Docs</a> &raquo;</li>
     
-      
     
-    <li>workstation_setup</li>
     <li class="wy-breadcrumbs-aside">
       
     </li>
@@ -131,34 +114,22 @@
           <div role="main">
             <div class="section">
               
-                <h1 id="workstation_setup">workstation_setup<a class="headerlink" href="#workstation_setup" title="Permanent link">&para;</a></h1>
-<p>Scripts to capture my workstation setups</p>
-<h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
-<p>Install pre-requirements:</p>
-<pre class="highlight"><code class="language-bash">sudo apt install -y git make
-git clone git@github.com:athackst/workstation_setup.git</code></pre>
 
-<h2 id="install-and-setup-workstation">Install and setup workstation<a class="headerlink" href="#install-and-setup-workstation" title="Permanent link">&para;</a></h2>
-<p>This installs the basics of my workstation</p>
-<pre class="highlight"><code class="language-bash">make install</code></pre>
+  <h1 id="search">Search Results</h1>
 
-<h2 id="develop">Develop<a class="headerlink" href="#develop" title="Permanent link">&para;</a></h2>
-<p>I have recently been playing with the idea of doing all/most development inside of docker containers.</p>
-<ul>
-<li><a href="examples/">examples</a> for example development processes</li>
-<li><a href="dockerfiles/">dockerfiles</a> for dockerfiles</li>
-</ul>
-              
+  <form id="content_search" action="search.html">
+    <span role="status" aria-live="polite" class="ui-helper-hidden-accessible"></span>
+    <input name="q" id="mkdocs-search-query" type="text" class="search_input search-query ui-autocomplete-input" placeholder="Search the Docs" autocomplete="off" autofocus title="Type search term here">
+  </form>
+
+  <div id="mkdocs-search-results" class="search-results">
+    Searching...
+  </div>
+
+
             </div>
           </div>
           <footer>
-  
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="dockerfiles/" class="btn btn-neutral float-right" title="dockerfiles">Next <span class="icon icon-circle-arrow-right"></span></a>
-      
-      
-    </div>
   
 
   <hr/>
@@ -183,13 +154,11 @@ git clone git@github.com:athackst/workstation_setup.git</code></pre>
       
       
       
-        <span style="margin-left: 15px"><a href="dockerfiles/" style="color: #fcfcfc">Next &raquo;</a></span>
-      
     </span>
 </div>
     <script>var base_url = '.';</script>
-    <script src="js/theme.js" defer></script>
-      <script src="search/main.js" defer></script>
+    <script src="./js/theme.js" defer></script>
+      <script src="./search/main.js" defer></script>
     <script defer>
         window.onload = function () {
             SphinxRtdTheme.Navigation.enable(true);
@@ -198,8 +167,3 @@ git clone git@github.com:athackst/workstation_setup.git</code></pre>
 
 </body>
 </html>
-
-<!--
-MkDocs version : 1.1.2
-Build Date UTC : 2020-08-17 01:52:59.880086+00:00
--->
