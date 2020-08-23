@@ -14,6 +14,6 @@ docker pull athackst/ros2:eloquent-dev
 docker pull athackst/ros2:foxy-base
 docker pull athackst/ros2:foxy-dev
 docker pull athackst/mkdocs-simple-plugin
-docker pull athackst/gh-pages-dev
+docker pull athackst/github:pages-dev
 
 docker system prune -f

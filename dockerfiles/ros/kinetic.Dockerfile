@@ -1,5 +1,6 @@
 FROM ubuntu:16.04 AS base
 
+ENV DEBIAN_FRONTEND=noninteractive
 ENV ROS_DISTRO="kinetic"
 
 # Install language
@@ -21,8 +22,7 @@ RUN ln -fs /usr/share/zoneinfo/UTC /etc/localtime \
 # install ROS
 COPY install_ros_base.sh /setup/install_ros_base.sh
 RUN /setup/install_ros_base.sh && rm -rf /var/lib/apt/lists/*
-
-# setup environment
+# Setup environment
 ENV LD_LIBRARY_PATH=/opt/ros/$ROS_DISTRO/lib:$LD_LIBRARY_PATH
 ENV ROS_ROOT=/opt/ros/$ROS_DISTRO/share/ros
 ENV ROS_PACKAGE_PATH=/opt/ros/$ROS_DISTRO/share
@@ -35,11 +35,12 @@ ENV PYTHONPATH=/opt/ros/$ROS_DISTRO/lib/python2.7/dist-packages:$PYTHONPATH
 ENV PKG_CONFIG_PATH=/opt/ros/$ROS_DISTRO/lib/pkgconfig:$PKG_CONFIG_PATH
 ENV ROS_ETC_DIR=/opt/ros/$ROS_DISTRO/etc/ros
 ENV CMAKE_PREFIX_PATH=/opt/ros/$ROS_DISTRO:$CMAKE_PREFIX_PATH
-
-CMD ["bash"]
+ENV DEBIAN_FRONTEND=dialog
 
 FROM base AS dev
 
+ENV DEBIAN_FRONTEND=noninteractive
+# Install dev tools
 COPY install_ros_dev.sh /setup/install_ros_dev.sh
 RUN /setup/install_ros_dev.sh && rm -rf /var/lib/apt/lists/*
 
@@ -61,4 +62,10 @@ RUN groupadd --gid $USER_GID $USERNAME \
   && echo "source /opt/ros/${ROS_DISTRO}/setup.bash" >> /home/$USERNAME/.bashrc
 ENV DEBIAN_FRONTEND=dialog
 
-CMD ["bash"]
+FROM dev AS full
+
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get update && apt-get install -y \
+  ros-${ROS_DISTRO}-desktop-full \
+  && rm -rf /var/lib/apt/lists/*
+ENV DEBIAN_FRONTEND=dialog

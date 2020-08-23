@@ -1,5 +1,6 @@
 FROM ubuntu:20.04 AS base
 
+ENV DEBIAN_FRONTEND=noninteractive
 ENV ROS_DISTRO=foxy
 
 # Install language
@@ -29,11 +30,12 @@ ENV PATH=/opt/ros/${ROS_DISTRO}/bin:$PATH
 ENV PYTHONPATH=/opt/ros/${ROS_DISTRO}/lib/python3.8/site-packages:/opt/ros/${ROS_DISTRO}/lib/python3.6/site-packages
 ENV ROS_PYTHON_VERSION=3
 ENV ROS_VERSION=2
-
-CMD ["bash"]
+ENV DEBIAN_FRONTEND=dialog
 
 FROM base AS dev
 
+ENV DEBIAN_FRONTEND=noninteractive
+# Install dev tools
 COPY install_ros2_dev.sh /setup/install_ros2_dev.sh
 RUN /setup/install_ros2_dev.sh
 
@@ -55,4 +57,11 @@ RUN groupadd --gid $USER_GID $USERNAME \
   && echo "source /opt/ros/${ROS_DISTRO}/setup.bash" >> /home/$USERNAME/.bashrc
 ENV DEBIAN_FRONTEND=dialog
 
-CMD ["bash"]
+FROM dev AS full
+
+ENV DEBIAN_FRONTEND=noninteractive
+# Install the full release
+RUN apt-get update && apt-get install -y \
+  ros-${ROS_DISTRO}-desktop \
+  && rm -rf /var/lib/apt/lists/*
+ENV DEBIAN_FRONTEND=dialog

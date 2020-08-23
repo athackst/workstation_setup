@@ -14,11 +14,10 @@ update() {
   LATEST_TAG=${DOCKER_IMG_NAME}-${DOCKER_TARGET_NAME}
   DATED_TAG=${LATEST_TAG}-${TODAY}
 
-  
   REPOSITORY=${USERNAME}/${DOCKER_BASE_NAME}
   CONTEXT=${DOCKER_BASE_NAME}
   
-  # first try to pull a remote image, if fail, 
+  # first try to pull a remote image, if fail,
   docker build -f ${DOCKER_FILE} \
     --target ${DOCKER_TARGET_NAME} \
     -t ${REPOSITORY}:${LATEST_TAG} \
@@ -56,36 +55,42 @@ update_dashing() {
   docker pull ubuntu:18.04
   update ros2 dashing base
   update ros2 dashing dev
+  update ros2 dashing full
 }
 
 update_eloquent() {
   docker pull ubuntu:18.04
   update ros2 eloquent base
   update ros2 eloquent dev
+  update ros2 eloquent full
 }
 
 update_foxy() {
   docker pull ubuntu:20.04
   update ros2 foxy base
   update ros2 foxy dev
+  update ros2 foxy full
 }
 
 update_kinetic() {
   docker pull ubuntu:18.04
   update ros kinetic base
   update ros kinetic dev
+  update ros kinetic full
 }
 
 update_melodic() {
   docker pull ubuntu:18.04
   update ros melodic base
   update ros melodic dev
+  update ros melodic full
 }
 
 update_noetic() {
   docker pull ubuntu:20.04
   update ros noetic base
   update ros noetic dev
+  update ros noetic full
 }
 
 update_all() {
@@ -115,7 +120,15 @@ while [ "$1" != "" ]; do
       exit
     ;;
     * )
-      update_$1
+      VERSION=$1
+    ;;
   esac
   shift
 done
+
+if [ -z ${VERSION} ]; then
+  usage
+  exit
+fi
+
+update_${VERSION}

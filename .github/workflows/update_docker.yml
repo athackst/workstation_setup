@@ -7,7 +7,7 @@ on:
   push:
     branches:
       - "master"
-      - "feature/docker*"
+      - "feature/docker**"
     paths:
       - "dockerfiles/**"
 
@@ -19,7 +19,7 @@ jobs:
       matrix:
         docker_image:
           ["kinetic", "melodic", "noetic", "dashing", "eloquent", "foxy"]
-        docker_target: ["base", "dev"]
+        docker_target: ["base", "dev", "full"]
         include:
           - docker_image: "kinetic"
             docker_repo: "ros"
@@ -53,3 +53,4 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
           tags: ${{ matrix.docker_image }}-${{ matrix.docker_target }},${{ matrix.docker_image }}-${{ matrix.docker_target }}-${{ env.TODAY }}
           labels: version=${{ env.TODAY }}
+          push: ${{ github.ref == 'refs/heads/master' }}
