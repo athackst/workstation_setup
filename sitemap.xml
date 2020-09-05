@@ -1,30 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url>
-     <loc>None</loc>
+     <loc>https://athackst.github.io/dockerfiles/</loc>
      <lastmod>2020-09-05</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>None</loc>
+     <loc>https://athackst.github.io/dockerfiles/examples/</loc>
      <lastmod>2020-09-05</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>None</loc>
+     <loc>https://athackst.github.io/dockerfiles/examples/bazel/</loc>
      <lastmod>2020-09-05</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>None</loc>
+     <loc>https://athackst.github.io/dockerfiles/examples/ros2_crystal_dev_release/</loc>
      <lastmod>2020-09-05</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>None</loc>
+     <loc>https://athackst.github.io/dockerfiles/examples/ros2_crystal_multistage/</loc>
      <lastmod>2020-09-05</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>None</loc>
+     <loc>https://athackst.github.io/dockerfiles/examples/ros2_dashing_vscode/</loc>
      <lastmod>2020-09-05</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>None</loc>
+     <loc>https://athackst.github.io/dockerfiles/examples/ros_melodic_vscode/</loc>
      <lastmod>2020-09-05</lastmod>
      <changefreq>daily</changefreq>
     </url>
