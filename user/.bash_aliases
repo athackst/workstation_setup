@@ -206,6 +206,7 @@ if [ -f /usr/share/bash-completion/completions/git ]; then
     i=0
     git fetch
     git remote prune origin
+    BASE_BRANCH=$(git remote show origin | grep "HEAD branch" | cut -d ":" -f 2)
     for branch in $(git for-each-ref refs/heads/ "--format=%(refname:short)")
     do
       mergeBase=$(git merge-base $BASE_BRANCH $branch)
@@ -338,5 +339,19 @@ fi
 # mkdocs
 ########################
 function mkdocs_start() {
-  docker run --rm -it --network=host -v ${PWD}:/docs --user $(id -u):$(id -g) -e HOME=/tmp -e PATH=/tmp/.local/bin:$PATH --name mkdocs_simple athackst/mkdocs-simple-plugin $@
+  docker run --rm -it --network=host -v ${PWD}:/docs --user $(id -u):$(id -g) --name mkdocs_simple athackst/mkdocs-simple-plugin mkdocs serve $@
+}
+
+######################
+# Github
+#####################
+if command -v gh &> /dev/null; then
+  eval "$(gh completion -s bash)"
+fi
+
+#####################
+# ROS
+#####################
+function noetic_gazebo() {
+  docker run -it --rm -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix -u ros athackst/ros:noetic-gazebo gazebo
 }
