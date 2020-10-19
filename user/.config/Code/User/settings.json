@@ -42,6 +42,9 @@
         "editor.defaultFormatter": "ms-python.python",
         "editor.tabSize": 2,
     },
+    "[html]": {
+        "editor.defaultFormatter": "vscode.html-language-features"
+    },
     "workbench.colorTheme": "Visual Studio Dark",
     "terminal.integrated.fontFamily": "monospace",
     "terminal.integrated.scrollback": 10000,
@@ -50,6 +53,13 @@
     "grunt.autoDetect": "off",
     "jake.autoDetect": "off",
     "npm.autoDetect": "off",
+    "cmake.sourceDirectory": "${workspaceFolder}/src",
+    "cmake.configureOnOpen": true,
+    "files.associations": {
+        ".rosinstall": "yaml",
+        "*.bats": "shellscript",
+        "*.xacro": "xml"
+    },
     "search.useIgnoreFiles": false,
-
+    "cSpell.allowCompoundWords": true,
 }

@@ -145,7 +145,7 @@ if [ -f /usr/share/bash-completion/completions/git ]; then
   # Commit the changes in the changeref
   alias g_commit="git commit"
   # Push the current changes to a remote branch, matching names
-  g_pr() {
+  g_up() {
     branch=`git name-rev --name-only HEAD`
     remote=`git config "branch.${branch}.remote" || echo "origin"`
     echo "pushing to: $remote $branch"
@@ -191,7 +191,7 @@ if [ -f /usr/share/bash-completion/completions/git ]; then
       if [[ $local_ref == $branchname ]]
       then
         local_ref="*"$local_ref
-        branch_status="$(g_status)"
+        branch_status="$(git status -s)"
       fi
       printf "%-${maxlen}s [$status] $remote_status\n" $local_ref
       if [ ! -z "$branch_status" ]
