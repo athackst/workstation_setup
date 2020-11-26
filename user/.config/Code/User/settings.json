@@ -1,49 +1,23 @@
 {
-    "cSpell.enabledLanguageIds": [
-        "asciidoc",
-        "c",
-        "cpp",
-        "csharp",
-        "css",
-        "dockerfile",
-        "go",
-        "handlebars",
-        "html",
-        "jade",
-        "javascript",
-        "javascriptreact",
-        "json",
-        "latex",
-        "less",
-        "markdown",
-        "php",
-        "plaintext",
-        "pub",
-        "python",
-        "restructuredtext",
-        "rst",
-        "rust",
-        "scss",
-        "text",
-        "typescript",
-        "typescriptreact",
-        "yml"
-    ],
     "diffEditor.ignoreTrimWhitespace": false,
     "editor.multiCursorModifier": "alt",
     "[cpp]": {
-        "editor.defaultFormatter": "ms-vscode.cpptools",
         "editor.rulers": [
             80
         ],
         "editor.tabSize": 2,
     },
-    "[python]": {
-        "editor.defaultFormatter": "ms-python.python",
-        "editor.tabSize": 2,
+    "[dockerfile]": {
+        "editor.quickSuggestions": {
+            "strings": true
+        }
     },
     "[html]": {
         "editor.defaultFormatter": "vscode.html-language-features"
+    },
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.python",
+        "editor.tabSize": 2,
     },
     "workbench.colorTheme": "Visual Studio Dark",
     "terminal.integrated.fontFamily": "monospace",
@@ -53,13 +27,10 @@
     "grunt.autoDetect": "off",
     "jake.autoDetect": "off",
     "npm.autoDetect": "off",
-    "cmake.sourceDirectory": "${workspaceFolder}/src",
-    "cmake.configureOnOpen": true,
     "files.associations": {
         ".rosinstall": "yaml",
         "*.bats": "shellscript",
         "*.xacro": "xml"
     },
     "search.useIgnoreFiles": false,
-    "cSpell.allowCompoundWords": true,
 }

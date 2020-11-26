@@ -111,9 +111,9 @@ if [ -f /usr/share/bash-completion/completions/git ]; then
   alias g="git"
   complete -o default -o nospace -F _git g
   
-  export BASE_BRANCH="origin/master"
   # Make a new branch, and check it out
   g_mk() {
+    BASE_BRANCH=$(git remote show origin | grep 'HEAD branch' | cut -d' ' -f5)
     git branch $1 $BASE_BRANCH --no-track
     git checkout $@
   }
@@ -129,7 +129,7 @@ if [ -f /usr/share/bash-completion/completions/git ]; then
   _git_cd() {
     _git_branch
   }
-  # Remove a branch from local nad remote
+  # Remove a branch from local and remote
   g_del() {
     git branch -D $1 2>/dev/null && echo "Deleted local branch $1"
     git push -d origin $1 2>/dev/null && echo "Deleted remote branch $1"
@@ -144,21 +144,22 @@ if [ -f /usr/share/bash-completion/completions/git ]; then
   alias g_add="git add -u"
   # Commit the changes in the changeref
   alias g_commit="git commit"
-  # Push the current changes to a remote branch, matching names
+  # Update branch on remote to match local
   g_up() {
     branch=`git name-rev --name-only HEAD`
     remote=`git config "branch.${branch}.remote" || echo "origin"`
     echo "pushing to: $remote $branch"
-    git push $remote $branch -u
+    git push $remote $branch -u --force
   }
-  # Sync the local branches with the remote
+  # Sync the local branch with the remote
   g_sync() {
     git fetch -p
-    git prune
+    BASE_BRANCH=$(git remote show origin | grep 'HEAD branch' | cut -d' ' -f5)
+    git rebase origin/${BASE_BRANCH}
   }
   # Scan all local branches for changes
   g_scan() {
-    branchname=$(git rev-parse --abbrev-ref HEAD)
+    BASE_BRANCH=$(git remote show origin | grep 'HEAD branch' | cut -d' ' -f5)
     # get max length of branch name
     local maxlen=$(maxlength $(git for-each-ref --format="%(refname:short)" refs/heads))
     maxlen=$(($maxlen+2))
@@ -171,7 +172,12 @@ if [ -f /usr/share/bash-completion/completions/git ]; then
         remote_status="${RED}!!${UNSET}"
         remote_ref="${BASE_BRANCH}"
       fi
-      git rev-list --left-right ${local_ref}...${remote_ref} -- 2>/dev/null >/tmp/git_upstream_status_delta || continue
+      git rev-list --left-right ${local_ref}...${remote_ref} -- 2>/dev/null >/tmp/git_upstream_status_delta
+      MISSING_REMOTE=$(grep -c '>fatal' /tmp/git_upstream_status_delta)
+      if [ $MISSING_REMOTE -ne 0 ]
+      then
+        remote_status="${RED}!!${UNSET}"
+      fi
       RIGHT_AHEAD=$(grep -c '^>' /tmp/git_upstream_status_delta)
       status=""
       if [ $RIGHT_AHEAD -ne 0 ]
@@ -202,11 +208,11 @@ if [ -f /usr/share/bash-completion/completions/git ]; then
   }
   
   # Remove branches that have been squashed on the remote
-  g_dsquashed() {
+  g_trim() {
     i=0
     git fetch
     git remote prune origin
-    BASE_BRANCH=$(git remote show origin | grep "HEAD branch" | cut -d ":" -f 2)
+    BASE_BRANCH="origin/"$(git remote show origin | grep 'HEAD branch' | cut -d' ' -f5)
     for branch in $(git for-each-ref refs/heads/ "--format=%(refname:short)")
     do
       mergeBase=$(git merge-base $BASE_BRANCH $branch)
