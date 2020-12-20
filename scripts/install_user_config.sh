@@ -7,10 +7,14 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 rm -fr $HOME/.workspace
 cp -r $DIR/../user/.workspace/ $HOME/.workspace/
 
+rm -fr $HOME/.aliases
+cp -r $DIR/../user/.aliases/ $HOME/.aliases/
+
 # set up aliases
 read -p "Replace .bash_aliases? (Y/n): " yn
 case $yn in
   "" | [Yy]* )
+    cp $HOME/.bash_aliases $HOME/.bash_aliases.bak
     cp $DIR/../user/.bash_aliases* $HOME/
   ;;
 esac
@@ -19,6 +23,7 @@ esac
 read -p "Replace .gitconfig? (Y/n): " yn
 case $yn in
   "" | [Yy]* )
+    cp $HOME/.gitconfig $HOME/.gitconfig.bak
     cp $DIR/../user/.gitconfig $HOME/
   ;;
 esac
