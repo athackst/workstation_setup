@@ -15,7 +15,8 @@
 	up = !bash -c 'source $HOME/.bash_aliases && g_up'
 	sync = !bash -c 'source $HOME/.bash_aliases && g_sync'
 	scan = !bash -c 'source $HOME/.bash_aliases && g_scan'
-	trim = !bash -c 'source $HOME/.bash_aliases && g_dsquashed'
+	prune = !bash -c 'source $HOME/.bash_aliases && g_prune'
+	amend = !bash -c 'source $HOME/.bash_aliases && g_amend'
 [filter "lfs"]
 	required = true
 	clean = git-lfs clean -- %f

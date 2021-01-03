@@ -10,7 +10,8 @@
     "[dockerfile]": {
         "editor.quickSuggestions": {
             "strings": true
-        }
+        },
+        "editor.defaultFormatter": "ms-azuretools.vscode-docker"
     },
     "[html]": {
         "editor.defaultFormatter": "vscode.html-language-features"
@@ -19,7 +20,6 @@
         "editor.defaultFormatter": "ms-python.python",
         "editor.tabSize": 2,
     },
-    "workbench.colorTheme": "Visual Studio Dark",
     "terminal.integrated.fontFamily": "monospace",
     "terminal.integrated.scrollback": 10000,
     "typescript.tsc.autoDetect": "off",
@@ -33,4 +33,5 @@
         "*.xacro": "xml"
     },
     "search.useIgnoreFiles": false,
+    "workbench.colorTheme": "Visual Studio Dark",
 }

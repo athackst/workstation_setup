@@ -59,7 +59,7 @@ if [ -f /usr/share/bash-completion/completions/git ]; then
   # Get the status of the current branch
   alias g_status="git status -s"
   # Add changes into the current branch
-  alias g_add="git add -u"
+  alias g_amend="git add -u; git commit --amed --no-edit"
   # Commit the changes in the changeref
   alias g_commit="git commit"
   # Update branch on remote to match local
@@ -126,7 +126,7 @@ if [ -f /usr/share/bash-completion/completions/git ]; then
   }
   
   # Remove branches that have been squashed on the remote
-  g_trim() {
+  g_prune() {
     i=0
     git fetch
     git remote prune origin

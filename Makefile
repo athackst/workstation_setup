@@ -1,4 +1,4 @@
-install: base programs vscode docker user_config
+defaults: base programs vscode docker user_config
 
 base: scripts/install_base.sh 
 	bash scripts/install_base.sh
