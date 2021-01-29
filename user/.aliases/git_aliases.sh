@@ -81,6 +81,7 @@ g_sync() {
 }
 # Scan all local branches for changes
 g_scan() {
+  git fetch -p
   BASE_BRANCH=$(git remote show origin | grep 'HEAD branch' | cut -d' ' -f5)
   # get max length of branch name
   local maxlen=$(maxlength $(git for-each-ref --format="%(refname:short)" refs/heads))
@@ -155,7 +156,6 @@ g_prune() {
 
 # Scan the branches of all repositories in a folder
 g_scanall() {
-  vcs custom -n --git --args fetch . >/dev/null
   for dir in $(find . -name '.git' -printf "%h\n" | sort -u)
   do
     if [[ -d $dir ]]
@@ -168,7 +168,13 @@ g_scanall() {
 }
 
 g_fetchall() {
-  vcs custom -n --git --args fetch . >/dev/null
+  for dir in $(find . -name '.git' -printf "%h\n" | sort -u)
+  do
+    if [[ -d $dir ]]
+    then
+      (cd $dir; git fetch)
+    fi
+  done
 }
 
 # Get a short status of all repositories in a folder.
