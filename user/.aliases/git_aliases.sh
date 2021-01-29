@@ -63,7 +63,7 @@ _git_del() {
 # Get the status of the current branch
 alias g_status="git status -s"
 # Add changes into the current branch
-alias g_amend="git add -u; git commit --amed --no-edit"
+alias g_amend="git add -u; git commit --amend --no-edit"
 # Commit the changes in the changeref
 alias g_commit="git commit"
 # Update branch on remote to match local
