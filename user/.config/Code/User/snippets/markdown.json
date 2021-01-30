@@ -16,5 +16,20 @@
 			"<!-- link to contributing instructions -->"
 		],
 		"description": "Outline for README file",
+	},
+	"Insert Front Matter": {
+		"prefix": "frontmatter",
+		"body": [
+			"---",
+			"layout: text_entry",
+			"title: ${1:title}",
+			"category: ${2:Robotics}",
+			"series: ${3}",
+			"tags: ${4}",
+			"image: ${5}",
+			"summary: ${6}",
+			"redirect_from: ",
+			"---"
+		]
 	}
 }

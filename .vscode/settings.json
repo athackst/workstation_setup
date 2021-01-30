@@ -1,23 +1,4 @@
 {
-    "cSpell.words": [
-        "UNAME",
-        "athackst",
-        "bazel",
-        "chmod",
-        "cmake",
-        "colcon",
-        "distro",
-        "dockerfiles",
-        "mkdir",
-        "nopasswd",
-        "pythonpath",
-        "releasecontainer",
-        "rosinstall",
-        "struct",
-        "sudoers",
-        "whoami",
-        "wstool"
-    ],
     "files.trimFinalNewlines": true,
     "files.insertFinalNewline": true
 }

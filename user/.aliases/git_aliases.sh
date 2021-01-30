@@ -1,8 +1,9 @@
 if [ -f /usr/share/bash-completion/completions/git ]; then
   source /usr/share/bash-completion/completions/git
-fi
-if [ -f /etc/profile.d/git-prompt.sh ]; then
+elif [ -f /etc/profile.d/git-prompt.sh ]; then
   source /etc/profile.d/git-prompt.sh
+else
+  return
 fi
 
 maxlength() {

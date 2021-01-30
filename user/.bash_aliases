@@ -55,16 +55,16 @@ function mkdocs_start() {
   docker run --rm -it --network=host -v ${PWD}:/docs --user $(id -u):$(id -g) --name mkdocs_simple athackst/mkdocs-simple-plugin mkdocs serve $@
 }
 
-######################
+########################
 # Github
-#####################
+########################
 if command -v gh &> /dev/null; then
   eval "$(gh completion -s bash)"
 fi
 
-#####################
+########################
 # ROS
-#####################
+########################
 function noetic_gazebo() {
   docker run -it --rm -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix -u ros athackst/ros:noetic-gazebo gazebo
 }
