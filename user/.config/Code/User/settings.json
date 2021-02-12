@@ -34,4 +34,6 @@
     },
     "search.useIgnoreFiles": false,
     "workbench.colorTheme": "Visual Studio Dark",
+    "window.zoomLevel": 0,
+    "diffEditor.renderSideBySide": true,
 }

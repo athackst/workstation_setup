@@ -51,8 +51,9 @@ fi
 ########################
 # mkdocs
 ########################
-function mkdocs_start() {
-  docker run --rm -it --network=host -v ${PWD}:/docs --user $(id -u):$(id -g) --name mkdocs_simple athackst/mkdocs-simple-plugin mkdocs serve $@
+function mkdocs_simple() {
+    local port=${1:-"8000"}
+    docker run --rm -p ${port}:8000 -v ${PWD}:/docs --user $(id -u):$(id -g) athackst/mkdocs-simple-plugin 
 }
 
 ########################

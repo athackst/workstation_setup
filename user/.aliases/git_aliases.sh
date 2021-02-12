@@ -102,6 +102,7 @@ g_scan() {
     then
       remote_status="${RED}!!${UNSET}"
     fi
+    git rev-list --left-right ${local_ref}...${BASE_BRANCH} -- 2>/dev/null >/tmp/git_upstream_status_delta
     RIGHT_AHEAD=$(grep -c '^>' /tmp/git_upstream_status_delta)
     status=""
     if [ $RIGHT_AHEAD -ne 0 ]
@@ -118,7 +119,7 @@ g_scan() {
       status="${LTGREEN}ok${UNSET}"
     fi
     branch_status=""
-    if [[ $local_ref == $branchname ]]
+    if [[ ${local_ref} == $(git branch --show-current) ]]
     then
       local_ref="*"$local_ref
       branch_status="$(git status -s)"
