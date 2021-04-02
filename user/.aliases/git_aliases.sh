@@ -124,11 +124,11 @@ g_scan() {
       local_ref="*"$local_ref
       branch_status="$(git status -s)"
     fi
-    printf "%-${maxlen}s [$status] $remote_status\n" $local_ref
     if [ ! -z "$branch_status" ]
     then
-      printf "${RED}%s${UNSET} %s\n" $branch_status
+      branch_status="${YELLOW}uncommitted changes${UNSET}"
     fi
+    printf "%-${maxlen}s [$status] $remote_status $branch_status\n" $local_ref
   done
 }
 

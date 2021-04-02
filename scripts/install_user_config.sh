@@ -14,7 +14,9 @@ cp -r $DIR/../user/.aliases/ $HOME/.aliases/
 read -p "Replace .bash_aliases? (Y/n): " yn
 case $yn in
   "" | [Yy]* )
-    cp $HOME/.bash_aliases $HOME/.bash_aliases.bak
+    if [ -f $HOME/.bash_aliases ]; then
+      cp $HOME/.bash_aliases $HOME/.bash_aliases.bak
+    fi
     cp $DIR/../user/.bash_aliases* $HOME/
   ;;
 esac
@@ -23,7 +25,9 @@ esac
 read -p "Replace .gitconfig? (Y/n): " yn
 case $yn in
   "" | [Yy]* )
-    cp $HOME/.gitconfig $HOME/.gitconfig.bak
+    if [ -f $HOME/.gitconfig ]; then
+      cp $HOME/.gitconfig $HOME/.gitconfig.bak
+    fi
     cp $DIR/../user/.gitconfig $HOME/
   ;;
 esac
