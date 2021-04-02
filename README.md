@@ -13,7 +13,7 @@ git clone git@github.com:athackst/workstation_setup.git
 
 ## Install and setup workstation
 
-This installs the basics of my workstation
+Installs the basics of my workstation with make
 
 ```bash
 make install
@@ -24,4 +24,5 @@ make install
 I have recently been playing with the idea of doing all/most development inside of docker containers.
 
 - [examples](examples/README.md) for example development processes
-- [dockerfiles](dockerfiles/README.md) for dockerfiles
+
+Dockerfiles have been moved to [athackst/dockerfiles](https://github.com/athackst/dockerfiles)
