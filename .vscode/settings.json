@@ -1,4 +1,12 @@
 {
     "files.trimFinalNewlines": true,
-    "files.insertFinalNewline": true
+    "files.insertFinalNewline": true,
+	"yaml.schemaStore.enable": false,
+	"yaml.schemas": {
+		"http://json.schemastore.org/github-workflow.json": ["/.github/workflows/*"],
+		"http://json.schemastore.org/dependabot-2.0.json": ["dependabot.yml"]
+	},
+	"editor.rulers": [
+	80, 120
+	]
 }

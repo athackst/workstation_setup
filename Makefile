@@ -1,5 +1,7 @@
 defaults: base programs vscode docker user_config
 
+devcontainer: base user_config
+
 base: scripts/install_base.sh 
 	bash scripts/install_base.sh
 
