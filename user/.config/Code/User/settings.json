@@ -34,6 +34,12 @@
     },
     "search.useIgnoreFiles": false,
     "workbench.colorTheme": "Visual Studio Dark",
-    "window.zoomLevel": 0,
     "diffEditor.renderSideBySide": true,
+    "workbench.editorAssociations": [
+        {
+            "viewType": "jupyter.notebook.ipynb",
+            "filenamePattern": "*.ipynb"
+        }
+    ],
+
 }

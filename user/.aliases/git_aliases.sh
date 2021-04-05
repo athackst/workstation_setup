@@ -83,7 +83,7 @@ g_sync() {
 # Scan all local branches for changes
 g_scan() {
   git fetch -p
-  BASE_BRANCH=$(git remote show origin | grep 'HEAD branch' | cut -d' ' -f5)
+  BASE_BRANCH="origin/$(git remote show origin | grep 'HEAD branch' | cut -d' ' -f5)"
   # get max length of branch name
   local maxlen=$(maxlength $(git for-each-ref --format="%(refname:short)" refs/heads))
   maxlen=$(($maxlen+2))
@@ -100,7 +100,7 @@ g_scan() {
     MISSING_REMOTE=$(grep -c '>fatal' /tmp/git_upstream_status_delta)
     if [ $MISSING_REMOTE -ne 0 ]
     then
-      remote_status="${RED}!!${UNSET}"
+      remote_status="${RED}!!unpushed refs!!${UNSET}"
     fi
     git rev-list --left-right ${local_ref}...${BASE_BRANCH} -- 2>/dev/null >/tmp/git_upstream_status_delta
     RIGHT_AHEAD=$(grep -c '^>' /tmp/git_upstream_status_delta)
@@ -124,11 +124,11 @@ g_scan() {
       local_ref="*"$local_ref
       branch_status="$(git status -s)"
     fi
+    printf "%-${maxlen}s [$status] $remote_status\n" $local_ref
     if [ ! -z "$branch_status" ]
     then
-      branch_status="${YELLOW}uncommitted changes${UNSET}"
+      printf "${RED}%s${UNSET} %s\n" $branch_status
     fi
-    printf "%-${maxlen}s [$status] $remote_status $branch_status\n" $local_ref
   done
 }
 

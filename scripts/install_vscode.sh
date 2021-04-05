@@ -27,8 +27,6 @@ case $yn in
         code --install-extension DotJoshJohnson.xml
         # yaml
         code --install-extension redhat.vscode-yaml
-        # spellchecker
-        code --install-extension streetsidesoftware.code-spell-checker
         # markdown (for README.md)
         code --install-extension yzhang.markdown-all-in-one
         # coding
