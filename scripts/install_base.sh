@@ -13,10 +13,12 @@ sudo apt-get install -y \
   git-lfs \
   make \
   pass \
-  python-is-python3 \
   python3-pip \
   snapd \
   software-properties-common \
   ssh \
-  wget &&
-  echo "installed packages"
+  wget
+
+sudo apt-get install -y python-is-python3
+sudo update-alternatives --install /usr/bin/pip pip /usr/bin/pip3 1
+pip install -U pip

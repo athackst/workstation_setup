@@ -17,7 +17,7 @@
 	"extensions": [
 		"docsmsft.docs-yaml",
 		"ms-python.python",
-		"shakram02.bash-beautify"
+		"foxundermoon.shell-format"
 	],
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
