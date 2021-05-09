@@ -15,38 +15,21 @@ read -p "Install vscode extensions? (y/N): " yn
 case $yn in
     [Yy]* )
         # configure code with exensions
-        # remote tools
-        code --install-extension ms-vscode-remote.vscode-remote-extensionpack
         # docker
         code --install-extension ms-azuretools.vscode-docker
-        # python
-        code --install-extension ms-python.python
-        # c++
-        code --install-extension ms-vscode.cpptools
-        # xml
-        code --install-extension DotJoshJohnson.xml
-        # yaml
-        code --install-extension redhat.vscode-yaml
+        # github pull requests
+        code --install-extension github.vscode-pull-request-github
+        # gitlens
+        code --install-extension eamodio.gitlens
+        # jupyter
+        code --install-extension ms-toolsai.jupyter
         # markdown (for README.md)
         code --install-extension yzhang.markdown-all-in-one
-        # coding
-        # compiler (bazel)
-        code --install-extension BazelBuild.vscode-bazel
-        # compiler (cmake)
-        code --install-extension twxs.cmake
-        code --install-extension ms-vscode.cmake-tools
-        # proto3
-        code --install-extension zxh404.vscode-proto3
-        # go
-        code --install-extension ms-vscode.go
-        # css
-        code --install-extension ecmel.vscode-html-css
-        # jekyll
-        code --install-extension ginfuru.ginfuru-vscode-jekyll-syntax
-        code --install-extension ginfuru.vscode-jekyll-snippets
-        # ros
-        code --install-extension ms-iot.vscode-ros
-        code --install-extension smilerobotics.urdf
+        code --install-extension davidanson.vscode-markdownlint
+        # remote tools
+        code --install-extension ms-vscode-remote.vscode-remote-extensionpack
+        # yaml
+        code --install-extension redhat.vscode-yaml
     ;;
     [Nn]* ) ;;
     * )     ;;
