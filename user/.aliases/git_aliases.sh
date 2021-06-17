@@ -34,10 +34,22 @@ UNSET="\e[0m"
 alias g="git"
 complete -o default -o nospace -F _git g
 
+_g_base_branch() {
+  echo "$(_g_remote)/$(git remote show origin | grep 'HEAD branch' | cut -d' ' -f5)"
+}
+_g_current_branch() {
+  # Try to use --show-current, otherwise fallback to git branch parsing.
+  # This is for compatibility with git versions <2.22
+  git branch --show-current 2>/dev/null || git branch | grep -v detached | awk '$1=="*"{print $2}'
+}
+_g_remote() {
+  # The name of the remote host
+  git config "branch.${branch}.remote" || echo "origin"
+}
+
 # Make a new branch, and check it out
 g_mk() {
-  BASE_BRANCH=$(git remote show origin | grep 'HEAD branch' | cut -d' ' -f5)
-  git branch $1 $BASE_BRANCH --no-track
+  git branch $1 $(_g_base_branch) --no-track
   git checkout $@
 }
 # List all of the branches
@@ -64,26 +76,27 @@ _git_del() {
 # Get the status of the current branch
 alias g_status="git status -s"
 # Add changes into the current branch
-alias g_amend="git add -u; git commit --amend --no-edit"
+alias g_amend="git commit --amend --no-edit"
+alias g_amend_all="git add -u; git commit --amend --no-edit"
 # Commit the changes in the changeref
 alias g_commit="git commit"
 # Update branch on remote to match local
 g_up() {
-  branch=`git name-rev --name-only HEAD`
-  remote=`git config "branch.${branch}.remote" || echo "origin"`
+  branch=$(_g_current_branch)
+  remote=$(_g_remote)
   echo "pushing to: $remote $branch"
   git push $remote $branch -u --force
 }
 # Sync the local branch with the remote
 g_sync() {
   git fetch -p
-  BASE_BRANCH=$(git remote show origin | grep 'HEAD branch' | cut -d' ' -f5)
+  BASE_BRANCH=$(_g_current_branch)
   git rebase origin/${BASE_BRANCH}
 }
 # Scan all local branches for changes
 g_scan() {
   git fetch -p
-  BASE_BRANCH="origin/$(git remote show origin | grep 'HEAD branch' | cut -d' ' -f5)"
+  BASE_BRANCH=$(_g_base_branch)
   # get max length of branch name
   local maxlen=$(maxlength $(git for-each-ref --format="%(refname:short)" refs/heads))
   maxlen=$(($maxlen+2))
@@ -119,7 +132,7 @@ g_scan() {
       status="${LTGREEN}ok${UNSET}"
     fi
     branch_status=""
-    if [[ ${local_ref} == $(git branch --show-current) ]]
+    if [[ ${local_ref} == $(_g_current_branch) ]]
     then
       local_ref="*"$local_ref
       branch_status="$(git status -s)"
@@ -137,7 +150,7 @@ g_prune() {
   i=0
   git fetch
   git remote prune origin
-  BASE_BRANCH="origin/"$(git remote show origin | grep 'HEAD branch' | cut -d' ' -f5)
+  BASE_BRANCH=$(_g_base_branch)
   for branch in $(git for-each-ref refs/heads/ "--format=%(refname:short)")
   do
     mergeBase=$(git merge-base $BASE_BRANCH $branch)
@@ -227,24 +240,22 @@ g_setall() {
   # Checkout the desired branch, if it exists
   for dir in $(find . -name '.git' -printf "%h\n" | sort -u)
   do
-    current=$(git -C $dir rev-parse --abbrev-ref HEAD)
     error=""
     # If branch exists
     if [[ $(git -C $dir branch -a | grep "$desired" | wc -l) -ne 0 ]]
     then
       # If not already on desired branch
-      if [[ $current != $desired ]]
+      if [[ $(_g_current_branch)  != $desired ]]
       then
         git -C $dir checkout -q $desired
         # If the checkout was not successful
-        if [[ $(git -C $dir rev-parse --abbrev-ref HEAD) != $desired ]]
+        if [[ $(_g_current_branch)  != $desired ]]
         then
           error="${RED}!!${UNSET}"
         fi
       fi
     fi
     # print the branches
-    branchname=$(git -C $dir rev-parse --abbrev-ref HEAD)
-    printf "%-${maxlen}s: ${branchname} ${error}\n" $dir
+    printf "%-${maxlen}s: $(_g_current_branch) ${error}\n" $dir
   done
 }
