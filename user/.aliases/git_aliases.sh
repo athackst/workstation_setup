@@ -105,14 +105,14 @@ g_scan() {
     remote_status=""
     if [ -z "$remote_ref" ]
     then
-      remote_status="${RED}!!${UNSET}"
+      remote_status="${RED}(missing remote)${UNSET}"
       remote_ref="${BASE_BRANCH}"
     fi
     git rev-list --left-right ${local_ref}...${remote_ref} -- 2>/dev/null >/tmp/git_upstream_status_delta
     MISSING_REMOTE=$(grep -c '>fatal' /tmp/git_upstream_status_delta)
     if [ $MISSING_REMOTE -ne 0 ]
     then
-      remote_status="${RED}!!unpushed refs!!${UNSET}"
+      remote_status="${RED}(unpushed refs)${UNSET}"
     fi
     git rev-list --left-right ${local_ref}...${BASE_BRANCH} -- 2>/dev/null >/tmp/git_upstream_status_delta
     RIGHT_AHEAD=$(grep -c '^>' /tmp/git_upstream_status_delta)
@@ -134,13 +134,11 @@ g_scan() {
     if [[ ${local_ref} == $(_g_current_branch) ]]
     then
       local_ref="*"$local_ref
-      branch_status="$(git status -s)"
+      if [[ $(git status -s) ]]; then 
+        branch_status="(Uncommitted changes)"
+      fi
     fi
-    printf "%-${maxlen}s [$status] $remote_status\n" $local_ref
-    if [ ! -z "$branch_status" ]
-    then
-      printf "${RED}%s${UNSET} %s\n" $branch_status
-    fi
+    printf "%-${maxlen}s [$status] $remote_status $branch_status\n" $local_ref
   done
 }
 
@@ -169,7 +167,7 @@ g_prune() {
 
 # Scan the branches of all repositories in a folder
 g_scanall() {
-  for dir in $(find . -name '.git' -printf "%h\n" | sort -u)
+  for dir in $(find . -type d \( -name archive -o -name third_party \) -prune -false -o -name '*.git' -printf "%h\n" | sort -u)
   do
     if [[ -d $dir ]]
     then
