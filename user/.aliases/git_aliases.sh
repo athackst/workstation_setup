@@ -90,8 +90,7 @@ g_up() {
 # Sync the local branch with the remote
 g_sync() {
   git fetch -p
-  BASE_BRANCH=$(_g_current_branch)
-  git rebase origin/${BASE_BRANCH}
+  git rebase $(_g_base_branch)
 }
 # Scan all local branches for changes
 g_scan() {
@@ -148,8 +147,7 @@ g_scan() {
 # Remove branches that have been squashed on the remote
 g_prune() {
   i=0
-  git fetch
-  git remote prune origin
+  git fetch -p
   BASE_BRANCH=$(_g_base_branch)
   for branch in $(git for-each-ref refs/heads/ "--format=%(refname:short)")
   do
