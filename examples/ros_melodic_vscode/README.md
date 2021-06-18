@@ -33,7 +33,7 @@ wstool up
 
 This will download the beginner tutorial code into your workspace.
 
-See [ros beginner tutorials](http://wiki.ros.org/ROS/Tutorials/WritingPublisherSubscriber%28c%2B%2B%29).
+See [ros beginner tutorials](https://wiki.ros.org/ROS/Tutorials/WritingPublisherSubscriber%28c%2B%2B%29).
 
 ### Build
 
