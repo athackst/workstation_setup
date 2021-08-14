@@ -26,3 +26,12 @@ I have recently been playing with the idea of doing all/most development inside 
 - [examples](examples/README.md) for example development processes
 
 Dockerfiles have been moved to [athackst/dockerfiles](https://github.com/athackst/dockerfiles)
+
+
+## Get the aliases in a container
+
+```docker
+RUN wget -O /etc/profile.d/git_aliases.sh https://github.com/athackst/workstation_setup/raw/main/user/.aliases/git_aliases.sh \
+    && echo "source /etc/profile.d/git_aliases.sh" >> "/home/vscode/.bashrc"
+
+```

@@ -2,6 +2,7 @@
 
 docker pull ubuntu:20.04
 docker pull ubuntu:18.04
+docker pull mcr.microsoft.com/vscode/devcontainers/base:0-focal
 # kinetic images needed for deepracer
 docker pull athackst/ros:kinetic-base
 docker pull athackst/ros:kinetic-dev
