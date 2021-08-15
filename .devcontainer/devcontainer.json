@@ -15,8 +15,9 @@
 	// Add the IDs of extensions you want installed when the container is created.
 	"extensions": [
 		"docsmsft.docs-yaml",
+		"foxundermoon.shell-format",
+		"ms-azuretools.vscode-docker",
 		"ms-python.python",
-		"foxundermoon.shell-format"
 	],
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
