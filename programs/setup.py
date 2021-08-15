@@ -17,9 +17,9 @@ setuptools.setup(
     keywords='setup, scripts',
     url='https://althack.dev/workstation_setup/',
     project_urls={
-        "Issues": "https://github.com/athackst/workstation_setup/issues",
+        "Issues": "https://github.com/althack/workstation_setup/issues",
         "Documentation": "https://althack.dev/workstation_setup/",
-        "Source Code": "https://github.com/athackst/workstation_setup",
+        "Source Code": "https://github.com/althack/workstation_setup",
     },
     author='Allison Thackston',
     author_email='allison@allisonthackston.com',

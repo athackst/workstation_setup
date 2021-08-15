@@ -77,7 +77,7 @@ function create_ros2_ws() {
   else
     return
   fi
-  gh repo create $1 --template athackst/vscode_ros2_workspace --private --include-all-branches
+  gh repo create $1 --template althack/vscode_ros2_workspace --private --include-all-branches
   gh repo clone $user/$1
   cd $1
 }
@@ -93,7 +93,7 @@ function create_website_ws() {
   else
     return
   fi
-  gh repo create $1 --template athackst/vscode_website_workspace --private --include-all-branches
+  gh repo create $1 --template althack/vscode_website_workspace --private --include-all-branches
   gh repo clone $user/$1
   cd $1
 }
@@ -106,15 +106,15 @@ function mkdocs_docker_serve() {
   docker run --rm -p ${port}:8000 -v ${PWD}:/docs -e THEME=material -e SITE_DIR="/test" -it althack/mkdocs-simple-plugin:latest
 }
 
-function athackst_mkdocs() {
+function althack_mkdocs() {
   (
     curr_dur=$PWD
     cd /tmp
-    rm -fr /tmp/athackst.mkdocs/
-    git clone -b main --depth 1 --single-branch https://github.com/athackst/athackst.mkdocs.git &&
-      rm -rf athackst.mkdocs/.git/
-    cp -r $curr_dur/* /tmp/athackst.mkdocs/
-    cd /tmp/athackst.mkdocs
+    rm -fr /tmp/althack.mkdocs/
+    git clone -b main --depth 1 --single-branch https://github.com/althack/althack.mkdocs.git &&
+      rm -rf althack.mkdocs/.git/
+    cp -r $curr_dur/* /tmp/althack.mkdocs/
+    cd /tmp/althack.mkdocs
     mkdocs_docker_serve
   )
 }

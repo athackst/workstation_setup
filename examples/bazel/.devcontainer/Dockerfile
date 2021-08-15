@@ -26,7 +26,7 @@ RUN wget https://github.com/bazelbuild/bazel/releases/download/${BAZEL_VERSION}/
 
 ##############################
 # The version of buildifier to use
-# @todo athackst Look into getting buildifier through the WORKSPACE file
+# @todo althack Look into getting buildifier through the WORKSPACE file
 # Currently, buildifier is downloaded from the release artifact and installed into
 # /usr/local/bin  This seems to be the recommended way to use buildifier with vscode.
 # The more "bazel" way of doing this would be to add the buildifier through bazel

@@ -52,6 +52,6 @@ This will use a VS Code docker container [plugin](https://code.visualstudio.com/
 
 ## ROS melodic workspace ([ros_melodic_vscode](ros_melodic_vscode/README.md))
 
-This is similar to the [vscode_ros2_workspace](https://github.com/athackst/vscode_ros2_workspace) but for ROS1.
+This is similar to the [vscode_ros2_workspace](https://github.com/althack/vscode_ros2_workspace) but for ROS1.
 
 > TODO: Make this its own template.

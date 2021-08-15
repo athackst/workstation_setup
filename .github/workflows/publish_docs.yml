@@ -15,10 +15,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Setup config
-        uses: athackst/athackst.mkdocs@main
+        uses: althack/althack.mkdocs@main
       - name: Build and push docs to gh-pages
-        uses: athackst/mkdocs-simple-plugin@main
+        uses: althack/mkdocs-simple-plugin@main
       - name: Htmlproofer
-        uses: athackst/htmlproofer-action@main
+        uses: althack/htmlproofer-action@main
         with:
           directory: site

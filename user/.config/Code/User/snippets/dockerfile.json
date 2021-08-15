@@ -2,7 +2,7 @@
 	"Add custom git aliases": {
 		"prefix": "git_aliases",
 		"body": [
-				 "RUN wget -O /etc/profile.d/git_aliases.sh https://github.com/athackst/workstation_setup/raw/main/user/.aliases/git_aliases.sh \\",
+				 "RUN wget -O /etc/profile.d/git_aliases.sh https://github.com/althack/workstation_setup/raw/main/user/.aliases/git_aliases.sh \\",
 				 "    && echo \"source /etc/profile.d/git_aliases.sh\" >> /home/\\${USERNAME\\}/.bashrc"
 			 ],
 		"description": "Add custom git aliases"
@@ -10,7 +10,7 @@
 	"Add custom bazel aliases": {
 		"prefix": "bazel_aliases",
 		"body": [
-				 "RUN wget -O /etc/profile.d/bazel_aliases.sh https://github.com/athackst/workstation_setup/raw/main/user/.aliases/bazel_aliases.sh \\",
+				 "RUN wget -O /etc/profile.d/bazel_aliases.sh https://github.com/althack/workstation_setup/raw/main/user/.aliases/bazel_aliases.sh \\",
 				 "    && echo \"source /etc/profile.d/bazel_aliases.sh\" >> /home/\\${USERNAME\\}/.bashrc"
 			 ],
 		"description": "Add custom git aliases"
