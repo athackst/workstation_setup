@@ -29,5 +29,5 @@ wstool up -t src
 ### Build the dockerfile
 
 ```bash
-docker build -f Dockerfile -t athackst/ros2:crystal-example .
+docker build -f Dockerfile -t althack/ros2:crystal-example .
 ```
