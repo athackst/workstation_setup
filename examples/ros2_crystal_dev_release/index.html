@@ -613,12 +613,12 @@ git clone https://github.com/ros2/examples.git
 <h3 id="build-the-dockerfile">Build the dockerfile</h3>
 <p>Edit the docker file to include all additional resources and build the development dockerfile.  This file is special because it is built with your user id/group/name.  This allows you to build within the docker workspace as yourself.</p>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span> ~/workstation_setup/examples/ros2_crystal_example_dev
-docker build -f develop.dockerfile -t althack/ros2:crystal-example-dev  --build-arg <span class="nv">UID</span><span class="o">=</span><span class="k">$(</span>id -u<span class="k">)</span> --build-arg <span class="nv">GID</span><span class="o">=</span><span class="k">$(</span>id -g<span class="k">)</span> --build-arg <span class="nv">UNAME</span><span class="o">=</span><span class="k">$(</span>whoami<span class="k">)</span> .
+docker build -f develop.dockerfile -t athackst/ros2:crystal-example-dev  --build-arg <span class="nv">UID</span><span class="o">=</span><span class="k">$(</span>id -u<span class="k">)</span> --build-arg <span class="nv">GID</span><span class="o">=</span><span class="k">$(</span>id -g<span class="k">)</span> --build-arg <span class="nv">UNAME</span><span class="o">=</span><span class="k">$(</span>whoami<span class="k">)</span> .
 </code></pre></div>
 <h3 id="build-inside-the-docker-image">Build inside the docker image</h3>
 <p>Run the docker image with the build function</p>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span> ~/ros2_ws
-docker run -v <span class="nv">$HOME</span>:<span class="nv">$HOME</span> althack/ros2:crystal-example-dev /build.sh <span class="sb">`</span><span class="nb">pwd</span><span class="sb">`</span>
+docker run -v <span class="nv">$HOME</span>:<span class="nv">$HOME</span> athackst/ros2:crystal-example-dev /build.sh <span class="sb">`</span><span class="nb">pwd</span><span class="sb">`</span>
 </code></pre></div>
 <h3 id="copy-install-targets-into-release-docker-image">Copy install targets into release docker image</h3>
 <p>Build the release docker image that will copy the install targets into the image</p>
