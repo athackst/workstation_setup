@@ -2,11 +2,17 @@
 	tool = diffmerge
 [difftool "diffmerge"]
 	cmd = diffmerge \"$LOCAL\" \"$REMOTE\"
+[difftool "vscode"]
+	cmd = code --wait --diff \"$LOCAL\" \"$REMOTE\"
 [merge]
 	tool = diffmerge
 [mergetool "diffmerge"]
 	cmd = "diffmerge --merge --result=\"$MERGED\" \"$LOCAL\" \"$(if test -f \"$BASE\"; then echo \"$BASE\"; else echo \"$LOCAL\"; fi)\" \"$REMOTE\""
 	trustExitCode = true
+[mergetool "vscode"]
+	cmd = code --wait $MERGED
+[mergetool "meld"]
+	cmd = meld \"$MERGED\" \"$LOCAL\" \"$REMOTE\"
 [alias]
 	mk = !bash -c 'source $HOME/.bash_aliases && g_mk \"$@\"' g_mk
 	ls = !bash -c 'source $HOME/.bash_aliases && g_ls'

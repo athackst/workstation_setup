@@ -1,6 +1,7 @@
 {
     "diffEditor.ignoreTrimWhitespace": false,
     "editor.multiCursorModifier": "alt",
+    "editor.bracketPairColorization.enabled": true,
     "[cpp]": {
         "editor.rulers": [
             80
@@ -11,7 +12,6 @@
         "editor.quickSuggestions": {
             "strings": true
         },
-        "editor.defaultFormatter": "ms-azuretools.vscode-docker"
     },
     "[html]": {
         "editor.defaultFormatter": "vscode.html-language-features"
@@ -22,6 +22,7 @@
     },
     "terminal.integrated.fontFamily": "monospace",
     "terminal.integrated.scrollback": 10000,
+    "terminal.integrated.tabs.enabled": true,
     "typescript.tsc.autoDetect": "off",
     "gulp.autoDetect": "off",
     "grunt.autoDetect": "off",
@@ -32,6 +33,7 @@
         "*.bats": "shellscript",
         "*.xacro": "xml"
     },
+    "files.autoSave": "afterDelay",
     "search.useIgnoreFiles": false,
     "workbench.colorTheme": "Visual Studio Dark",
     "diffEditor.renderSideBySide": true,

@@ -82,10 +82,8 @@ alias g_amend_all="git add -u; git commit --amend --no-edit"
 alias g_commit="git commit"
 # Update branch on remote to match local
 g_up() {
-  branch=$(_g_current_branch)
-  remote=$(_g_remote)
-  echo "pushing to: $remote $branch"
-  git push $remote $branch -u --force
+  echo "pushing to: $(_g_remote) $(_g_current_branch)"
+  git push $(_g_remote) $(_g_current_branch) -u --force
 }
 # Sync the local branch with the remote
 g_sync() {
@@ -149,11 +147,18 @@ g_prune() {
   BASE_BRANCH=$(_g_base_branch)
   for branch in $(git for-each-ref refs/heads/ "--format=%(refname:short)")
   do
+    # Don't prune base branch
+    if [ "$(_g_remote)/$branch" == "$(_g_base_branch)" ] 
+    then
+	    continue
+    fi
+    # Find the common base
     mergeBase=$(git merge-base $BASE_BRANCH $branch)
     if [ -z $mergeBase ]
     then
       continue
     fi
+    # If all commits are contained in base, then delete
     mergeStatus=$(git cherry $BASE_BRANCH $(git commit-tree $(git rev-parse $branch^{tree}) -p $mergeBase -m _))
     case $mergeStatus in
       "-"*)
@@ -161,6 +166,13 @@ g_prune() {
         git branch -D $branch
       ;;
     esac
+    # Sometimes when squashing, the diffs aren't consistent.
+    # If the diff is empty, then delete branch
+    if [[ -z $(git diff $BASE_BRANCH $branch) ]] 
+    then
+      i=$(expr $i + 1)
+      git branch -D $branch
+    fi
   done
   echo "Deleted $i branches"
 }
