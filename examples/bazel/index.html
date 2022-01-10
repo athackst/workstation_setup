@@ -11,7 +11,7 @@
         <link rel="canonical" href="https://athackst.github.io/workstation_setup/examples/bazel/">
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-8.1.3">
+      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-8.1.4">
     
     
       
@@ -19,7 +19,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.edf004c2.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.bb3983ee.min.css">
       
         
         <link rel="stylesheet" href="../../assets/stylesheets/palette.e6a45f82.min.css">
@@ -556,18 +556,18 @@
 <p class="admonition-title">Note</p>
 <p>The working directory for a running task needs to be set to the directory containing a <code>WORKSPACE</code> file.</p>
 <p>You can use vscode environment variables to set the worksapce</p>
-<div class="highlight"><pre><span></span><code>    <span class="p">{</span>
-        <span class="nt">&quot;label&quot;</span><span class="p">:</span> <span class="s2">&quot;build stage1&quot;</span><span class="p">,</span>
-        <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;shell&quot;</span><span class="p">,</span>
-        <span class="nt">&quot;options&quot;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="nt">&quot;cwd&quot;</span><span class="p">:</span> <span class="s2">&quot;${workspaceRoot}/examples/cpp-tutorial/stage1&quot;</span>
-        <span class="p">},</span>
-        <span class="nt">&quot;command&quot;</span><span class="p">:</span> <span class="s2">&quot;bazel build //main:hello-world&quot;</span><span class="p">,</span>
-        <span class="nt">&quot;problemMatcher&quot;</span><span class="p">:</span> <span class="p">[</span>
-            <span class="s2">&quot;$gcc&quot;</span>
-        <span class="p">],</span>
-        <span class="nt">&quot;group&quot;</span><span class="p">:</span> <span class="s2">&quot;build&quot;</span>
-    <span class="p">},</span>
+<div class="highlight"><pre><span></span><code><span class="w">    </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="nt">&quot;label&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;build stage1&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">        </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;shell&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">        </span><span class="nt">&quot;options&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">            </span><span class="nt">&quot;cwd&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;${workspaceRoot}/examples/cpp-tutorial/stage1&quot;</span><span class="w"></span>
+<span class="w">        </span><span class="p">},</span><span class="w"></span>
+<span class="w">        </span><span class="nt">&quot;command&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;bazel build //main:hello-world&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">        </span><span class="nt">&quot;problemMatcher&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">            </span><span class="s2">&quot;$gcc&quot;</span><span class="w"></span>
+<span class="w">        </span><span class="p">],</span><span class="w"></span>
+<span class="w">        </span><span class="nt">&quot;group&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;build&quot;</span><span class="w"></span>
+<span class="w">    </span><span class="p">},</span><span class="w"></span>
 </code></pre></div>
 </div>
 <h4 id="command-line">Command line</h4>
@@ -671,10 +671,10 @@ bazel build :all
     <div class="md-dialog" data-md-component="dialog">
       <div class="md-dialog__inner md-typeset"></div>
     </div>
-    <script id="__config" type="application/json">{"base": "../..", "features": [], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../assets/javascripts/workers/search.0bbba5b5.min.js"}</script>
+    <script id="__config" type="application/json">{"base": "../..", "features": [], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../assets/javascripts/workers/search.361d90f1.min.js"}</script>
     
     
-      <script src="../../assets/javascripts/bundle.e1a181d9.min.js"></script>
+      <script src="../../assets/javascripts/bundle.289a2a4b.min.js"></script>
       
         <script src="../../javascripts/config.js"></script>
       
