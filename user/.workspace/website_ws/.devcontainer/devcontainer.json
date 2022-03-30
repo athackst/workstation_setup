@@ -2,7 +2,7 @@
 // https://github.com/microsoft/vscode-dev-containers/tree/master/containers/ubuntu-18.04-git
 {
 	"name": "Github Pages",
-	"image": "athackst/gh-pages-dev:latest",
+	"image": "althack/gh-pages-dev:latest",
 	"remoteUser": "jekyll",
 	"mounts": [
 		"source=/${env:HOME}/.bash_aliases,target=/home/jekyll/.bash_aliases,type=bind,consistency=cached"

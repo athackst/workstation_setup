@@ -61,7 +61,7 @@ Edit the docker file to include all additional resources and build the developme
 
 ```bash
 cd ~/workstation_setup/examples/ros2_crystal_example_dev
-docker build -f develop.dockerfile -t athackst/ros2:crystal-example-dev  --build-arg UID=$(id -u) --build-arg GID=$(id -g) --build-arg UNAME=$(whoami) .
+docker build -f develop.dockerfile -t althack/ros2:crystal-example-dev  --build-arg UID=$(id -u) --build-arg GID=$(id -g) --build-arg UNAME=$(whoami) .
 ```
 
 ### Build inside the docker image
@@ -70,7 +70,7 @@ Run the docker image with the build function
 
 ```bash
 cd ~/ros2_ws
-docker run -v $HOME:$HOME athackst/ros2:crystal-example-dev /build.sh `pwd`
+docker run -v $HOME:$HOME althack/ros2:crystal-example-dev /build.sh `pwd`
 ```
 
 ### Copy install targets into release docker image

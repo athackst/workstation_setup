@@ -70,7 +70,7 @@ fi
 ########################
 function mkdocs_simple() {
     local port=${1:-"8000"}
-    docker run --rm -p ${port}:8000 -v ${PWD}:/docs --user $(id -u):$(id -g) athackst/mkdocs-simple-plugin 
+    docker run --rm -p ${port}:8000 -v ${PWD}:/docs --user $(id -u):$(id -g) althack/mkdocs-simple-plugin 
 }
 
 ########################
@@ -84,5 +84,5 @@ fi
 # ROS
 ########################
 function noetic_gazebo() {
-  docker run -it --rm -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix -u ros athackst/ros:noetic-gazebo gazebo
+  docker run -it --rm -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix -u ros althack/ros:noetic-gazebo gazebo
 }
