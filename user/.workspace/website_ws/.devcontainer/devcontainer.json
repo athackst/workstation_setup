@@ -8,7 +8,7 @@
 		"source=/${env:HOME}/.bash_aliases,target=/home/jekyll/.bash_aliases,type=bind,consistency=cached"
 	],
 	"settings": {
-		"terminal.integrated.shell.linux": "/bin/bash"
+		"terminal.integrated.defaultProfile.linux": "bash"
 	},
 	"runArgs": ["--network","host"],
 	// Uncomment the next line if you want to publish any ports.
