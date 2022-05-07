@@ -68,9 +68,9 @@ fi
 ########################
 # mkdocs
 ########################
-function mkdocs_simple() {
+function mkdocs_simple_serve() {
     local port=${1:-"8000"}
-    docker run --rm -p ${port}:8000 -v ${PWD}:/docs --user $(id -u):$(id -g) althack/mkdocs-simple-plugin 
+    docker run --rm -p ${port}:8000 -v ${PWD}:/docs -e THEME=material -e SITE_DIR="/test"  althack/mkdocs-simple-plugin:latest
 }
 
 ########################

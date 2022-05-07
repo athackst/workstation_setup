@@ -2,9 +2,7 @@
 # This script compares the files in workstation_setup/user with those in the home directory
 # by opening up diffmerge so that changes can be captured in the home directory.
 
-DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
-
-path=$DIR/../user/
+path="$HOME/Code/workstation_setup/user"
 
 find $path -type f | while read F; do
   base_path="$HOME/${F#"$path"}"

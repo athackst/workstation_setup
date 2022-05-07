@@ -150,7 +150,7 @@ g_prune() {
     # Don't prune base branch
     if [ "$(_g_remote)/$branch" == "$(_g_base_branch)" ] 
     then
-	    continue
+      continue
     fi
     # Find the common base
     mergeBase=$(git merge-base $BASE_BRANCH $branch)
@@ -160,18 +160,18 @@ g_prune() {
     fi
     # If all commits are contained in base, then delete
     mergeStatus=$(git cherry $BASE_BRANCH $(git commit-tree $(git rev-parse $branch^{tree}) -p $mergeBase -m _))
-    case $mergeStatus in
-      "-"*)
+    if [[ $mergeStatus =~ "-".* ]]
+    then 
         i=$(expr $i + 1)
         git branch -D $branch
-      ;;
-    esac
+	      echo "Deleted $branch"
     # Sometimes when squashing, the diffs aren't consistent.
     # If the diff is empty, then delete branch
-    if [[ -z $(git diff $BASE_BRANCH $branch) ]] 
+    elif [[ -z $(git diff $BASE_BRANCH $branch) ]] 
     then
       i=$(expr $i + 1)
       git branch -D $branch
+      echo "Deleted empty branch $branch"
     fi
   done
   echo "Deleted $i branches"
