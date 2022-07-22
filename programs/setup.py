@@ -27,6 +27,7 @@ setuptools.setup(
     python_requires='>=3',
     scripts=[
         'docker-decendents',
+        'gif-gen',
         'update-docker-images',
         'user-config-diff',
         'user-config-update'],

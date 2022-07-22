@@ -19,6 +19,8 @@
 		"foxundermoon.shell-format",
 		"ms-azuretools.vscode-docker",
 		"ms-python.python",
+		"DavidAnson.vscode-markdownlint",
+		"yzhang.markdown-all-in-one"
 	],
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
