@@ -2,42 +2,42 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://athackst.github.io/workstation_setup/</loc>
-         <lastmod>2022-07-22</lastmod>
+         <lastmod>2022-07-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://athackst.github.io/workstation_setup/examples/</loc>
-         <lastmod>2022-07-22</lastmod>
+         <lastmod>2022-07-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://athackst.github.io/workstation_setup/examples/bazel/</loc>
-         <lastmod>2022-07-22</lastmod>
+         <lastmod>2022-07-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://athackst.github.io/workstation_setup/examples/ros2_crystal_dev_release/</loc>
-         <lastmod>2022-07-22</lastmod>
+         <lastmod>2022-07-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://athackst.github.io/workstation_setup/examples/ros2_crystal_multistage/</loc>
-         <lastmod>2022-07-22</lastmod>
+         <lastmod>2022-07-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://athackst.github.io/workstation_setup/examples/ros2_dashing_vscode/</loc>
-         <lastmod>2022-07-22</lastmod>
+         <lastmod>2022-07-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://athackst.github.io/workstation_setup/examples/ros_melodic_vscode/</loc>
-         <lastmod>2022-07-22</lastmod>
+         <lastmod>2022-07-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://athackst.github.io/workstation_setup/programs/</loc>
-         <lastmod>2022-07-22</lastmod>
+         <lastmod>2022-07-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
 </urlset>
