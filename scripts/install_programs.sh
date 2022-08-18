@@ -53,10 +53,3 @@ case $yn in
     sudo apt-get install -y  ffmpeg obs-studio
   ;;
 esac
-
-# set up gitconfig
-read -p "Replace .gitconfig? (Y/n): " yn
-case $yn in
-  [Nn]* ) ;;
-  * )     cp $DIR/../user/.gitconfig $HOME/.gitconfig;;
-esac

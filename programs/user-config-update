@@ -6,11 +6,11 @@ path="$HOME/Code/workstation_setup/user"
 
 find $path -type f | while read F; do
   base_path="$HOME/${F#"$path"}"
-  diffmerge -d /dev/null $F $base_path
+  diff -q $F $base_path
   status=$?
   if [[ $status -eq 1 ]]; then
     echo "$base_path different"
-    diffmerge -i $F $base_path
+    git difftool $F $base_path
   elif [[ $status -eq 3 ]]; then
     echo "$base_path doesn't exist"
   fi

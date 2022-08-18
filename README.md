@@ -7,7 +7,7 @@ Scripts to capture my workstation setups
 Install pre-requirements:
 
 ```bash
-sudo apt install -y git make
+sudo apt install -y git
 git clone git@github.com:athackst/workstation_setup.git
 ```
 
@@ -16,7 +16,7 @@ git clone git@github.com:athackst/workstation_setup.git
 Installs the basics of my workstation with make
 
 ```bash
-make install
+./scripts/install
 ```
 
 ## Develop
@@ -32,5 +32,4 @@ Dockerfiles have been moved to [athackst/dockerfiles](https://github.com/athacks
 ```docker
 RUN wget -O /etc/profile.d/git_aliases.sh https://github.com/athackst/workstation_setup/raw/main/user/.aliases/git_aliases.sh \
     && echo "source /etc/profile.d/git_aliases.sh" >> "/home/vscode/.bashrc"
-
 ```
