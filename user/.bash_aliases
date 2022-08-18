@@ -48,22 +48,42 @@ fi
 ########################
 # workspaces
 ########################
-if [ -d $HOME/.workspace ]; then
-  for d in $HOME/.workspace/*/; do
-    ws=$(basename $d)
-    input='$1'
-    num_input='$#'
-    source /dev/stdin << EOF
-function create_${ws}() {
-  if [ ${num_input} -eq 0 ]; then
-    echo "Usage: create_${ws} <name>";
-    return 1;
+
+# Returns the raw gh auth status displyaing the auth token.
+# Doc: https://cli.github.com/manual/gh_auth_status
+get_gh_auth_status() {
+  gh auth status -t 2>&1
+}
+
+# Returns the current user's username from the auth status.
+get_gh_username() {
+  local auth_status="${1:-}"
+  [[ -z "${auth_status}" ]] && auth_status="$( get_gh_auth_status )"
+  echo "${auth_status}" | \
+    sed -E -n 's/^.* Logged in to [^[:space:]]+ as ([^[:space:]]+).*/\1/gp'
+}
+
+function create_ros2_ws() {
+  if get_gh_auth_status; then
+    user=$(get_gh_username)
+  else
+    return
   fi
-  cp -r $d/. ${input};
-};
-EOF
-  done
-fi
+  gh repo create $1 --template athackst/vscode_ros2_workspace --private --include-all-branches
+  gh repo clone $user/$1
+  cd $1
+}
+
+function create_website_ws() {
+  if get_gh_auth_status; then
+    user=$(get_gh_username)
+  else
+    return
+  fi
+  gh repo create $1 --template athackst/vscode_website_workspace --private --include-all-branches
+  gh repo clone $user/$1
+  cd $1
+}
 
 ########################
 # mkdocs
