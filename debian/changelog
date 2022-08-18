@@ -1,0 +1,5 @@
+althack-workstation-setup (0.1-1) unstable; urgency=medium
+
+  * Initial release (Closes: #nnnn)  <nnnn is the bug number of your ITP>
+
+ -- Allison Thackston <allison@allisonthackston.com>  Thu, 18 Aug 2022 04:37:46 -0700

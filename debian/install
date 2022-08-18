@@ -1,0 +1,3 @@
+user /home/$USER/.workstation-setup
+scripts /home/$USER/.workstation-setup
+programs /home/$USER/.workstation-setup
