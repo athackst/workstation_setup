@@ -61,12 +61,17 @@ get_gh_auth_status() {
 # Returns the current user's username from the auth status.
 get_gh_username() {
   local auth_status="${1:-}"
-  [[ -z "${auth_status}" ]] && auth_status="$( get_gh_auth_status )"
-  echo "${auth_status}" | \
+  [[ -z "${auth_status}" ]] && auth_status="$(get_gh_auth_status)"
+  echo "${auth_status}" |
     sed -E -n 's/^.* Logged in to [^[:space:]]+ as ([^[:space:]]+).*/\1/gp'
 }
 
 function create_ros2_ws() {
+  if [ -z "$1" ]; then
+    echo "Error: Need to provide a name for the workspace!"
+    echo "Usage: create_ros2_ws <name>"
+    return
+  fi
   if get_gh_auth_status; then
     user=$(get_gh_username)
   else
@@ -78,6 +83,11 @@ function create_ros2_ws() {
 }
 
 function create_website_ws() {
+  if [ -z "$1" ]; then
+    echo "Error: Need to provide a name for the workspace!"
+    echo "Usage: create_website_ws <name>"
+    return
+  fi
   if get_gh_auth_status; then
     user=$(get_gh_username)
   else
@@ -91,9 +101,22 @@ function create_website_ws() {
 ########################
 # mkdocs
 ########################
-function mkdocs_simple_serve() {
-    local port=${1:-"8000"}
-    docker run --rm -p ${port}:8000 -v ${PWD}:/docs -e THEME=material -e SITE_DIR="/test"  althack/mkdocs-simple-plugin:latest
+function mkdocs_docker_serve() {
+  local port=${1:-"8000"}
+  docker run --rm -p ${port}:8000 -v ${PWD}:/docs -e THEME=material -e SITE_DIR="/test" -it althack/mkdocs-simple-plugin:latest
+}
+
+function athackst_mkdocs() {
+  (
+    curr_dur=$PWD
+    cd /tmp
+    rm -fr /tmp/athackst.mkdocs/
+    git clone -b main --depth 1 --single-branch https://github.com/athackst/athackst.mkdocs.git &&
+      rm -rf athackst.mkdocs/.git/
+    cp -r $curr_dur/* /tmp/athackst.mkdocs/
+    cd /tmp/athackst.mkdocs
+    mkdocs_docker_serve
+  )
 }
 
 ########################
