@@ -1,47 +1,85 @@
 {
-    "diffEditor.ignoreTrimWhitespace": false,
-    "editor.multiCursorModifier": "alt",
-    "editor.bracketPairColorization.enabled": true,
     "[cpp]": {
         "editor.rulers": [
             80
         ],
-        "editor.tabSize": 2,
+        "editor.tabSize": 2
     },
     "[dockerfile]": {
+        "editor.defaultFormatter": "ms-azuretools.vscode-docker",
         "editor.quickSuggestions": {
             "strings": true
-        },
+        }
     },
     "[html]": {
-        "editor.defaultFormatter": "vscode.html-language-features"
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[json]": {
+        "editor.defaultFormatter": "vscode.json-language-features"
+    },
+    "[jsonc]": {
+        "editor.defaultFormatter": "vscode.json-language-features"
+    },
+    "[liquid]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[markdown]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
     },
     "[python]": {
         "editor.defaultFormatter": "ms-python.python",
-        "editor.tabSize": 2,
+        "editor.tabSize": 4
     },
-    "terminal.integrated.fontFamily": "monospace",
-    "terminal.integrated.scrollback": 10000,
-    "terminal.integrated.tabs.enabled": true,
-    "typescript.tsc.autoDetect": "off",
-    "gulp.autoDetect": "off",
-    "grunt.autoDetect": "off",
-    "jake.autoDetect": "off",
-    "npm.autoDetect": "off",
+    "[ruby]": {
+        "editor.defaultFormatter": "Shopify.ruby-lsp"
+    },
+    "[scss]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[shellscript]": {
+        "editor.defaultFormatter": "foxundermoon.shell-format"
+    },
+    "[typescript]": {
+        "editor.defaultFormatter": "vscode.typescript-language-features"
+    },
+    "[yaml]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "cSpell.ignorePaths": [
+        "package-lock.json",
+        "node_modules",
+        "vscode-extension",
+        ".git/objects",
+        ".vscode",
+        ".vscode-insiders",
+        "settings.json"
+    ],
+    "diffEditor.ignoreTrimWhitespace": false,
+    "diffEditor.renderSideBySide": true,
+    "editor.bracketPairColorization.enabled": true,
+    "editor.inlineSuggest.enabled": true,
+    "editor.minimap.enabled": false,
+    "editor.multiCursorModifier": "alt",
     "files.associations": {
         ".rosinstall": "yaml",
         "*.bats": "shellscript",
         "*.xacro": "xml"
     },
     "files.autoSave": "afterDelay",
-    "search.useIgnoreFiles": false,
+    "files.insertFinalNewline": true,
+    "files.trimFinalNewlines": true,
+    "grunt.autoDetect": "off",
+    "gulp.autoDetect": "off",
+    "jake.autoDetect": "off",
+    "npm.autoDetect": "off",
+    "terminal.integrated.fontFamily": "monospace",
+    "terminal.integrated.scrollback": 10000,
+    "terminal.integrated.tabs.enabled": true,
+    "typescript.tsc.autoDetect": "off",
     "workbench.colorTheme": "Visual Studio Dark",
-    "diffEditor.renderSideBySide": true,
-    "workbench.editorAssociations": [
-        {
-            "viewType": "jupyter.notebook.ipynb",
-            "filenamePattern": "*.ipynb"
-        }
-    ],
-
+    "workbench.editor.enablePreviewFromQuickOpen": true,
+    "workbench.editorAssociations": {
+        "filenamePattern": "*.ipynb",
+        "viewType": "jupyter.notebook.ipynb"
+    }
 }
