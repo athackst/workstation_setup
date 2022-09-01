@@ -15,21 +15,23 @@ read -p "Install vscode extensions? (y/N): " yn
 case $yn in
     [Yy]*)
         # configure code with exensions
-        # docker
-        code --install-extension ms-azuretools.vscode-docker
-        # github pull requests
-        code --install-extension github.vscode-pull-request-github
-        # gitlens
+        # Preview PDF files
+        code --install-extension analytic-signal.preview-pdf
+        # Use meld in diffs
+        code --install-extension danielroedl.meld-diff
+        # Git lens for code history and management
         code --install-extension eamodio.gitlens
+        # Github pull request support
+        code --install-extension GitHub.vscode-pull-request-github
+        # Docker
+        code --install-extension ms-azuretools.vscode-docker
+        # Remote containers
+        code --install-extension ms-vscode-remote.vscode-remote-extensionpack
+        # Octave
+        code --install-extension paulosilva.vsc-octave-debugger
+        code --install-extension toasty-technologies.octave
         # jupyter
         code --install-extension ms-toolsai.jupyter
-        # markdown (for README.md)
-        code --install-extension yzhang.markdown-all-in-one
-        code --install-extension davidanson.vscode-markdownlint
-        # remote tools
-        code --install-extension ms-vscode-remote.vscode-remote-extensionpack
-        # yaml
-        code --install-extension redhat.vscode-yaml
         ;;
     [Nn]*) ;;
     *) ;;
