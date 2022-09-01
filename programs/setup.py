@@ -15,10 +15,10 @@ setuptools.setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     keywords='setup, scripts',
-    url='https://athackst.github.io/workstation_setup/',
+    url='https://althack.dev/workstation_setup/',
     project_urls={
         "Issues": "https://github.com/athackst/workstation_setup/issues",
-        "Documentation": "https://athackst.github.io/workstation_setup/",
+        "Documentation": "https://althack.dev/workstation_setup/",
         "Source Code": "https://github.com/athackst/workstation_setup",
     },
     author='Allison Thackston',
