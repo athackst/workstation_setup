@@ -7,13 +7,13 @@ sudo sh -c 'echo "deb [arch=amd64] https://packages.microsoft.com/repos/vscode s
 
 sudo apt-get update
 sudo apt-get install -y \
-  apt-transport-https \
-  code # or code-insiders
+    apt-transport-https \
+    code # or code-insiders
 
 # set up gitconfig
 read -p "Install vscode extensions? (y/N): " yn
 case $yn in
-    [Yy]* )
+    [Yy]*)
         # configure code with exensions
         # docker
         code --install-extension ms-azuretools.vscode-docker
@@ -30,18 +30,20 @@ case $yn in
         code --install-extension ms-vscode-remote.vscode-remote-extensionpack
         # yaml
         code --install-extension redhat.vscode-yaml
-    ;;
-    [Nn]* ) ;;
-    * )     ;;
+        ;;
+    [Nn]*) ;;
+    *) ;;
 esac
 
 # install user preferences
 read -p "Update user preferences? (y/N): " yn
 case $yn in
-    [Yy]* )
-        DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+    [Yy]*)
+        DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" > /dev/null 2>&1 && pwd)"
         cp -r $DIR/../user/.config/Code/ $HOME/.config/Code/
-    ;;
-    [Nn]* ) ;;
-    * )     ;;
+        ;;
+    [Nn]*) ;;
+
+    *) ;;
+
 esac

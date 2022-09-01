@@ -8,15 +8,13 @@ sudo apt-get install -y ros-$ROS_DISTRO-desktop-full
 sudo apt-get install -y python-rosinstall python-rosinstall-generator python-wstool build-essential
 
 #initialize and update rosdep
-if [ ! -f "/etc/ros/rosdep/sources.list.d/20-default.list" ]
-then
+if [ ! -f "/etc/ros/rosdep/sources.list.d/20-default.list" ]; then
   rosdep init
 fi
 rosdep update
 
 # add to .bash_aliases if not already there
-if ! grep -Fxq "source /opt/ros/$ROS_DISTRO/setup.bash" ~/.bash_aliases
-then
+if ! grep -Fxq "source /opt/ros/$ROS_DISTRO/setup.bash" ~/.bash_aliases; then
   echo "adding /opt/ros/$ROS_DISTRO/setup.bash to bash_aliases"
   echo "source /opt/ros/$ROS_DISTRO/setup.bash" >> ~/.bash_aliases
 fi

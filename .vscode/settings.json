@@ -1,7 +1,6 @@
 {
 	"files.trimFinalNewlines": true,
 	"files.insertFinalNewline": true,
-	"http.proxyStrictSSL": false,
 	"yaml.schemaStore.enable": false,
 	"yaml.schemas": {
 		"http://raw.githubusercontent.com/SchemaStore/schemastore/master/src/schemas/json/github-workflow.json": [
@@ -15,4 +14,32 @@
 		80,
 		120
 	],
+	"[dockerfile]": {
+		"editor.quickSuggestions": {
+			"strings": true
+		},
+		"editor.defaultFormatter": "ms-azuretools.vscode-docker"
+	},
+	"[json]": {
+		"editor.defaultFormatter": "vscode.json-language-features"
+	},
+	"[jsonc]": {
+		"editor.defaultFormatter": "vscode.json-language-features"
+	},
+	"[markdown]": {
+		"editor.wordWrap": "wordWrapColumn",
+		"editor.wordWrapColumn": 80,
+		"editor.defaultFormatter": "DavidAnson.vscode-markdownlint"
+	},
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.python",
+        "editor.tabSize": 4
+    },
+	"[shellscript]": {
+		"editor.defaultFormatter": "foxundermoon.shell-format"
+	},
+	"[yaml]": {
+		"editor.defaultFormatter": "redhat.vscode-yaml"
+	},
+	"shellformat.flag": "-ci -sr",
 }

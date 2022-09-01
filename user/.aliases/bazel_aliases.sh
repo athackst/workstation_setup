@@ -21,8 +21,7 @@ b() {
   shift
   for rule in $(cat $BAZEL_BIN_CACHE); do
     rule_binary=$(echo $rule | sed 's|^.*[:/]||')
-    if [ "$rule_binary" == "$binary" ]
-    then
+    if [ "$rule_binary" == "$binary" ]; then
       echo "Running bazel binary $rule ..."
       path=$BAZEL_WS/bazel-bin/$(echo $rule | sed -e 's|:|/|' -e 's|//||')
       $path "$@"
@@ -57,4 +56,3 @@ _my_bt_alias_autocomplete() {
   _bazel__complete_target_stdout "test"
 }
 complete -o nospace -F _my_bt_alias_autocomplete bb
-fi

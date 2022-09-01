@@ -27,7 +27,6 @@ I have recently been playing with the idea of doing all/most development inside 
 
 Dockerfiles have been moved to [athackst/dockerfiles](https://github.com/athackst/dockerfiles)
 
-
 ## Get the aliases in a container
 
 ```docker

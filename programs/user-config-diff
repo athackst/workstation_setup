@@ -4,8 +4,7 @@
 
 path="$HOME/Code/workstation_setup/user"
 
-find $path -type f | while read F
-do
+find $path -type f | while read F; do
   base_path="$HOME/${F#"$path"}"
   diffmerge -d /dev/null $base_path $F
   status=$?

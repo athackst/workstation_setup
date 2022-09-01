@@ -35,15 +35,13 @@ sudo apt-get update && sudo apt-get install -y \
   wget
 
 #initialize and update rosdep
-if [ ! -f "/etc/ros/rosdep/sources.list.d/20-default.list" ]
-then
+if [ ! -f "/etc/ros/rosdep/sources.list.d/20-default.list" ]; then
   rosdep init
 fi
 rosdep update
 
 # add to .bash_aliases if not already there
-if ! grep -Fxq "source /opt/ros/$ROS_DISTRO/setup.bash" ~/.bash_aliases
-then
+if ! grep -Fxq "source /opt/ros/$ROS_DISTRO/setup.bash" ~/.bash_aliases; then
   echo "adding ros $ROS_DISTRO to bash_aliases"
   echo "source /opt/ros/$ROS_DISTRO/setup.bash" >> ~/.bash_aliases
 fi
