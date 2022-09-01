@@ -31,10 +31,10 @@
 		"editor.wordWrapColumn": 80,
 		"editor.defaultFormatter": "DavidAnson.vscode-markdownlint"
 	},
-    "[python]": {
-        "editor.defaultFormatter": "ms-python.python",
-        "editor.tabSize": 4
-    },
+	"[python]": {
+		"editor.defaultFormatter": "ms-python.python",
+		"editor.tabSize": 4
+	},
 	"[shellscript]": {
 		"editor.defaultFormatter": "foxundermoon.shell-format"
 	},
