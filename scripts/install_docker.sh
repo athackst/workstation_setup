@@ -11,7 +11,7 @@ sudo apt-get install -y \
     curl \
     gnupg-agent \
     software-properties-common \
-    python-pip
+    python3-pip
 
 # add Docker's official GPG key
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
@@ -23,7 +23,7 @@ sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubun
 sudo apt-get update
 
 # install the latest version of Docker CE
-sudo apt-get install -y docker-ce docker-ce-cli containerd.io python-pip
+sudo apt-get install -y docker-ce docker-ce-cli containerd.io python3-pip
 
 # update user permisions
 user="$(id -un 2>/dev/null || true)"
