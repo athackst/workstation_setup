@@ -1,8 +1,0 @@
-.catkin_tools/
-build/
-devel/
-install/
-log/
-logs/
-src/*
-!.rosinstall
