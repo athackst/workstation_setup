@@ -38,7 +38,7 @@ esac
 read -p "Run user-config-update (recommended)? (Y/n): " yn
 case $yn in
   "" | [Yy]*)
-    user-config-update
+    $DIR/../programs/user-config-update
     ;;
 esac
 
