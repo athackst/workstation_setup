@@ -5,7 +5,7 @@
 path="$HOME/Code/workstation_setup/user"
 
 find $path -type f | while read F; do
-  base_path="$HOME/${F#"$path"}"
+  base_path="${HOME}${F#"$path"}"
   diff -q $F $base_path
   status=$?
   if [[ $status -eq 1 ]]; then

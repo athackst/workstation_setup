@@ -6,7 +6,7 @@ It's a convenient way to add scripts to the program list.  The program list allo
 
 ## Installation
 
-To instll just run pip install
+To install just run pip install
 
 ```bash
 pip install .

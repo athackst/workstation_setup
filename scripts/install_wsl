@@ -1,0 +1,11 @@
+#!/bin/bash
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+
+$DIR/install_base.sh
+$DIR/install_gh.sh
+
+cd $DIR/../programs
+pip install .
+
+$DIR/install_user_config.sh
