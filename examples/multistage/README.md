@@ -1,4 +1,4 @@
-# ros2_crystal_multistage
+# Wmultistage
 
 This is an example of a multi-stage dockerfile to produce a target image with custom built targets.
 
@@ -7,7 +7,7 @@ This is an example of a multi-stage dockerfile to produce a target image with cu
 ### Build
 
 ```bash
-make example
+make
 ```
 
 ### Uninstall

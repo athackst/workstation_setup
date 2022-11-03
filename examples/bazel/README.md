@@ -22,7 +22,7 @@ code workstation_setup/examples/bazel
 Run the get_code script, then open this folder in vscode.
 
 ```bash
-./get_code
+./get_code.sh
 ```
 
 This will download the bazel example code repository.
