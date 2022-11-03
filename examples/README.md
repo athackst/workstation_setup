@@ -1,8 +1,8 @@
 # Example workspaces
 
-Here are 3 examples of how to set up your docker development workflow with ROS.
+Here are some example workspace setups
 
-## 1. Multi stage docker build ([ros2_crystal_multistage](ros2_crystal_multistage/README.md))
+## Multi stage docker build ([multistage](multistage/README.md))
 
 This will build and compile your code into a small output image by building your code during dockerfile creation.  
 
@@ -15,7 +15,7 @@ __Cons:__
 
 * Takes longer to compile when a file changes (about the same as building from scratch)
 
-## 2. Docker development environment copied into final image ([ros2_crystal_dev_release](ros2_crystal_dev_release/README.md))
+## Docker development environment copied into final image ([dev_release](dev_release/README.md))
 
 This will build the workspace on your host machine using a docker image as the development environment.
 
@@ -29,7 +29,7 @@ __Cons:__
 * Requires multiple dockerfiles to set up
 * Not as repeatable (your local cache may affect build)
 
-## 3. Docker development through VS Code ([ros2_dashing_vscode](ros2_dashing_vscode/README.md))
+## Docker development through VS Code ([dev_release_vscode](dev_release_vscode/README.md))
 
 This will use the VS Code docker container [plugin](https://code.visualstudio.com/docs/remote/containers) as the basis of development.  
 
@@ -46,6 +46,12 @@ __Cons:__
 
 * Built targets have "root" permissions unless you've updated your base docker image to have your user name/group.
 
-## 4. Bazel workspace with VS Code ([bazel](bazel/README.md))
+## Bazel workspace with VS Code ([bazel](bazel/README.md))
 
 This will use a VS Code docker container [plugin](https://code.visualstudio.com/docs/remote/containers) as the basis of development for a bazel environment.
+
+## ROS melodic workspace ([ros_melodic_vscode](ros_melodic_vscode/README.md))
+
+This is similar to the [vscode_ros2_workspace](https://github.com/athackst/vscode_ros2_workspace) but for ROS1.
+
+> TODO: Make this its own template.

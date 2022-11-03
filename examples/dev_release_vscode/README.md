@@ -1,4 +1,4 @@
-# ros2_dashing_vscode
+# dev_release_vscode
 
 This is an example using ros2 dashing + vscode + docker.
 
@@ -71,7 +71,7 @@ in the current working directory.
 
 ## Deployment
 
-The deployment steps for this workflow are similar dev/release workflow.  Development is performed in a different container than the release, where the build outputs are copied into the release container.
+The deployment steps for this workflow are similar [dev_release](../dev_release/README.md) release workflow.  Development is performed in a different container than the release, where the build outputs are copied into the release container.
 
 Run the release script on the host computer.
 
