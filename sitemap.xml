@@ -21,17 +21,17 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://athackst.github.io/workstation_setup/examples/ros2_crystal_dev_release/</loc>
+         <loc>https://athackst.github.io/workstation_setup/examples/dev_release/</loc>
          <lastmod>2022-11-03</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://athackst.github.io/workstation_setup/examples/ros2_crystal_multistage/</loc>
+         <loc>https://athackst.github.io/workstation_setup/examples/dev_release_vscode/</loc>
          <lastmod>2022-11-03</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://athackst.github.io/workstation_setup/examples/ros2_dashing_vscode/</loc>
+         <loc>https://athackst.github.io/workstation_setup/examples/multistage/</loc>
          <lastmod>2022-11-03</lastmod>
          <changefreq>daily</changefreq>
     </url>
