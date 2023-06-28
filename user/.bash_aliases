@@ -103,19 +103,27 @@ function create_website_ws() {
 ########################
 function mkdocs_docker_serve() {
   local port=${1:-"8000"}
-  docker run --rm -p ${port}:8000 -v ${PWD}:/docs -e THEME=material -e SITE_DIR="/test" -it althack/mkdocs-simple-plugin:latest
+  docker run --rm -p ${port}:8000 -v ${PWD}:/docs -e INPUT_THEME=material -it althack/mkdocs-simple-plugin:latest
 }
 
-function athackst_mkdocs() {
-  (
-    curr_dur=$PWD
-    cd /tmp
-    rm -fr /tmp/athackst.mkdocs/
-    git clone -b main --depth 1 --single-branch https://github.com/athackst/athackst.mkdocs.git &&
-      rm -rf athackst.mkdocs/.git/
-    cp -r $curr_dur/* /tmp/athackst.mkdocs/
-    cd /tmp/athackst.mkdocs
-    mkdocs_docker_serve
+function mkdocs_docker_build() {
+  docker run --rm -v ${PWD}:/docs -w /docs --user $(id -u):$(id -g) -e INPUT_THEME=material althack/mkdocs-simple-plugin:latest mkdocs_simple_gen --build
+}
+
+function mkdocs_docker() {
+  docker run --rm -v ${PWD}:/docs -w /docs --user $(id -u):$(id -g) -it althack/mkdocs-simple-plugin:latest /bin/bash
+}
+
+function mkdocs_athackst() {
+  (	
+  curr_dur=$PWD
+  cd /tmp
+  rm -fr /tmp/athackst.mkdocs/
+  git clone -b main --depth 1 --single-branch https://github.com/athackst/athackst.mkdocs.git \
+    && rm -rf athackst.mkdocs/.git/
+  cp -r $curr_dur/* /tmp/athackst.mkdocs/
+  cd /tmp/athackst.mkdocs
+  mkdocs_docker_serve
   )
 }
 
@@ -131,4 +139,16 @@ fi
 ########################
 function noetic_gazebo() {
   docker run -it --rm -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix -u ros althack/ros:noetic-gazebo gazebo
+}
+
+#######################
+# HTML Proofer
+#######################
+function htmlproofer() {
+	curr_dir="$PWD/$1"
+	echo "Running on $curr_dir"
+	base_dir=$(basename "$PWD")
+	ignore="https://www.linkedin.com/in/allisonthackston,http://sdformat.org,/gazebosim.org/docs/citadel/,https://fonts.gstatic.com,/regex101.com/"
+	url_swap="^\/${base_dir}:,^\/dev:,^\/v\d+\.\d+\.\d+:"
+	docker run -v ${curr_dir}:/site -e INPUT_DIRECTORY=/site -e INPUT_IGNORE_URLS=${ignore} -e INPUT_URL_SWAP=${url_swap} althack/htmlproofer:latest
 }

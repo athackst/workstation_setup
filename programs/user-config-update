@@ -1,4 +1,5 @@
 #!/bin/bash
+
 # This script compares the files in workstation_setup/user with those in the home directory
 # by opening up diffmerge so that changes can be captured in the home directory.
 

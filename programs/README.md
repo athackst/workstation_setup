@@ -14,6 +14,22 @@ pip install .
 
 ## Usage
 
+### docker-decendents
+
+Get all of the decendent images of a docker image
+
+### docker-services-start
+
+Start all of my core docker servies like registry, notes, and watchtower
+
+### docker-services-stop
+
+Stop all of my docker services to keep them from restarting
+
+### docker-services-update
+
+Run the watchtower update once on command.
+
 ### gif-gen
 
 Generates a gif from a video, including automatic "good" compression

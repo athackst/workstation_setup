@@ -1,4 +1,5 @@
 #!/bin/bash
+
 filename=''
 output=''
 start='0'

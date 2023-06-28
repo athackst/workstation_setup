@@ -12,7 +12,7 @@
         }
     },
     "[html]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode"
+        "editor.defaultFormatter": "vscode.html-language-features"
     },
     "[json]": {
         "editor.defaultFormatter": "vscode.json-language-features"
@@ -20,18 +20,14 @@
     "[jsonc]": {
         "editor.defaultFormatter": "vscode.json-language-features"
     },
-    "[liquid]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode"
-    },
     "[markdown]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode"
+        "editor.wordWrap": "wordWrapColumn",
+        "editor.wordWrapColumn": 80,
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
     },
     "[python]": {
         "editor.defaultFormatter": "ms-python.python",
         "editor.tabSize": 4
-    },
-    "[ruby]": {
-        "editor.defaultFormatter": "Shopify.ruby-lsp"
     },
     "[scss]": {
         "editor.defaultFormatter": "esbenp.prettier-vscode"
@@ -43,7 +39,7 @@
         "editor.defaultFormatter": "vscode.typescript-language-features"
     },
     "[yaml]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode"
+        "editor.defaultFormatter": "redhat.vscode-yaml"
     },
     "cSpell.ignorePaths": [
         "package-lock.json",
@@ -60,6 +56,10 @@
     "editor.inlineSuggest.enabled": true,
     "editor.minimap.enabled": false,
     "editor.multiCursorModifier": "alt",
+    "editor.rulers": [
+        80,
+        100
+    ],
     "files.associations": {
         ".rosinstall": "yaml",
         "*.bats": "shellscript",

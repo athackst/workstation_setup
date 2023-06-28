@@ -14,18 +14,21 @@
 		"source=/${env:HOME}/.bash_aliases,target=/home/vscode/.bash_aliases,type=bind,consistency=cached",
 		"source=/${env:HOME}/.aliases,target=/home/vscode/.aliases,type=bind,consistency=cached"
 	],
-	// Set *default* container specific settings.json values on container create.
-	"settings": {},
 	// Add the IDs of extensions you want installed when the container is created.
-	"extensions": [
-		"docsmsft.docs-yaml",
-		"eamodio.gitlens",
-		"foxundermoon.shell-format",
-		"ms-azuretools.vscode-docker",
-		"ms-python.python",
-		"DavidAnson.vscode-markdownlint",
-		"yzhang.markdown-all-in-one"
-	],
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"docsmsft.docs-yaml",
+				"eamodio.gitlens",
+				"foxundermoon.shell-format",
+				"ms-azuretools.vscode-docker",
+				"ms-python.python",
+				"DavidAnson.vscode-markdownlint",
+				"yzhang.markdown-all-in-one"
+			]
+		}
+	},
+
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// "forwardPorts": [],
 	// Use 'postCreateCommand' to run commands after the container is created.

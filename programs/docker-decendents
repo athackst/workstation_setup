@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-#
+
 # usage: python3 docker_descendants.py <image_id> ...
 
 import argparse

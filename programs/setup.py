@@ -27,6 +27,9 @@ setuptools.setup(
     python_requires='>=3',
     scripts=[
         'docker-decendents',
+        'docker-services-start',
+        'docker-services-stop',
+        'docker-services-update',
         'gif-gen',
         'update-docker-images',
         'user-config-diff',
