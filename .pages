@@ -1,0 +1,5 @@
+nav:
+    - workstation_setup: README.md
+    - Programs: programs
+    - Examples: examples
+    - License: LICENSE
