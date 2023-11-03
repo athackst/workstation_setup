@@ -31,7 +31,7 @@ case $yn in
     then
       # NOTE: diffmerge is no longer supported by debian from sourcegear in Ubuntu 18.04
       sudo apt install -y libcanberra-gtk-module libcanberra-gtk3-module python python-requests
-      python $DIR/google_drive.py 1sj_6QHV15tIzQBIGJaopMsogyds0pxD9 /tmp/diffmerge_4.2.1.817.beta_amd64.deb
+      python $DIR/get_google_drive_file.py 1sj_6QHV15tIzQBIGJaopMsogyds0pxD9 /tmp/diffmerge_4.2.1.817.beta_amd64.deb
       sudo dpkg -i /tmp/diffmerge_4.2.1.817.beta_amd64.deb
       sudo apt-get install -f -y
     else
