@@ -2,8 +2,8 @@
 FROM althack/ros2:crystal-dev
 
 # install any extra required packages
-COPY install_depends.sh /setup/install_depends.sh
-RUN /setup/install_depends.sh && rm -rf /var/lib/apt/lists/*
+COPY get_depends.sh /setup/get_depends.sh
+RUN /setup/get_depends.sh && rm -rf /var/lib/apt/lists/*
 
 # add your user parameters
 ARG UNAME=docker

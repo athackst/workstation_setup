@@ -1,6 +1,6 @@
 #!/bin/bash
 
-scripts/install_base.sh
-scripts/install_gh.sh
+install/base.sh
+install/gh.sh
 
 pip install programs/.
