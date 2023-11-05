@@ -11,6 +11,16 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://athackst.github.io/workstation_setup/scripts/keep_to_obsidian/</loc>
+         <lastmod>2023-11-05</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://athackst.github.io/workstation_setup/scripts/get_google_drive_file/</loc>
+         <lastmod>2023-11-05</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://athackst.github.io/workstation_setup/examples/</loc>
          <lastmod>2023-11-05</lastmod>
          <changefreq>daily</changefreq>
