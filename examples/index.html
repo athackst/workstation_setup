@@ -398,17 +398,238 @@
       
   
   
+    
   
-    <li class="md-nav__item">
-      <a href="README.md" class="md-nav__link">
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
         
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
   
   <span class="md-ellipsis">
     Examples
   </span>
   
 
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Examples
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Example workspaces
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Example workspaces
+  </span>
+  
+
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#multi-stage-docker-build-multistage" class="md-nav__link">
+    Multi stage docker build (multistage)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#docker-development-environment-copied-into-final-image-dev_release" class="md-nav__link">
+    Docker development environment copied into final image (dev_release)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#docker-development-through-vs-code-dev_release_vscode" class="md-nav__link">
+    Docker development through VS Code (dev_release_vscode)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bazel-workspace-with-vs-code-bazel" class="md-nav__link">
+    Bazel workspace with VS Code (bazel)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ros-melodic-workspace-ros_melodic_vscode" class="md-nav__link">
+    ROS melodic workspace (ros_melodic_vscode)
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="ros_melodic_vscode/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    ros_melodic_vscode
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="multistage/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    multistage
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="bazel/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    bazel
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="dev_release/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    dev_release
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="dev_release_vscode/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    dev_release_vscode
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
     </li>
   
 
@@ -511,7 +732,7 @@
 <h1 id="example-workspaces">Example workspaces</h1>
 <p>Here are some example workspace setups</p>
 <h2 id="multi-stage-docker-build-multistage">Multi stage docker build (<a href="multistage/">multistage</a>)</h2>
-<p>This will build and compile your code into a small output image by building your code during dockerfile creation.  </p>
+<p>This will build and compile your code into a small output image by building your code during dockerfile creation.</p>
 <p><strong>Pros:</strong></p>
 <ul>
 <li>One file defines everything you need to create the image</li>
@@ -534,8 +755,8 @@
 <li>Not as repeatable (your local cache may affect build)</li>
 </ul>
 <h2 id="docker-development-through-vs-code-dev_release_vscode">Docker development through VS Code (<a href="dev_release_vscode/">dev_release_vscode</a>)</h2>
-<p>This will use the VS Code docker container <a href="https://code.visualstudio.com/docs/remote/containers">plugin</a> as the basis of development.  </p>
-<p>Under-the-hood, vscode is running a docker container and mounting your source code into it. This gives you all the tooling you need to build your code and can enable standardization of tooling including linters.  It also seamlessly integrates with IntelliSense (which is all sorts of awesome) and enables debugging through traditional debuggers ie gdb.  </p>
+<p>This will use the VS Code docker container <a href="https://code.visualstudio.com/docs/remote/containers">plugin</a> as the basis of development.</p>
+<p>Under-the-hood, vscode is running a docker container and mounting your source code into it. This gives you all the tooling you need to build your code and can enable standardization of tooling including linters.  It also seamlessly integrates with IntelliSense (which is all sorts of awesome) and enables debugging through traditional debuggers ie gdb.</p>
 <p>It seems to follow the develop-release pattern with docker, where a develop container is created for compiling and a then the built assets can be copied into a deployment container.  It is also possible to support multi-stage, but development would be in a docker-in-docker configuration.</p>
 <p><strong>Pros:</strong></p>
 <ul>
@@ -550,9 +771,9 @@
 <p>This will use a VS Code docker container <a href="https://code.visualstudio.com/docs/remote/containers">plugin</a> as the basis of development for a bazel environment.</p>
 <h2 id="ros-melodic-workspace-ros_melodic_vscode">ROS melodic workspace (<a href="ros_melodic_vscode/">ros_melodic_vscode</a>)</h2>
 <p>This is similar to the <a href="https://github.com/athackst/vscode_ros2_workspace">vscode_ros2_workspace</a> but for ROS1.</p>
-<blockquote>
-<p>TODO: Make this its own template.</p>
-</blockquote>
+<ul>
+<li>[ ] TODO: Make this its own template.</li>
+</ul>
 
 
   
