@@ -121,7 +121,7 @@ function mkdocs_athackst() {
   git clone -b main --depth 1 --single-branch https://github.com/athackst/athackst.mkdocs.git ${mkdocs_dir} \
     && rm -rf ${mkdocs_dir}/.git/
   echo "Copying current directory ${curr_dir} to ${mkdocs_dir}"
-  find . -name '.*' -prune -o -type f -exec cp -rv {} ${mkdocs_dir} \;
+  rsync -av ./ ${mkdocs_dir}/
   (cd ${mkdocs_dir} && mkdocs_docker_serve)
 }
 
