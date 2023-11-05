@@ -11,7 +11,7 @@ You'll need the following packages installed:
 
 ## Usage
 
-Open this directory in vscode 
+Open this directory in vscode
 
 ```bash
 code workstation_setup/examples/bazel
