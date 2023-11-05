@@ -1,4 +1,25 @@
 #!/usr/bin/python
+# md
+# ## Download a google drive file
+#
+# This python script downloads a file from google drive using teh file ID obtained from a shareable link.
+#
+# ### Usage
+#
+# 1. Obtain the file ID from the shareable link of the file.
+# 2. Run the script with the following command:
+#    ```shell
+#    python google_drive.py file_id destination_file_path
+#    ```
+# 3. The file will be saved in the destination path.
+#
+# ### Notes
+# - The script will overwrite existing files with the same name.
+# - The script will not work for files that are not shared.
+# - To share a file, click on the share button on the top right corner of the file and click on "Get shareable link".
+#
+# /md
+
 import requests
 
 

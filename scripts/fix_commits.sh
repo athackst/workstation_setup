@@ -1,4 +1,5 @@
 #!/bin/sh
+# Change committer email from OLD_EMAIL to CORRECT_EMAIL with CORRECT_NAME
 
 git filter-branch --env-filter '
 OLD_EMAIL="allisoon@allisonthackston.com"
