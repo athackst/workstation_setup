@@ -8,12 +8,12 @@ This will build and compile your code into a small output image by building your
 
 __Pros:__
 
-* One file defines everything you need to create the image
-* Repeatability built in
+- One file defines everything you need to create the image
+- Repeatability built in
 
 __Cons:__
 
-* Takes longer to compile when a file changes (about the same as building from scratch)
+- Takes longer to compile when a file changes (about the same as building from scratch)
 
 ## Docker development environment copied into final image ([dev_release](dev_release/README.md))
 
@@ -21,13 +21,13 @@ This will build the workspace on your host machine using a docker image as the d
 
 __Pros:__
 
-* Fastest re-build time because you can use cmake cache
-* Small output image possible by passing targets into final image
+- Fastest re-build time because you can use cmake cache
+- Small output image possible by passing targets into final image
 
 __Cons:__
 
-* Requires multiple dockerfiles to set up
-* Not as repeatable (your local cache may affect build)
+- Requires multiple dockerfiles to set up
+- Not as repeatable (your local cache may affect build)
 
 ## Docker development through VS Code ([dev_release_vscode](dev_release_vscode/README.md))
 
@@ -39,12 +39,12 @@ It seems to follow the develop-release pattern with docker, where a develop cont
 
 __Pros:__
 
-* All developers using the same tools (including linters, etc) in an easy to share setup
-* Supported IDE functionalities such as intellisense, code following, debugging, etc.
+- All developers using the same tools (including linters, etc) in an easy to share setup
+- Supported IDE functionalities such as intellisense, code following, debugging, etc.
 
 __Cons:__
 
-* Built targets have "root" permissions unless you've updated your base docker image to have your user name/group.
+- Built targets have "root" permissions unless you've updated your base docker image to have your user name/group.
 
 ## Bazel workspace with VS Code ([bazel](bazel/README.md))
 
