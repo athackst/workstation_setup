@@ -24,4 +24,4 @@ sudo apt-get install -y \
 # sudo apt-get install -y python-is-python3
 # sudo update-alternatives --install /usr/bin/pip pip /usr/bin/pip3 1
 pip install -U pip
-pip install -U autopep8 requests
+pip install -U autopep8 requests hatch
