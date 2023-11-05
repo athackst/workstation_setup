@@ -2,5 +2,5 @@ nav:
     - workstation_setup: README.md
     - Programs: programs
     - Scripts: scripts
-    - Examples: examples/README.md
+    - Examples: examples
     - License: LICENSE

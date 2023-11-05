@@ -4,7 +4,7 @@ Here are some example workspace setups
 
 ## Multi stage docker build ([multistage](multistage/README.md))
 
-This will build and compile your code into a small output image by building your code during dockerfile creation.  
+This will build and compile your code into a small output image by building your code during dockerfile creation.
 
 __Pros:__
 
@@ -31,9 +31,9 @@ __Cons:__
 
 ## Docker development through VS Code ([dev_release_vscode](dev_release_vscode/README.md))
 
-This will use the VS Code docker container [plugin](https://code.visualstudio.com/docs/remote/containers) as the basis of development.  
+This will use the VS Code docker container [plugin](https://code.visualstudio.com/docs/remote/containers) as the basis of development.
 
-Under-the-hood, vscode is running a docker container and mounting your source code into it. This gives you all the tooling you need to build your code and can enable standardization of tooling including linters.  It also seamlessly integrates with IntelliSense (which is all sorts of awesome) and enables debugging through traditional debuggers ie gdb.  
+Under-the-hood, vscode is running a docker container and mounting your source code into it. This gives you all the tooling you need to build your code and can enable standardization of tooling including linters.  It also seamlessly integrates with IntelliSense (which is all sorts of awesome) and enables debugging through traditional debuggers ie gdb.
 
 It seems to follow the develop-release pattern with docker, where a develop container is created for compiling and a then the built assets can be copied into a deployment container.  It is also possible to support multi-stage, but development would be in a docker-in-docker configuration.
 
@@ -54,4 +54,4 @@ This will use a VS Code docker container [plugin](https://code.visualstudio.com/
 
 This is similar to the [vscode_ros2_workspace](https://github.com/athackst/vscode_ros2_workspace) but for ROS1.
 
-> TODO: Make this its own template.
+- [ ] TODO: Make this its own template.
