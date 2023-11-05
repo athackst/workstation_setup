@@ -32,7 +32,6 @@
 		"editor.defaultFormatter": "DavidAnson.vscode-markdownlint"
 	},
 	"[python]": {
-		"editor.defaultFormatter": "ms-python.python",
 		"editor.tabSize": 4
 	},
 	"[shellscript]": {
