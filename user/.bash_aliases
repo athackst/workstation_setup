@@ -115,16 +115,14 @@ function mkdocs_docker() {
 }
 
 function mkdocs_athackst() {
-  (	
-  curr_dur=$PWD
-  cd /tmp
-  rm -fr /tmp/athackst.mkdocs/
-  git clone -b main --depth 1 --single-branch https://github.com/athackst/athackst.mkdocs.git \
-    && rm -rf athackst.mkdocs/.git/
-  cp -r $curr_dur/* /tmp/athackst.mkdocs/
-  cd /tmp/athackst.mkdocs
-  mkdocs_docker_serve
-  )
+  curr_dir=$PWD
+  mkdocs_dir="/tmp/athackst.mkdocs"
+  rm -fr ${mkdocs_dir}
+  git clone -b main --depth 1 --single-branch https://github.com/athackst/athackst.mkdocs.git ${mkdocs_dir} \
+    && rm -rf ${mkdocs_dir}/.git/
+  echo "Copying current directory ${curr_dir} to ${mkdocs_dir}"
+  find . -name '.*' -prune -o -type f -exec cp -rv {} ${mkdocs_dir} \;
+  (cd ${mkdocs_dir} && mkdocs_docker_serve)
 }
 
 ########################
