@@ -2,57 +2,57 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://athackst.github.io/workstation_setup/LICENSE/</loc>
-         <lastmod>2023-12-08</lastmod>
+         <lastmod>2023-12-22</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://athackst.github.io/workstation_setup/</loc>
-         <lastmod>2023-12-08</lastmod>
+         <lastmod>2023-12-22</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://athackst.github.io/workstation_setup/scripts/keep_to_obsidian/</loc>
-         <lastmod>2023-12-08</lastmod>
+         <lastmod>2023-12-22</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://athackst.github.io/workstation_setup/scripts/get_google_drive_file/</loc>
-         <lastmod>2023-12-08</lastmod>
+         <lastmod>2023-12-22</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://athackst.github.io/workstation_setup/examples/</loc>
-         <lastmod>2023-12-08</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://athackst.github.io/workstation_setup/examples/bazel/</loc>
-         <lastmod>2023-12-08</lastmod>
+         <lastmod>2023-12-22</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://athackst.github.io/workstation_setup/examples/dev_release_vscode/</loc>
-         <lastmod>2023-12-08</lastmod>
+         <lastmod>2023-12-22</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://athackst.github.io/workstation_setup/examples/bazel/</loc>
+         <lastmod>2023-12-22</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://athackst.github.io/workstation_setup/examples/ros_melodic_vscode/</loc>
-         <lastmod>2023-12-08</lastmod>
+         <lastmod>2023-12-22</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://athackst.github.io/workstation_setup/examples/multistage/</loc>
-         <lastmod>2023-12-08</lastmod>
+         <lastmod>2023-12-22</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://athackst.github.io/workstation_setup/examples/dev_release/</loc>
-         <lastmod>2023-12-08</lastmod>
+         <lastmod>2023-12-22</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://athackst.github.io/workstation_setup/programs/</loc>
-         <lastmod>2023-12-08</lastmod>
+         <lastmod>2023-12-22</lastmod>
          <changefreq>daily</changefreq>
     </url>
 </urlset>
