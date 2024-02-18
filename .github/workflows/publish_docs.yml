@@ -24,3 +24,4 @@ jobs:
           directory: site
           ignore_urls: |
             https://twitter.com/althack
+            https://fonts.gstatic.com
