@@ -22,3 +22,5 @@ jobs:
         uses: athackst/htmlproofer-action@main
         with:
           directory: site
+          ignore_urls: |
+            https://twitter.com/althack
