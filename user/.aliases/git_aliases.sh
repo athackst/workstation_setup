@@ -45,10 +45,31 @@ _g_remote() {
   git config "branch.${branch}.remote" || echo "origin"
 }
 
+# Stash changes if there are any
+try_stash() {
+  if [[ -n $(git status --porcelain) ]]; then
+    git stash
+    return 0
+  else
+    return 1
+  fi
+}
+
+# Pop stash if it was created
+pop_stash() {
+  local stashed=${1:-0}
+  if [[ $stashed -eq 0 ]]; then
+    git stash pop
+  fi
+}
+
 # Make a new branch, and check it out
 g_mk() {
+  try_stash
+  local stashed=$?
   git branch $1 $(_g_base_branch) --no-track
-  git checkout $@
+  git checkout $1
+  pop_stash $stashed
 }
 # List all of the branches
 g_ls() {
@@ -77,7 +98,7 @@ alias g_status="git status -s"
 alias g_amend="git commit --amend --no-edit"
 alias g_amend_all="git add -u; git commit --amend --no-edit"
 # Commit the changes in the changeref
-alias g_commit="git commit"
+alias g_commit="git commit -am "
 # Update branch on remote to match local
 g_up() {
   echo "pushing to: $(_g_remote) $(_g_current_branch)"
@@ -87,6 +108,15 @@ g_up() {
 g_sync() {
   git fetch -p
   git rebase $(_g_base_branch)
+}
+# Sync and update branch on remote
+g_syncup() {
+  try_stash
+  local stashed=$?
+  git stash
+  g_sync
+  g_up
+  pop_stash $stashed
 }
 # Scan all local branches for changes
 g_scan() {
