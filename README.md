@@ -13,10 +13,18 @@ git clone git@github.com:athackst/workstation_setup.git
 
 ## Install and setup workstation
 
-Installs the basics of my workstation with make
+Installs the basics of my workstation
+
+### Ubuntu
 
 ```bash
-./install.sh
+./deploy_ubuntu.sh
+```
+
+### WSL
+
+```bash
+./deploy_wsl.sh
 ```
 
 ## Develop
