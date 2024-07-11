@@ -106,17 +106,16 @@ g_up() {
 }
 # Sync the local branch with the remote
 g_sync() {
+  try_stash
+  local stashed=$?
   git fetch -p
   git rebase $(_g_base_branch)
+  pop_stash $stashed
 }
 # Sync and update branch on remote
 g_syncup() {
-  try_stash
-  local stashed=$?
-  git stash
   g_sync
   g_up
-  pop_stash $stashed
 }
 # Scan all local branches for changes
 g_scan() {
