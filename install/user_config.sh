@@ -42,4 +42,11 @@ case $yn in
     ;;
 esac
 
+read -p "Run git maintenance chron job: " yn
+case $yn in
+  "" | [Yy]*)
+    git maintenance start
+    ;;
+esac
+
 source ~/.bashrc

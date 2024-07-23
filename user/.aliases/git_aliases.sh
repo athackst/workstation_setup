@@ -102,7 +102,7 @@ alias g_commit="git commit -am "
 # Update branch on remote to match local
 g_up() {
   echo "pushing to: $(_g_remote) $(_g_current_branch)"
-  git push $(_g_remote) $(_g_current_branch) -u --force
+  git push $(_g_remote) $(_g_current_branch) -u --force-with-lease
 }
 # Sync the local branch with the remote
 g_sync() {
