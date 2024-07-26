@@ -1,6 +1,16 @@
 #!/usr/bin/python3
 
-# usage: python3 docker_descendants.py <image_id> ...
+# md
+# ## docker-decendents
+#
+# Finds all decendents of a docker image.
+#
+# ### Usage
+#
+# ```sh
+# docker_descendants <image_id> ...
+# ```
+# /md
 
 import argparse
 import docker

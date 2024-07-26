@@ -1,5 +1,17 @@
 #!/bin/bash
 
+# md
+# ## gif-gen
+#
+# Generate a giv from a mpeg
+#
+# ### Usage
+#
+# ```sh
+# gif-gen --help
+# ```
+# /md
+
 filename=''
 output=''
 start='0'

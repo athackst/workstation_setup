@@ -1,7 +1,19 @@
 #!/bin/bash
 
+# md
+# ## docker-services-stop
+#
 # This script compares the files in workstation_setup/user with those in the home directory
-# by opening up diffmerge so that changes can be captured in the home directory.
+# by opening up diffmerge so that changes can be updated in the home directory.[^1]
+#
+# ### Usage
+#
+# ```sh
+# user-config-update
+# ```
+#
+# [^1]: Location of this project must be in ~/Code
+# /md
 
 path="$HOME/Code/workstation_setup/user"
 
