@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "workstation-setup"
 dynamic = ["version"]
-description = "Ny workstation setup scripts."
+description = "My workstation setup scripts."
 readme = "README.md"
 license = "Apache-2.0"
 requires-python = ">=3"
@@ -44,5 +44,19 @@ pattern = "(?P<version>.+)"
 
 [tool.hatch.build.targets.sdist]
 include = [
-    ".",
+    "*.py",
+    "*.sh"
 ]
+
+[tool.hatch.build.targets.wheel]
+packages= ["workstation_setup"]
+
+[tool.hatch.build.targets.wheel.shared-data]
+"docker-decendents.py" = "bin/docker-decendents"
+"docker-images-update.sh" = "bin/docker-images-update"
+"docker-services-start.sh" = "bin/docker-services-start"
+"docker-services-stop.sh" = "bin/docker-services-stop"
+"docker-services-update.sh" = "bin/docker-services-update"
+"gif-gen.sh" = "bin/gif-gen"
+"user-config-diff.sh" = "bin/user-config-diff"
+"user-config-update.sh" = "bin/user-config-update"
