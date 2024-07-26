@@ -55,4 +55,44 @@
          <lastmod>2024-07-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
+    <url>
+         <loc>https://athackst.github.io/workstation_setup/scripts/programs/docker-services-update/</loc>
+         <lastmod>2024-07-26</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://athackst.github.io/workstation_setup/scripts/programs/docker-services-stop/</loc>
+         <lastmod>2024-07-26</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://athackst.github.io/workstation_setup/scripts/programs/docker-services-start/</loc>
+         <lastmod>2024-07-26</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://athackst.github.io/workstation_setup/scripts/programs/user-config-diff/</loc>
+         <lastmod>2024-07-26</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://athackst.github.io/workstation_setup/scripts/programs/docker-images-update/</loc>
+         <lastmod>2024-07-26</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://athackst.github.io/workstation_setup/scripts/programs/gif-gen/</loc>
+         <lastmod>2024-07-26</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://athackst.github.io/workstation_setup/scripts/programs/docker-decendents/</loc>
+         <lastmod>2024-07-26</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://athackst.github.io/workstation_setup/scripts/programs/user-config-update/</loc>
+         <lastmod>2024-07-26</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
 </urlset>
