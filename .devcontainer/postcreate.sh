@@ -3,4 +3,4 @@
 install/base.sh
 install/gh.sh
 
-pip install programs/.
+pip install scripts/.
