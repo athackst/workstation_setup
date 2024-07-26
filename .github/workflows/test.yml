@@ -30,3 +30,11 @@ jobs:
         run: |
           cd scripts
           hatch build
+
+  complete:
+    needs:
+      - scripts
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check
+        run: echo "Completed successfully!"
