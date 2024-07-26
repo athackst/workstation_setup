@@ -45,18 +45,19 @@ pattern = "(?P<version>.+)"
 [tool.hatch.build.targets.sdist]
 include = [
     "*.py",
-    "*.sh"
+    "*.sh",
+    "programs/*"
 ]
 
 [tool.hatch.build.targets.wheel]
 packages= ["workstation_setup"]
 
 [tool.hatch.build.targets.wheel.shared-data]
-"docker-decendents.py" = "bin/docker-decendents"
-"docker-images-update.sh" = "bin/docker-images-update"
-"docker-services-start.sh" = "bin/docker-services-start"
-"docker-services-stop.sh" = "bin/docker-services-stop"
-"docker-services-update.sh" = "bin/docker-services-update"
-"gif-gen.sh" = "bin/gif-gen"
-"user-config-diff.sh" = "bin/user-config-diff"
-"user-config-update.sh" = "bin/user-config-update"
+"programs/docker-decendents.py" = "bin/docker-decendents"
+"programs/docker-images-update.sh" = "bin/docker-images-update"
+"programs/docker-services-start.sh" = "bin/docker-services-start"
+"programs/docker-services-stop.sh" = "bin/docker-services-stop"
+"programs/docker-services-update.sh" = "bin/docker-services-update"
+"programs/gif-gen.sh" = "bin/gif-gen"
+"programs/user-config-diff.sh" = "bin/user-config-diff"
+"programs/user-config-update.sh" = "bin/user-config-update"
