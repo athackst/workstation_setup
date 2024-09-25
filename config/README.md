@@ -2,14 +2,6 @@
 
 This folder contains user settings and customizations for my desktop environment.
 
-## Contents
-
-### User
-
-1. `.aliases`: Custom bash aliases for frequently used commands
-2. `.config`: System configuration files
-3. `.gitconfig`: Git configuration settings
-
 ## Installation
 
 To install these user configurations on a new machine
@@ -31,3 +23,17 @@ To install these user configurations on a new machine
     ```sh
     ./config/install.sh
     ```
+
+## Usage
+
+The install sets up user aliases and user preferences contained in the following folders.
+
+1. `.aliases`: Custom bash aliases for frequently used commands
+2. `.config`: System configuration files
+3. `.gitconfig`: Git configuration settings
+
+
+Additionally, it adds a bash alias:
+
+- `user-config-diff` -> [user-config-diff.sh](user-config-diff.md)
+- `user-config-update` -> [user-config-update.sh](user-config-update.md)

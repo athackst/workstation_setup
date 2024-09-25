@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # md
-# ## docker-services-stop
+# ## user-config-diff.sh
 #
 # This script compares the files in the home directory with those in workstation_setup/user
 # by using git diff so that changes can be captured in this repo.
@@ -9,7 +9,7 @@
 # ### Usage
 #
 # ```sh
-# user-config-diff
+# user-config-diff.sh
 # ```
 #
 # /md

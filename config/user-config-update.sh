@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # md
-# ## docker-services-stop
+# ## user-config-update.sh
 #
 # This script compares the files in workstation_setup/user with those in the home directory
 # by using git diff so that changes can be updated in the home directory.
@@ -9,7 +9,7 @@
 # ### Usage
 #
 # ```sh
-# user-config-update
+# user-config-update.sh
 # ```
 #
 # /md
