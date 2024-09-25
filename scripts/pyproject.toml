@@ -59,5 +59,3 @@ packages= ["workstation_setup"]
 "programs/docker-services-stop.sh" = "bin/docker-services-stop"
 "programs/docker-services-update.sh" = "bin/docker-services-update"
 "programs/gif-gen.sh" = "bin/gif-gen"
-"programs/user-config-diff.sh" = "bin/user-config-diff"
-"programs/user-config-update.sh" = "bin/user-config-update"
