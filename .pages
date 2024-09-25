@@ -1,5 +1,6 @@
 nav:
     - workstation_setup: README.md
+    - Config: config
     - Scripts: scripts
     - Examples: examples
     - License: LICENSE
