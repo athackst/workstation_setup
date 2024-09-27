@@ -35,5 +35,5 @@ The install sets up user aliases and user preferences contained in the following
 
 Additionally, it adds a bash alias:
 
-- `user-config-diff` -> [user-config-diff.sh](user-config-diff.md)
-- `user-config-update` -> [user-config-update.sh](user-config-update.md)
+- `user_config_diff` -> [user-config-diff.sh](user-config-diff.md)
+- `user_config_update` -> [user-config-update.sh](user-config-update.md)
