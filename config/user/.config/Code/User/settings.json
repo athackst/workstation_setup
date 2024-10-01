@@ -71,6 +71,7 @@
     "gulp.autoDetect": "off",
     "jake.autoDetect": "off",
     "npm.autoDetect": "off",
+    "remote.autoForwardPortsSource": "hybrid",
     "terminal.integrated.fontFamily": "monospace",
     "terminal.integrated.scrollback": 10000,
     "terminal.integrated.tabs.enabled": true,
@@ -80,5 +81,8 @@
     "workbench.editorAssociations": {
         "filenamePattern": "*.ipynb",
         "viewType": "jupyter.notebook.ipynb"
+    },
+    "yaml.schemas": {
+        "file:///home/vscode/.vscode-server/extensions/docsmsft.docs-yaml-1.0.4/dist/toc.schema.json": "/toc\\.yml/i"
     }
 }

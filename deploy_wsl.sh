@@ -8,4 +8,4 @@ $DIR/install/gh.sh
 cd ${DIR}/install/programs
 pip install .
 
-$DIR/install/user_config.sh
+$DIR/config/install.sh -y
