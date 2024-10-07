@@ -142,11 +142,11 @@ function noetic_gazebo() {
 #######################
 # HTML Proofer
 #######################
-function htmlproofer() {
+function htmlproofer_action() {
 	curr_dir="$PWD/$1"
 	echo "Running on $curr_dir"
 	base_dir=$(basename "$PWD")
 	ignore="https://www.linkedin.com/in/allisonthackston,http://sdformat.org,/gazebosim.org/docs/citadel/,https://fonts.gstatic.com,/regex101.com/"
 	url_swap="^\/${base_dir}:,^\/dev:,^\/v\d+\.\d+\.\d+:"
-	docker run -v ${curr_dir}:/site -e INPUT_DIRECTORY=/site -e INPUT_IGNORE_URLS=${ignore} -e INPUT_URL_SWAP=${url_swap} althack/htmlproofer:latest
+	docker run -v ${curr_dir}:/site -e INPUT_IGNORE_URLS=${ignore} -e INPUT_URL_SWAP=${url_swap} althack/htmlproofer:latest
 }
