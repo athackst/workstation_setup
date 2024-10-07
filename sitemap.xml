@@ -2,86 +2,78 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://athackst.github.io/workstation_setup/LICENSE/</loc>
-         <lastmod>2024-09-27</lastmod>
+         <lastmod>2024-10-07</lastmod>
     </url>
     <url>
          <loc>https://athackst.github.io/workstation_setup/</loc>
-         <lastmod>2024-09-27</lastmod>
+         <lastmod>2024-10-07</lastmod>
     </url>
     <url>
-         <loc>https://athackst.github.io/workstation_setup/config/user-config-diff/</loc>
-         <lastmod>2024-09-27</lastmod>
-    </url>
-    <url>
-         <loc>https://athackst.github.io/workstation_setup/config/</loc>
-         <lastmod>2024-09-27</lastmod>
-    </url>
-    <url>
-         <loc>https://athackst.github.io/workstation_setup/config/user-config-update/</loc>
-         <lastmod>2024-09-27</lastmod>
+         <loc>https://athackst.github.io/workstation_setup/config/install/</loc>
+         <lastmod>2024-10-07</lastmod>
     </url>
     <url>
          <loc>https://athackst.github.io/workstation_setup/scripts/remove_dupes/</loc>
-         <lastmod>2024-09-27</lastmod>
+         <lastmod>2024-10-07</lastmod>
     </url>
     <url>
          <loc>https://athackst.github.io/workstation_setup/scripts/keep_to_obsidian/</loc>
-         <lastmod>2024-09-27</lastmod>
+         <lastmod>2024-10-07</lastmod>
     </url>
     <url>
          <loc>https://athackst.github.io/workstation_setup/scripts/</loc>
-         <lastmod>2024-09-27</lastmod>
+         <lastmod>2024-10-07</lastmod>
     </url>
     <url>
          <loc>https://athackst.github.io/workstation_setup/scripts/get_google_drive_file/</loc>
-         <lastmod>2024-09-27</lastmod>
+         <lastmod>2024-10-07</lastmod>
     </url>
     <url>
          <loc>https://athackst.github.io/workstation_setup/scripts/programs/docker-services-update/</loc>
-         <lastmod>2024-09-27</lastmod>
+         <lastmod>2024-10-07</lastmod>
     </url>
     <url>
          <loc>https://athackst.github.io/workstation_setup/scripts/programs/docker-images-update/</loc>
-         <lastmod>2024-09-27</lastmod>
+         <lastmod>2024-10-07</lastmod>
     </url>
     <url>
          <loc>https://athackst.github.io/workstation_setup/scripts/programs/gif-gen/</loc>
-         <lastmod>2024-09-27</lastmod>
+         <lastmod>2024-10-07</lastmod>
     </url>
     <url>
          <loc>https://athackst.github.io/workstation_setup/scripts/programs/docker-services-start/</loc>
-         <lastmod>2024-09-27</lastmod>
+         <lastmod>2024-10-07</lastmod>
     </url>
     <url>
          <loc>https://athackst.github.io/workstation_setup/scripts/programs/docker-services-stop/</loc>
-         <lastmod>2024-09-27</lastmod>
+         <lastmod>2024-10-07</lastmod>
     </url>
     <url>
          <loc>https://athackst.github.io/workstation_setup/scripts/programs/docker-decendents/</loc>
-         <lastmod>2024-09-27</lastmod>
+         <lastmod>2024-10-07</lastmod>
     </url>
     <url>
          <loc>https://athackst.github.io/workstation_setup/examples/</loc>
-         <lastmod>2024-09-27</lastmod>
+         <lastmod>2024-10-07</lastmod>
     </url>
     <url>
          <loc>https://athackst.github.io/workstation_setup/examples/ros_melodic_vscode/</loc>
-         <lastmod>2024-09-27</lastmod>
+         <lastmod>2024-10-07</lastmod>
     </url>
     <url>
          <loc>https://athackst.github.io/workstation_setup/examples/bazel/</loc>
-         <lastmod>2024-09-27</lastmod>
+         <lastmod>2024-10-07</lastmod>
     </url>
     <url>
          <loc>https://athackst.github.io/workstation_setup/examples/multistage/</loc>
-         <lastmod>2024-09-27</lastmod>
+         <lastmod>2024-10-07</lastmod>
     </url>
     <url>
          <loc>https://athackst.github.io/workstation_setup/examples/dev_release_vscode/</loc>
-         <lastmod>2024-09-27</lastmod>
+         <lastmod>2024-10-07</lastmod>
     </url>
     <url>
          <loc>https://athackst.github.io/workstation_setup/examples/dev_release/</loc>
-         <lastmod>2024-09-27</lastmod>
+         <lastmod>2024-10-07</lastmod>
     </url>
 </urlset>
