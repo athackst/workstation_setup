@@ -16,6 +16,13 @@ set -e
 # /md
 
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" > /dev/null 2>&1 && pwd)"
+auto_yes=false
+name=""
+email=""
+# Path to the user-specific Git config file
+git_user_config="$HOME/.gitconfig.user"
+# Path to backup directory
+BACKUP_DIR="$HOME/bak/config_backup_$(date +%Y%m%d_%H%M%S)"
 
 # Helper function to ask for confirmation with a default value and auto_yes handling
 ask_for_confirmation() {
@@ -56,6 +63,19 @@ ask_for_confirmation() {
     [[ "$REPLY" =~ ^[Yy]$ ]]
 }
 
+# Helper function to backup a file
+backup_file() {
+    local path="$1"
+    if [ -e "$path" ] || [ -L "$path" ]; then
+        local basename=$(basename "$path")
+        mkdir -p "$BACKUP_DIR"
+        cp -rL "$path" "$BACKUP_DIR/$basename"
+        echo "Backed up contents of $path to $BACKUP_DIR/$basename"
+    else
+        echo "Path $path does not exist, skipping backup"
+    fi
+}
+
 # md
 # ### Command Line Arguments
 #
@@ -66,9 +86,6 @@ ask_for_confirmation() {
 # - `-n <name>` : Sets the Git user name.
 #
 # /md
-auto_yes=false
-name=""
-email=""
 
 while getopts ":ye:n:" opt; do
     case ${opt} in
@@ -102,24 +119,27 @@ shift $((OPTIND - 1))
 #
 # If left blank, the script will skip this step.
 # /md
-if [ -z "$name" ]; then
+if [ -z "$name" ] && [ "$auto_yes" = false ]; then
     read -p "Enter the name you want to use for git: " name
 fi
 
 # Validate that the name is not empty if it needs to be set
 if [ -n "$name" ]; then
-    # Check if GIT_USER_NAME is already present in .bashrc
-    if ! grep -q "export GIT_USER_NAME=" "$HOME/.bashrc"; then
-        echo "export GIT_USER_NAME=$name" >> "$HOME/.bashrc"
-        echo "GIT_USER_NAME added to .bashrc"
+    # Check if the file exists and if it contains the user.name setting
+    if [ ! -f "$git_user_config" ] || ! grep -q '^\[user\]' "$git_user_config" || ! grep -q '^\s*name = ' "$git_user_config"; then
+        # Create or overwrite the file with the new setting
+        cat > "$git_user_config" << EOF
+[user]
+    name = $name
+EOF
+        echo "User name added to $git_user_config"
     else
-        echo "GIT_USER_NAME already set in .bashrc, updating to new value"
-        # Update the existing GIT_USER_NAME in .bashrc
-        sed -i "s/^export GIT_USER_NAME=.*/export GIT_USER_NAME=$name/" "$HOME/.bashrc"
+        # Update the existing user.name in the file
+        sed -i '/^\[user\]/,/^\[/ s/^\s*name = .*/    name = '"$name"'/' "$git_user_config"
+        echo "User name updated in $git_user_config"
     fi
 
-    # Source .bashrc to apply changes immediately
-    source "$HOME/.bashrc"
+    echo "Git user name set to: $name"
 else
     echo "Skipping setting up git name"
 fi
@@ -133,24 +153,27 @@ fi
 #
 # If left blank the script will skip this step.
 # /md
-if [ -z "$email" ]; then
+if [ -z "$email" ] && [ "$auto_yes" = false ]; then
     read -p "Enter the email address you want to use for git: " email
 fi
 
 # Validate that the email is not empty if it needs to be set
 if [ -n "$email" ]; then
-    # Check if GIT_USER_EMAIL is already present in .bashrc
-    if ! grep -q "export GIT_USER_EMAIL=" "$HOME/.bashrc"; then
-        echo "export GIT_USER_EMAIL=$email" >> "$HOME/.bashrc"
-        echo "GIT_USER_EMAIL added to .bashrc"
+    # Check if the file exists and if it contains the user.email setting
+    if [ ! -f "$git_user_config" ] || ! grep -q '^\[user\]' "$git_user_config" || ! grep -q '^\s*email = ' "$git_user_config"; then
+        # Create or append to the file with the new setting
+        if [ ! -f "$git_user_config" ] || ! grep -q '^\[user\]' "$git_user_config"; then
+            echo "[user]" >> "$git_user_config"
+        fi
+        echo "    email = $email" >> "$git_user_config"
+        echo "User email added to $git_user_config"
     else
-        echo "GIT_USER_EMAIL already set in .bashrc, updating to new value"
-        # Update the existing GIT_USER_EMAIL in .bashrc
-        sed -i "s/^export GIT_USER_EMAIL=.*/export GIT_USER_EMAIL=$email/" "$HOME/.bashrc"
+        # Update the existing user.email in the file
+        sed -i '/^\[user\]/,/^\[/ s/^\s*email = .*/    email = '"$email"'/' "$git_user_config"
+        echo "User email updated in $git_user_config"
     fi
 
-    # Source .bashrc to apply changes immediately
-    source "$HOME/.bashrc"
+    echo "Git user email set to: $email"
 else
     echo "Skipping setting up git email address"
 fi
@@ -161,7 +184,7 @@ fi
 # The script sets up the `.aliases` directory. It creates a backup of the existing `.aliases` if present,
 # and then links the new `.aliases` from the repository to the user's home directory.
 # /md
-if ask_for_confirmation "Update .aliases?"; then
+if auto_yes || ask_for_confirmation "Update .aliases?"; then
     if [ -d "$HOME/.aliases" ]; then
         if [ -d "$HOME/.aliases_bak" ]; then
             rm -rf "$HOME/.aliases_bak"
@@ -182,7 +205,7 @@ fi
 # The script sets up `.bash_aliases`. It backs up the existing `.bash_aliases` and then creates
 # a symbolic link to the new one from the repository.
 # /md
-if ask_for_confirmation "Update .bash_aliases?"; then
+if auto_yes || ask_for_confirmation "Update .bash_aliases?"; then
     if [ -f "$HOME/.bash_aliases" ]; then
         echo "Backing up $HOME/.bash_aliases to $HOME/.bash_aliases.bak"
         cp "$HOME/.bash_aliases" "$HOME/.bash_aliases.bak"
@@ -199,7 +222,7 @@ fi
 # The script sets up `.gitconfig`. It creates a backup of the existing `.gitconfig` and then
 # creates a symbolic link to the new one from the repository.
 # /md
-if ask_for_confirmation "Update .gitconfig?"; then
+if auto_yes || ask_for_confirmation "Update .gitconfig?"; then
     if [ -f "$HOME/.gitconfig" ]; then
         echo "Backing up $HOME/.gitconfig to $HOME/.gitconfig.bak"
         cp "$HOME/.gitconfig" "$HOME/.gitconfig.bak"
@@ -216,7 +239,7 @@ fi
 # The script sets up user preferences in the `.config` directory.
 # It creates symbolic links to individual configuration files in `$HOME/.config`.
 # /md
-if ask_for_confirmation "Update user .config?"; then
+if auto_yes || ask_for_confirmation "Update user .config?"; then
     echo "Setting up .config directory..."
     find "$DIR/user/.config" -type f | while read -r item; do
         relative_path="${item#$DIR/user/.config/}"
