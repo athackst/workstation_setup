@@ -23,9 +23,6 @@
 	scan = !bash -c 'source $HOME/.bash_aliases && g_scan'
 	prune = !bash -c 'source $HOME/.bash_aliases && g_prune'
 	amend = !bash -c 'source $HOME/.bash_aliases && g_amend'
-[user]
-	name = ${GIT_USER_NAME}
-	email = ${GIT_USER_EMAIL}
 [filter "lfs"]
 	required = true
 	clean = git-lfs clean -- %f
@@ -33,3 +30,5 @@
 	process = git-lfs filter-process
 [init]
 	defaultBranch = main
+[include]
+	path = ~/.gitconfig.user
