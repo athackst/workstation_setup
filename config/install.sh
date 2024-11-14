@@ -63,6 +63,15 @@ ask_for_confirmation() {
     [[ "$REPLY" =~ ^[Yy]$ ]]
 }
 
+# Helper function to get user input
+ask_for_input() {
+    local prompt="$1"
+    local variable="$2"
+    if [ -z "${!variable}" ] && [ "$auto_yes" = false ]; then
+        read -p "$prompt" $variable
+    fi
+}
+
 # Helper function to backup a file
 backup_file() {
     local path="$1"
@@ -119,9 +128,7 @@ shift $((OPTIND - 1))
 #
 # If left blank, the script will skip this step.
 # /md
-if [ -z "$name" ] && [ "$auto_yes" = false ]; then
-    read -p "Enter the name you want to use for git: " name
-fi
+ask_for_input "Enter the name you want to use for git: " name
 
 # Validate that the name is not empty if it needs to be set
 if [ -n "$name" ]; then
@@ -153,9 +160,7 @@ fi
 #
 # If left blank the script will skip this step.
 # /md
-if [ -z "$email" ] && [ "$auto_yes" = false ]; then
-    read -p "Enter the email address you want to use for git: " email
-fi
+ask_for_input "Enter the email address you want to use for git: " email
 
 # Validate that the email is not empty if it needs to be set
 if [ -n "$email" ]; then
@@ -184,7 +189,7 @@ fi
 # The script sets up the `.aliases` directory. It creates a backup of the existing `.aliases` if present,
 # and then links the new `.aliases` from the repository to the user's home directory.
 # /md
-if auto_yes || ask_for_confirmation "Update .aliases?"; then
+if ask_for_confirmation "Update .aliases?"; then
     if [ -d "$HOME/.aliases" ]; then
         if [ -d "$HOME/.aliases_bak" ]; then
             rm -rf "$HOME/.aliases_bak"
@@ -205,7 +210,7 @@ fi
 # The script sets up `.bash_aliases`. It backs up the existing `.bash_aliases` and then creates
 # a symbolic link to the new one from the repository.
 # /md
-if auto_yes || ask_for_confirmation "Update .bash_aliases?"; then
+if ask_for_confirmation "Update .bash_aliases?"; then
     if [ -f "$HOME/.bash_aliases" ]; then
         echo "Backing up $HOME/.bash_aliases to $HOME/.bash_aliases.bak"
         cp "$HOME/.bash_aliases" "$HOME/.bash_aliases.bak"
@@ -222,7 +227,7 @@ fi
 # The script sets up `.gitconfig`. It creates a backup of the existing `.gitconfig` and then
 # creates a symbolic link to the new one from the repository.
 # /md
-if auto_yes || ask_for_confirmation "Update .gitconfig?"; then
+if ask_for_confirmation "Update .gitconfig?"; then
     if [ -f "$HOME/.gitconfig" ]; then
         echo "Backing up $HOME/.gitconfig to $HOME/.gitconfig.bak"
         cp "$HOME/.gitconfig" "$HOME/.gitconfig.bak"
@@ -239,7 +244,7 @@ fi
 # The script sets up user preferences in the `.config` directory.
 # It creates symbolic links to individual configuration files in `$HOME/.config`.
 # /md
-if auto_yes || ask_for_confirmation "Update user .config?"; then
+if ask_for_confirmation "Update user .config?"; then
     echo "Setting up .config directory..."
     find "$DIR/user/.config" -type f | while read -r item; do
         relative_path="${item#$DIR/user/.config/}"
