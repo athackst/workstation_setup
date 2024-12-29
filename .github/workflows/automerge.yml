@@ -22,6 +22,7 @@ jobs:
             echo "is_dependabot=true" >> $GITHUB_ENV
           else
             echo "is_dependabot=false" >> $GITHUB_ENV
+          fi
 
       - name: Enable Auto-Merge for Dependabot PR
         if: env.is_dependabot == 'true'
