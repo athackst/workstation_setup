@@ -6,6 +6,7 @@ on:
       - opened
       - synchronize
       - reopened
+  workflow_dispatch:
 
 permissions:
   contents: write   # Required for merging the PR
@@ -25,7 +26,7 @@ jobs:
           fi
 
       - name: Enable Auto-Merge for Dependabot PR
-        if: env.is_dependabot == 'true'
+        if: env.is_dependabot == 'true' || github.event_name == 'workflow_dispatch'
         run: gh pr merge ${{ github.event.pull_request.number }} --auto --squash
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
