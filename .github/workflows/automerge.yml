@@ -13,20 +13,11 @@ permissions:
   pull-requests: write  # Required for managing pull requests
 
 jobs:
-  check-and-automerge:
+  automerge:
     runs-on: ubuntu-latest
     steps:
-      - name: Check if PR is from Dependabot
-        id: check-dependabot
-        run: |
-          if [[ "${{ github.actor }}" == "dependabot[bot]" ]]; then
-            echo "is_dependabot=true" >> $GITHUB_ENV
-          else
-            echo "is_dependabot=false" >> $GITHUB_ENV
-          fi
-
       - name: Enable Auto-Merge for Dependabot PR
-        if: env.is_dependabot == 'true' || github.event_name == 'workflow_dispatch'
+        if: github.actor == 'dependabot[bot]' || github.event_name == 'workflow_dispatch'
         run: gh pr merge ${{ github.event.pull_request.number }} --auto --squash
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
