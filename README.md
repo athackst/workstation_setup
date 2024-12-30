@@ -38,6 +38,6 @@ Dockerfiles have been moved to [athackst/dockerfiles](https://github.com/athacks
 ## Get the aliases in a container
 
 ```docker
-RUN wget -O /etc/profile.d/git_aliases.sh https://github.com/athackst/workstation_setup/raw/main/user/.aliases/git_aliases.sh \
+RUN wget -O /etc/profile.d/git_aliases.sh https://github.com/athackst/workstation_setup/raw/main/config/user/.aliases/git_aliases.sh \
     && echo "source /etc/profile.d/git_aliases.sh" >> "/home/vscode/.bashrc"
 ```
