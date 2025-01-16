@@ -1,0 +1,21 @@
+# Add 'feature' label to any PR where the head branch name starts with `feature` or has a `feature` section in the name
+feature:
+  - head-branch: ["^feat", "^new"]
+
+documentation:
+  - changed-files:
+      - any-glob-to-any-file: "**/*.md"
+  - head-branch: ["^doc"]
+
+bug: 
+  - head-branch: ['^fix', '^bug']
+
+maintenance: 
+  - head-branch: ['^chore', '^maint', '^noop', '^no-op', '^upkeep', '^dev']
+
+dependencies: 
+  - head-branch: ['^deps', '^dependencies']
+
+devops:
+  - changed-files:
+    - any-glob-to-any-file: [".github/**", ".vscode/**"]
