@@ -1,4 +1,4 @@
-name: PR Labeler
+name: Labeler
 on:
   pull_request_target:
   pull_request:
@@ -17,5 +17,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Dump GitHub refs
+        env:
+          HEAD_REF: ${{ github.head_ref }}
+        run: echo "$HEAD_REF"
+
       - name: Label
+        id: label
         uses: actions/labeler@v5
+
+      - name: Debug labels
+        env:
+          ALL_LABELS: ${{ steps.label.outputs.all-labels }}
+        run: echo $ALL_LABELS
+        
