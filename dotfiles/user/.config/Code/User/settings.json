@@ -84,5 +84,12 @@
     },
     "yaml.schemas": {
         "file:///home/vscode/.vscode-server/extensions/docsmsft.docs-yaml-1.0.4/dist/toc.schema.json": "/toc\\.yml/i"
+    },
+    "security.workspace.trust.untrustedFiles": "open",
+    "git.confirmSync": false,
+    "git.autofetch": true,
+    "codeium.enableConfig": {
+        "*": true,
+        "starlark": true
     }
 }

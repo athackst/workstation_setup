@@ -8,7 +8,7 @@ $DIR/install/vscode.sh
 $DIR/install/docker.sh
 $DIR/install/gh.sh
 
-cd $DIR/install/../programs
+cd $DIR/scripts
 pip install .
 
-$DIR/config/install.sh -y
+$DIR/dotfiles/install.sh -y
