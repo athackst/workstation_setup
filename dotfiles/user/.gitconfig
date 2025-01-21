@@ -32,3 +32,5 @@
 	defaultBranch = main
 [include]
 	path = ~/.gitconfig.user
+[safe]
+	directory = /opt/brt
