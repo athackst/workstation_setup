@@ -35,7 +35,7 @@
         "editor.defaultFormatter": "foxundermoon.shell-format"
     },
     "[typescript]": {
-        "editor.defaultFormatter": "vscode.typescript-language-features"
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
     },
     "[yaml]": {
         "editor.defaultFormatter": "redhat.vscode-yaml"
@@ -83,11 +83,29 @@
         "viewType": "jupyter.notebook.ipynb"
     },
     "yaml.schemas": {
-        "file:///home/vscode/.vscode-server/extensions/docsmsft.docs-yaml-1.0.4/dist/toc.schema.json": "/toc\\.yml/i"
+        "file:///home/vscode/.vscode-server/extensions/docsmsft.docs-yaml-1.0.5/dist/toc.schema.json": "/toc\\.yml/i",
+        "http://raw.githubusercontent.com/SchemaStore/schemastore/master/src/schemas/json/github-workflow.json": [
+			"/.github/workflows/*"
+		],
+		"http://raw.githubusercontent.com/SchemaStore/schemastore/master/src/schemas/json/dependabot-2.0.json": [
+			"dependabot.yml"
+		]
     },
-    "security.workspace.trust.untrustedFiles": "open",
     "git.confirmSync": false,
     "git.autofetch": true,
+    "gitlens.views.scm.grouped.views": {
+        "commits": true,
+        "branches": true,
+        "remotes": true,
+        "stashes": false,
+        "tags": true,
+        "worktrees": true,
+        "contributors": true,
+        "repositories": true,
+        "searchAndCompare": false,
+        "launchpad": false
+    },
+    "redhat.telemetry.enabled": false,
     "codeium.enableConfig": {
         "*": true,
         "starlark": true
