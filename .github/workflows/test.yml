@@ -54,6 +54,7 @@ jobs:
   complete:
     needs:
       - scripts
+      - test-docs
     runs-on: ubuntu-latest
     steps:
       - name: Check
