@@ -31,9 +31,30 @@ jobs:
           cd scripts
           hatch build
 
+  test-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup config
+        uses: athackst/athackst.mkdocs@main
+      - name: Build docs
+        uses: athackst/mkdocs-simple-plugin@main
+        with:
+          push: false
+      - name: Htmlproofer
+        uses: athackst/htmlproofer-action@main
+        with:
+          directory: site
+          ignore_urls: |
+            https://twitter.com/althack
+            https://fonts.gstatic.com
+        
+
   complete:
     needs:
       - scripts
+      - test-docs
     runs-on: ubuntu-latest
     steps:
       - name: Check

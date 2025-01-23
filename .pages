@@ -1,6 +1,6 @@
 nav:
     - workstation_setup: README.md
-    - Config: config/install
+    - Dotfiles: dotfiles/install
     - Scripts: scripts
-    - Examples: examples
+    - Workspaces: workspaces
     - License: LICENSE
