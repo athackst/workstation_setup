@@ -109,5 +109,7 @@
     "codeium.enableConfig": {
         "*": true,
         "starlark": true
-    }
+    },
+    "dotfiles.repository": "https://github.com/athackst/workstation_setup.git",
+    "dotfiles.installCommand": "dotfiles/install.sh -y"
 }
