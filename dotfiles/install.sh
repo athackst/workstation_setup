@@ -120,67 +120,35 @@ shift $((OPTIND - 1))
 # /md
 
 # md
-# ### Git User Name Setup
+# ### Git User Name and Email Setup
 #
-# The script sets up the Git user name. If the name is not provided via the `-n` option,
-# the script prompts the user for it. The provided name is stored in `.bashrc` to be used
-# globally in Git.
+# The script sets up the Git user name and email in `$HOME/.gitconfig.user``. 
+# If the name or email is not provided, the script prompts the user for it. 
+# The provided name is stored in `.gitconfig.user` to be used globally in Git.
 #
 # If left blank, the script will skip this step.
 # /md
-ask_for_input "Enter the name you want to use for git: " name
 
-# Validate that the name is not empty if it needs to be set
-if [ -n "$name" ]; then
-    # Check if the file exists and if it contains the user.name setting
-    if [ ! -f "$git_user_config" ] || ! grep -q '^\[user\]' "$git_user_config" || ! grep -q '^\s*name = ' "$git_user_config"; then
-        # Create or overwrite the file with the new setting
+# Make sure the config file exists
+if [ ! -f "$git_user_config" ] || ! grep -q '^\[user\]' "$git_user_config"; then
+    touch $git_user_config
+    echo "[user]" >> "$git_user_config";
+    ask_for_input "Enter the name you want to use for git (optional): " name
+    ask_for_input "Enter the email address you want to use for git (optional): " email
+    # Validate that the name is not empty if it needs to be set
+    if [ -n "$name" ] && [ -n "$email" ]; then   
+        # Add the user name to the file
         cat > "$git_user_config" << EOF
 [user]
     name = $name
+    email = $email
 EOF
-        echo "User name added to $git_user_config"
-    else
-        # Update the existing user.name in the file
-        sed -i '/^\[user\]/,/^\[/ s/^\s*name = .*/    name = '"$name"'/' "$git_user_config"
-        echo "User name updated in $git_user_config"
+    else 
+        echo "Need name and email for git config, skipping."
     fi
-
-    echo "Git user name set to: $name"
 else
-    echo "Skipping setting up git name"
-fi
-
-# md
-# ### Git User Email Setup
-#
-# The script sets up the Git user email. If the email is not provided via the `-e` option,
-# the script prompts the user for it. The provided email is stored in `.bashrc` to be used
-# globally in Git.
-#
-# If left blank the script will skip this step.
-# /md
-ask_for_input "Enter the email address you want to use for git: " email
-
-# Validate that the email is not empty if it needs to be set
-if [ -n "$email" ]; then
-    # Check if the file exists and if it contains the user.email setting
-    if [ ! -f "$git_user_config" ] || ! grep -q '^\[user\]' "$git_user_config" || ! grep -q '^\s*email = ' "$git_user_config"; then
-        # Create or append to the file with the new setting
-        if [ ! -f "$git_user_config" ] || ! grep -q '^\[user\]' "$git_user_config"; then
-            echo "[user]" >> "$git_user_config"
-        fi
-        echo "    email = $email" >> "$git_user_config"
-        echo "User email added to $git_user_config"
-    else
-        # Update the existing user.email in the file
-        sed -i '/^\[user\]/,/^\[/ s/^\s*email = .*/    email = '"$email"'/' "$git_user_config"
-        echo "User email updated in $git_user_config"
-    fi
-
-    echo "Git user email set to: $email"
-else
-    echo "Skipping setting up git email address"
+    # Update the existing user.name in the file
+    echo "User config already set in $git_user_config, skipping."
 fi
 
 # md
