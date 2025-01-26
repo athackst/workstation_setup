@@ -24,7 +24,9 @@ jobs:
 
       - name: Label
         id: label
-        uses: actions/labeler@v5
+        uses: athackst/labeler@feature/create-labels
+        with:
+          create: true
 
       - name: Debug labels
         env:
