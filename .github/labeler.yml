@@ -34,6 +34,6 @@ devops:
 
 temp-test-label:
   - changed-files:
-    - any-glob-to-any-file: ["*"]
+    - any-glob-to-any-file: ["**"]
   - description: "This is a test"
   - color: "123FFF"
