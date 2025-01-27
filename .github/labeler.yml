@@ -31,9 +31,3 @@ devops:
     - any-glob-to-any-file: [".github/**", ".vscode/**"]
   - description: "Change to development workflows"
   - color: "9B3864"
-
-temp-test-label:
-  - changed-files:
-    - any-glob-to-any-file: ["**"]
-  - description: "This is a test"
-  - color: "123FFF"
