@@ -1,0 +1,34 @@
+name: Labeler
+on:
+  pull_request_target:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  labeler:
+    permissions:
+      contents: read
+      pull-requests: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Dump GitHub refs
+        env:
+          HEAD_REF: ${{ github.head_ref }}
+        run: echo "$HEAD_REF"
+
+      - name: Label
+        id: label
+        uses: athackst/labeler@feature/create-labels
+        with:
+          create: true
+
+      - name: Debug labels
+        env:
+          ALL_LABELS: ${{ steps.label.outputs.all-labels }}
+        run: echo $ALL_LABELS
+        
