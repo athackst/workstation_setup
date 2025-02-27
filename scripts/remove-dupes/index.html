@@ -8,13 +8,13 @@
       
       
       
-        <link rel="canonical" href="https://athackst.github.io/workstation_setup/scripts/keep_to_obsidian/">
+        <link rel="canonical" href="https://athackst.github.io/workstation_setup/scripts/remove-dupes/">
       
       
         <link rel="prev" href="../gif-gen/">
       
       
-        <link rel="next" href="../remove_dupes/">
+        <link rel="next" href="../utilities/get_google_drive_file/">
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
@@ -22,7 +22,7 @@
     
     
       
-        <title>Keep to obsidian - athackst/workstation_setup</title>
+        <title>Remove dupes - athackst/workstation_setup</title>
       
     
     
@@ -90,7 +90,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#export-google-keep-notes-to-obsidian" class="md-skip">
+        <a href="#usage" class="md-skip">
           Skip to content
         </a>
       
@@ -130,7 +130,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Keep to obsidian
+              Remove dupes
             
           </span>
         </div>
@@ -492,28 +492,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../get_google_drive_file/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Get google drive file
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../gif-gen/" class="md-nav__link">
         
   
@@ -547,7 +525,7 @@
           
   
   <span class="md-ellipsis">
-    Keep to obsidian
+    Remove dupes
     
   </span>
   
@@ -559,7 +537,7 @@
         
   
   <span class="md-ellipsis">
-    Keep to obsidian
+    Remove dupes
     
   </span>
   
@@ -580,35 +558,11 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#export-google-keep-notes-to-obsidian" class="md-nav__link">
-    <span class="md-ellipsis">
-      Export Google Keep notes to Obsidian
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Export Google Keep notes to Obsidian">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
   <a href="#usage" class="md-nav__link">
     <span class="md-ellipsis">
       Usage
     </span>
   </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#notes" class="md-nav__link">
-    <span class="md-ellipsis">
-      Notes
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -627,17 +581,83 @@
   
   
   
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_9" id="__nav_3_9_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Utilities
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_9">
+            <span class="md-nav__icon md-icon"></span>
+            Utilities
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
     <li class="md-nav__item">
-      <a href="../remove_dupes/" class="md-nav__link">
+      <a href="../utilities/get_google_drive_file/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Remove dupes
+    Get google drive file
     
   </span>
   
 
       </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../utilities/keep_to_obsidian/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Keep to obsidian
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
     </li>
   
 
@@ -871,35 +891,11 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#export-google-keep-notes-to-obsidian" class="md-nav__link">
-    <span class="md-ellipsis">
-      Export Google Keep notes to Obsidian
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Export Google Keep notes to Obsidian">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
   <a href="#usage" class="md-nav__link">
     <span class="md-ellipsis">
       Usage
     </span>
   </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#notes" class="md-nav__link">
-    <span class="md-ellipsis">
-      Notes
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -919,28 +915,13 @@
 
 
 
-  <h1>Keep to obsidian</h1>
+  <h1>Remove dupes</h1>
 
-<h2 id="export-google-keep-notes-to-obsidian">Export Google Keep notes to Obsidian</h2>
-<p>This script converts a Google Keep JSON export file to Markdown files that can be imported into Obsidian.</p>
-<h3 id="usage">Usage</h3>
-<ol>
-<li>Export your Google Keep notes to JSON format. See <a href="https://takeout.google.com/settings/takeout">Google Takeout</a> for instructions.</li>
-<li>Extract your Google Keep export file to the google_keep folder.</li>
-<li>Open a terminal and run the script with the following command:
-   <div class="highlight"><pre><span></span><code>python<span class="w"> </span>keep_to_obsidian.py<span class="w"> </span>--input<span class="w"> </span>path/to/google_keep_export<span class="w"> </span>--<span class="w"> </span>output<span class="w"> </span>path/to/obsidian_export
-</code></pre></div></li>
-<li>Markdown files will be saved in the Obsidian export folder.</li>
-</ol>
-<h3 id="notes">Notes</h3>
-<ul>
-<li>The script will create the Obsidian export folder if it doesn't exist.</li>
-<li>The script will overwrite existing Markdown files with the same name.</li>
-<li>The script will decode HTML entities in the note content.</li>
-<li>The script will use 'Untitled' as the note title if the note doesn't have a title.</li>
-<li>The script will ignore notes that don't have any content.</li>
-<li>The script will ignore notes that don't have a <code>textContent</code> field.</li>
-</ul>
+<p>Removes duplicate files between two folders by comparing their checksums.
+If a file exists in both Folder A and Folder B, the file in Folder B will be deleted.</p>
+<h2 id="usage">Usage</h2>
+<div class="highlight"><pre><span></span><code>remove_dupes.sh &lt;folder_a&gt; &lt;folder_b&gt;
+</code></pre></div>
 
 
 

@@ -17,19 +17,11 @@
          <lastmod>2025-02-27</lastmod>
     </url>
     <url>
-         <loc>https://athackst.github.io/workstation_setup/scripts/remove_dupes/</loc>
-         <lastmod>2025-02-27</lastmod>
-    </url>
-    <url>
          <loc>https://athackst.github.io/workstation_setup/scripts/docker-services-stop/</loc>
          <lastmod>2025-02-27</lastmod>
     </url>
     <url>
          <loc>https://athackst.github.io/workstation_setup/scripts/</loc>
-         <lastmod>2025-02-27</lastmod>
-    </url>
-    <url>
-         <loc>https://athackst.github.io/workstation_setup/scripts/keep_to_obsidian/</loc>
          <lastmod>2025-02-27</lastmod>
     </url>
     <url>
@@ -45,11 +37,19 @@
          <lastmod>2025-02-27</lastmod>
     </url>
     <url>
+         <loc>https://athackst.github.io/workstation_setup/scripts/remove-dupes/</loc>
+         <lastmod>2025-02-27</lastmod>
+    </url>
+    <url>
          <loc>https://athackst.github.io/workstation_setup/scripts/docker-decendents/</loc>
          <lastmod>2025-02-27</lastmod>
     </url>
     <url>
-         <loc>https://athackst.github.io/workstation_setup/scripts/get_google_drive_file/</loc>
+         <loc>https://athackst.github.io/workstation_setup/scripts/utilities/keep_to_obsidian/</loc>
+         <lastmod>2025-02-27</lastmod>
+    </url>
+    <url>
+         <loc>https://athackst.github.io/workstation_setup/scripts/utilities/get_google_drive_file/</loc>
          <lastmod>2025-02-27</lastmod>
     </url>
     <url>
