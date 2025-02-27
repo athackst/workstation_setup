@@ -2,7 +2,7 @@
 set -e
 
 # md
-# # Config
+# # Dotfiles installation
 #
 # Set up user configurations including Git configurations (name and email), along with configuring
 # several user preferences such as `.aliases`, `.bash_aliases`, and other configurations.
