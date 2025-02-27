@@ -48,4 +48,6 @@ I have been playing with the idea of doing all/most development inside of docker
 
 - [workspaces](workspaces/README.md) for example development processes
 
-Dockerfiles have been moved to [athackst/dockerfiles](https://github.com/athackst/dockerfiles)
+!!! info 
+
+    Dockerfiles have been moved to [athackst/dockerfiles](https://github.com/athackst/dockerfiles)
