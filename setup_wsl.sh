@@ -2,10 +2,10 @@
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
-$DIR/install/base.sh
-$DIR/install/gh.sh
+$DIR/setup/base.sh
+$DIR/setup/gh.sh
 
 cd ${DIR}/scripts
 pip install .
 
-$DIR/dotfiles/install.sh -y
+$DIR/install.sh

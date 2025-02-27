@@ -58,3 +58,4 @@ packages= ["workstation_setup"]
 "docker-services-stop.sh" = "bin/docker-services-stop"
 "docker-services-update.sh" = "bin/docker-services-update"
 "gif-gen.sh" = "bin/gif-gen"
+"remove-dupes.sh" = "bin/remove-dupes"

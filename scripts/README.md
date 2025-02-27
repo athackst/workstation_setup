@@ -10,8 +10,8 @@ To install:
 pip install .
 ```
 
-After installation, all programs in the `programs/` directory will be available from the commandline
+After installation, all programs in this directory will be available from the commandline.
 
-## Local scripts
+## Utilities
 
-Scripts in the root of this folder can be run locally without installing the package.
+Utility scripts in the `utilities` folder can be run locally and are not installed with this package.
