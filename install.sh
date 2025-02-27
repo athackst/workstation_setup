@@ -11,7 +11,7 @@ set -e
 # ## Basic usage:
 #
 # ```sh
-# config/install.sh
+# install.sh
 # ```
 # /md
 
@@ -67,9 +67,18 @@ ask_for_confirmation() {
 ask_for_input() {
     local prompt="$1"
     local variable="$2"
-    if [ -z "${!variable}" ] && [ "$auto_yes" = false ]; then
-        read -p "$prompt" $variable
+    local default="$3"
+    # Return if the variable is already assigned
+    if [ -n "${!variable}" ]; then
+        return
     fi
+    # If auoto_yes is true, automatically accept the default value
+    if [ "$auto_yes" = true ] && [ -n "$default" ]; then
+        eval "$variable=\"$default\""
+        return
+    fi
+    read -p "$prompt" input
+    eval "$variable=\"\${input:-$default}\""
 }
 
 # Helper function to backup a file
@@ -90,16 +99,17 @@ backup_file() {
 #
 # The following section parses command-line arguments using `getopts`:
 # 
-# - `-y` : Enables non-interactive mode by automatically accepting default values.
+# - `-i` : Enables interactive mode and will prompt each step.
 # - `-e <email>` : Sets the Git user email.
 # - `-n <name>` : Sets the Git user name.
 #
 # /md
 
+auto_yes=true
 while getopts ":ye:n:" opt; do
     case ${opt} in
-        y)
-            auto_yes=true
+        i)
+            auto_yes=false
             ;;
         e)
             email=$OPTARG
@@ -133,10 +143,11 @@ shift $((OPTIND - 1))
 if [ ! -f "$git_user_config" ] || ! grep -q '^\[user\]' "$git_user_config"; then
     touch $git_user_config
     echo "[user]" >> "$git_user_config";
-    ask_for_input "Enter the name you want to use for git (optional): " name
-    ask_for_input "Enter the email address you want to use for git (optional): " email
+    ask_for_input "Enter the name you want to use for git (optional): " name "Allison Thackston"
+    ask_for_input "Enter the email address you want to use for git (optional): " email "allison@allisonthackston.com"
     # Validate that the name is not empty if it needs to be set
-    if [ -n "$name" ] && [ -n "$email" ]; then   
+    if [ -n "$name" ] && [ -n "$email" ]; then
+        echo "Setting name and email in $git_user_config to $name and $email"
         # Add the user name to the file
         cat > "$git_user_config" << EOF
 [user]
@@ -166,8 +177,8 @@ if ask_for_confirmation "Update .aliases?"; then
         cp -rL "$HOME/.aliases" "$HOME/.aliases_bak"
         rm -rf "$HOME/.aliases"
     fi
-    ln -sfn "$DIR/user/.aliases" "$HOME/.aliases"
-    echo "Linked $HOME/.aliases to $DIR/user/.aliases"
+    ln -sfn "$DIR/dotfiles/.aliases" "$HOME/.aliases"
+    echo "Linked $HOME/.aliases to $DIR/dotfiles/.aliases"
 else
     echo "Skipping .aliases"
 fi
@@ -183,8 +194,8 @@ if ask_for_confirmation "Update .bash_aliases?"; then
         echo "Backing up $HOME/.bash_aliases to $HOME/.bash_aliases.bak"
         cp "$HOME/.bash_aliases" "$HOME/.bash_aliases.bak"
     fi
-    ln -sf "$DIR/user/.bash_aliases" "$HOME/.bash_aliases"
-    echo "Linked $HOME/.bash_aliases to $DIR/user/.bash_aliases"
+    ln -sf "$DIR/dotfiles/.bash_aliases" "$HOME/.bash_aliases"
+    echo "Linked $HOME/.bash_aliases to $DIR/dotfiles/.bash_aliases"
 else
     echo "Skipping .bash_aliases"
 fi
@@ -200,8 +211,8 @@ if ask_for_confirmation "Update .gitconfig?"; then
         echo "Backing up $HOME/.gitconfig to $HOME/.gitconfig.bak"
         cp "$HOME/.gitconfig" "$HOME/.gitconfig.bak"
     fi
-    ln -sf "$DIR/user/.gitconfig" "$HOME/.gitconfig"
-    echo "Linked $HOME/.gitconfig to $DIR/user/.gitconfig"
+    ln -sf "$DIR/dotfiles/.gitconfig" "$HOME/.gitconfig"
+    echo "Linked $HOME/.gitconfig to $DIR/dotfiles/.gitconfig"
 else
     echo "Skipping .gitconfig"
 fi
@@ -214,8 +225,8 @@ fi
 # /md
 if ask_for_confirmation "Update user .config?"; then
     echo "Setting up .config directory..."
-    find "$DIR/user/.config" -type f | while read -r item; do
-        relative_path="${item#$DIR/user/.config/}"
+    find "$DIR/dotfiles/.config" -type f | while read -r item; do
+        relative_path="${item#$DIR/dotfiles/.config/}"
         target="$HOME/.config/$relative_path"
         target_dir=$(dirname "$target")
         mkdir -p "$target_dir"
