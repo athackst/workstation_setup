@@ -2,78 +2,82 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://athackst.github.io/workstation_setup/LICENSE/</loc>
-         <lastmod>2025-02-27</lastmod>
+         <lastmod>2025-03-01</lastmod>
     </url>
     <url>
          <loc>https://athackst.github.io/workstation_setup/install/</loc>
-         <lastmod>2025-02-27</lastmod>
+         <lastmod>2025-03-01</lastmod>
     </url>
     <url>
          <loc>https://athackst.github.io/workstation_setup/</loc>
-         <lastmod>2025-02-27</lastmod>
+         <lastmod>2025-03-01</lastmod>
+    </url>
+    <url>
+         <loc>https://athackst.github.io/workstation_setup/services/auto-commit/</loc>
+         <lastmod>2025-03-01</lastmod>
     </url>
     <url>
          <loc>https://athackst.github.io/workstation_setup/scripts/docker-images-update/</loc>
-         <lastmod>2025-02-27</lastmod>
+         <lastmod>2025-03-01</lastmod>
     </url>
     <url>
          <loc>https://athackst.github.io/workstation_setup/scripts/docker-services-stop/</loc>
-         <lastmod>2025-02-27</lastmod>
+         <lastmod>2025-03-01</lastmod>
     </url>
     <url>
          <loc>https://athackst.github.io/workstation_setup/scripts/</loc>
-         <lastmod>2025-02-27</lastmod>
+         <lastmod>2025-03-01</lastmod>
     </url>
     <url>
          <loc>https://athackst.github.io/workstation_setup/scripts/docker-services-start/</loc>
-         <lastmod>2025-02-27</lastmod>
+         <lastmod>2025-03-01</lastmod>
     </url>
     <url>
          <loc>https://athackst.github.io/workstation_setup/scripts/docker-services-update/</loc>
-         <lastmod>2025-02-27</lastmod>
+         <lastmod>2025-03-01</lastmod>
     </url>
     <url>
          <loc>https://athackst.github.io/workstation_setup/scripts/gif-gen/</loc>
-         <lastmod>2025-02-27</lastmod>
+         <lastmod>2025-03-01</lastmod>
     </url>
     <url>
          <loc>https://athackst.github.io/workstation_setup/scripts/remove-dupes/</loc>
-         <lastmod>2025-02-27</lastmod>
+         <lastmod>2025-03-01</lastmod>
     </url>
     <url>
          <loc>https://athackst.github.io/workstation_setup/scripts/docker-decendents/</loc>
-         <lastmod>2025-02-27</lastmod>
+         <lastmod>2025-03-01</lastmod>
     </url>
     <url>
          <loc>https://athackst.github.io/workstation_setup/scripts/utilities/keep_to_obsidian/</loc>
-         <lastmod>2025-02-27</lastmod>
+         <lastmod>2025-03-01</lastmod>
     </url>
     <url>
          <loc>https://athackst.github.io/workstation_setup/scripts/utilities/get_google_drive_file/</loc>
-         <lastmod>2025-02-27</lastmod>
+         <lastmod>2025-03-01</lastmod>
     </url>
     <url>
          <loc>https://athackst.github.io/workstation_setup/workspaces/</loc>
-         <lastmod>2025-02-27</lastmod>
+         <lastmod>2025-03-01</lastmod>
     </url>
     <url>
          <loc>https://athackst.github.io/workstation_setup/workspaces/ros_melodic_vscode/</loc>
-         <lastmod>2025-02-27</lastmod>
+         <lastmod>2025-03-01</lastmod>
     </url>
     <url>
          <loc>https://athackst.github.io/workstation_setup/workspaces/dev_release_vscode/</loc>
-         <lastmod>2025-02-27</lastmod>
+         <lastmod>2025-03-01</lastmod>
     </url>
     <url>
          <loc>https://athackst.github.io/workstation_setup/workspaces/bazel/</loc>
-         <lastmod>2025-02-27</lastmod>
+         <lastmod>2025-03-01</lastmod>
     </url>
     <url>
          <loc>https://athackst.github.io/workstation_setup/workspaces/dev_release/</loc>
-         <lastmod>2025-02-27</lastmod>
+         <lastmod>2025-03-01</lastmod>
     </url>
     <url>
          <loc>https://athackst.github.io/workstation_setup/workspaces/multistage/</loc>
-         <lastmod>2025-02-27</lastmod>
+         <lastmod>2025-03-01</lastmod>
     </url>
 </urlset>
