@@ -95,7 +95,7 @@
     "git.autofetch": true,
     "gitlens.views.scm.grouped.views": {
         "commits": true,
-        "branches": true,
+        "branches": false,
         "remotes": true,
         "stashes": false,
         "tags": true,
@@ -117,5 +117,8 @@
     ],
     "[javascript]": {
         "editor.defaultFormatter": "vscode.typescript-language-features"
-    }
+    },
+    "cSpell.userWords": [
+        "athackst"
+    ]
 }
