@@ -1,8 +1,8 @@
-# Auto Commit Watcher Service
+# Auto Commit
 
 ## Overview
 
-The **Auto Commit Watcher Service** monitors a Git repository for file changes and automatically commits them to its corresponding repository. This ensures that any modifications are consistently saved and pushed.
+The **Auto Commit** service monitors a Git repository for file changes and automatically commits them to its corresponding repository. This ensures that any modifications are consistently saved and pushed.
 
 ## Components
 

@@ -3,4 +3,5 @@ nav:
     - Dotfiles: install
     - Scripts: scripts
     - Workspaces: workspaces
+    - Services: services
     - License: LICENSE
