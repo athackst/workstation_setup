@@ -1,6 +1,10 @@
 #!/bin/bash
+set -e
 
-install/base.sh
-install/gh.sh
+setup/base.sh
+setup/gh.sh
+setup/mkdocs.sh
 
-pip install scripts/.
+cd scripts
+pip install -r requirements.txt
+pip install .
