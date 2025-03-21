@@ -1,0 +1,19 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "mkdocs: build",
+            "type": "shell",
+            "command": "mkdocs build -f .devcontainer/mkdocs.yml -d \"$(pwd)/site\"",
+            "problemMatcher": []
+        },
+        {
+            "label": "mkdocs: serve",
+            "type": "shell",
+            "command": "mkdocs serve -f .devcontainer/mkdocs.yml",
+            "problemMatcher": []
+        }
+    ]
+}

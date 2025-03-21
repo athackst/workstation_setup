@@ -1,0 +1,43 @@
+site_name: workstation_setup
+docs_dir: /tmp/docs
+plugins:
+  - simple
+  - search
+  - mkdocstrings:
+      default_handler: python
+  - awesome-pages:
+      collapse_single_pages: true
+edit_uri: ''
+theme:
+  name: material
+  palette:
+    - media: '(prefers-color-scheme: light)'
+      scheme: default
+      primary: green
+      accent: green
+      toggle:
+        icon: material/toggle-switch
+        name: Switch to dark mode
+    - media: '(prefers-color-scheme: dark)'
+      scheme: slate
+      primary: green
+      accent: green
+      toggle:
+        icon: material/toggle-switch-off-outline
+        name: Switch to light mode
+  features:
+    - search.suggest
+    - search.highlight
+    - search.share
+markdown_extensions:
+  - admonition
+  - attr_list
+  - footnotes
+  - pymdownx.superfences
+  - pymdownx.highlight:
+      use_pygments: true
+  - pymdownx.emoji:
+      emoji_index: !!python/name:pymdownx.emoji.gemoji ''
+      emoji_generator: !!python/name:pymdownx.emoji.to_png ''
+  - pymdownx.arithmatex:
+      generic: true

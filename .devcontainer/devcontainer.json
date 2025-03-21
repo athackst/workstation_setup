@@ -7,7 +7,11 @@
 
 	// Features to add to the dev container. More info: https://containers.dev/features.
 	"features": {
-		"ghcr.io/devcontainers/features/python:1": {}
+		"ghcr.io/devcontainers/features/python:1": {},
+		"ghcr.io/devcontainers-extra/features/mkdocs:2": {
+			"version": "latest",
+			"plugins": "mkdocs-material pymdown-extensions mkdocs-simple-plugin mkdocs-awesome-pages-plugin mkdocstrings mkdocstrings-python-legacy mkdocs-macros-plugin"
+		}
 	},
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.

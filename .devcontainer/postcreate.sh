@@ -3,7 +3,8 @@ set -e
 
 setup/base.sh
 setup/gh.sh
-setup/mkdocs.sh
+
+mkdir -p /tmp/docs
 
 cd scripts
 pip install -r requirements.txt
