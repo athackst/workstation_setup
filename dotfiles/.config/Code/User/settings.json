@@ -14,6 +14,9 @@
     "[html]": {
         "editor.defaultFormatter": "vscode.html-language-features"
     },
+    "[javascript]": {
+        "editor.defaultFormatter": "vscode.typescript-language-features"
+    },
     "[json]": {
         "editor.defaultFormatter": "vscode.json-language-features"
     },
@@ -21,9 +24,9 @@
         "editor.defaultFormatter": "vscode.json-language-features"
     },
     "[markdown]": {
-        "editor.wordWrap": "wordWrapColumn",
-        "editor.wordWrapColumn": 80,
         "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.wordWrap": "wordWrapColumn",
+        "editor.wordWrapColumn": 80
     },
     "[python]": {
         "editor.tabSize": 4
@@ -40,6 +43,10 @@
     "[yaml]": {
         "editor.defaultFormatter": "redhat.vscode-yaml"
     },
+    "codeium.enableConfig": {
+        "*": true,
+        "starlark": true
+    },
     "cSpell.ignorePaths": [
         "package-lock.json",
         "node_modules",
@@ -49,8 +56,12 @@
         ".vscode-insiders",
         "settings.json"
     ],
+    "cSpell.userWords": [
+        "athackst"
+    ],
     "diffEditor.ignoreTrimWhitespace": false,
     "diffEditor.renderSideBySide": true,
+    "dotfiles.repository": "https://github.com/athackst/workstation_setup.git",
     "editor.bracketPairColorization.enabled": true,
     "editor.inlineSuggest.enabled": true,
     "editor.minimap.enabled": false,
@@ -67,11 +78,32 @@
     "files.autoSave": "afterDelay",
     "files.insertFinalNewline": true,
     "files.trimFinalNewlines": true,
+    "git.autofetch": true,
+    "git.confirmSync": false,
+    "githubPullRequests.defaultMergeMethod": "squash",
+    "githubPullRequests.quickDiff": true,
+    "gitlens.views.scm.grouped.views": {
+        "branches": false,
+        "commits": true,
+        "contributors": true,
+        "launchpad": false,
+        "remotes": true,
+        "repositories": true,
+        "searchAndCompare": false,
+        "stashes": false,
+        "tags": true,
+        "worktrees": true
+    },
     "grunt.autoDetect": "off",
     "gulp.autoDetect": "off",
     "jake.autoDetect": "off",
     "npm.autoDetect": "off",
+    "redhat.telemetry.enabled": false,
     "remote.autoForwardPortsSource": "hybrid",
+    "settingsSync.ignoredExtensions": [
+        "shopify.ruby-lsp",
+        "codeium.codeium"
+    ],
     "terminal.integrated.fontFamily": "monospace",
     "terminal.integrated.scrollback": 10000,
     "terminal.integrated.tabs.enabled": true,
@@ -83,42 +115,12 @@
         "viewType": "jupyter.notebook.ipynb"
     },
     "yaml.schemas": {
-        "http://raw.githubusercontent.com/SchemaStore/schemastore/master/src/schemas/json/github-workflow.json": [
-            "/.github/workflows/*"
-        ],
+        "file:///home/vscode/.vscode-server/extensions/docsmsft.docs-yaml-1.0.5/dist/toc.schema.json": "/toc\\.yml/i",
         "http://raw.githubusercontent.com/SchemaStore/schemastore/master/src/schemas/json/dependabot-2.0.json": [
             "dependabot.yml"
         ],
-        "file:///home/vscode/.vscode-server/extensions/docsmsft.docs-yaml-1.0.5/dist/toc.schema.json": "/toc\\.yml/i"
-    },
-    "git.confirmSync": false,
-    "git.autofetch": true,
-    "gitlens.views.scm.grouped.views": {
-        "commits": true,
-        "branches": false,
-        "remotes": true,
-        "stashes": false,
-        "tags": true,
-        "worktrees": true,
-        "contributors": true,
-        "repositories": true,
-        "searchAndCompare": false,
-        "launchpad": false
-    },
-    "redhat.telemetry.enabled": false,
-    "codeium.enableConfig": {
-        "*": true,
-        "starlark": true
-    },
-    "dotfiles.repository": "https://github.com/athackst/workstation_setup.git",
-    "settingsSync.ignoredExtensions": [
-        "shopify.ruby-lsp",
-        "codeium.codeium"
-    ],
-    "[javascript]": {
-        "editor.defaultFormatter": "vscode.typescript-language-features"
-    },
-    "cSpell.userWords": [
-        "athackst"
-    ]
+        "http://raw.githubusercontent.com/SchemaStore/schemastore/master/src/schemas/json/github-workflow.json": [
+            "/.github/workflows/*"
+        ]
+    }
 }

@@ -1,6 +1,6 @@
 {
 	"Create readme": {
-		"prefix": "#readme",
+		"prefix": "readme",
 		"body": [
 			"# $1",
 			"<!-- short description of package -->",
@@ -18,7 +18,7 @@
 		"description": "Outline for README file",
 	},
 	"Insert Front Matter": {
-		"prefix": "frontmatter",
+		"prefix": "---",
 		"body": [
 			"---",
 			"layout: text_entry",
@@ -30,6 +30,20 @@
 			"summary: ${6}",
 			"redirect_from: ",
 			"---"
-		]
+		],
+		"description": "Default front matter for a blog post"
+	},
+
+	"Decision log": {
+		"prefix": "log",
+		"body":[
+			"## ${1:title}",
+			"**Date:** ${CURRENT_YEAR}-${CURRENT_MONTH}-${CURRENT_DATE}",
+			"**Context:** ${2:Why was this decision needed?}",
+			"**Decision:** ${3: What did you choose?}",
+			"**Consequences:** ${4:What happens as a result?}",
+			"**Links**: ${5: Link to issue/discussion}"
+		],
+		"description": "Template for a decsion log entry"
 	}
 }

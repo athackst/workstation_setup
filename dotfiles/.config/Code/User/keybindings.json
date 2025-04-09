@@ -62,4 +62,9 @@
         "key": "ctrl+shift+t",
         "command": "-workbench.action.reopenClosedEditor"
     },
+    {
+        "key": "ctrl+shift+i",
+        "command": "-codeium.openCodeiumCommand",
+        "when": "codeium.commandEnabled && editorTextFocus && !inlineSuggestionsVisible"
+    },
 ]
