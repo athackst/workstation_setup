@@ -8,28 +8,28 @@
       
       
       
-        <link rel="canonical" href="https://athackst.github.io/workstation_setup/services/">
+        <link rel="canonical" href="https://athackst.github.io/workstation_setup/scripts/install-appimage/">
       
       
-        <link rel="prev" href="../workspaces/ros_melodic_vscode/">
+        <link rel="prev" href="../gif-gen/">
       
       
-        <link rel="next" href="auto-commit/">
+        <link rel="next" href="../remove-dupes/">
       
       
-      <link rel="icon" href="../assets/images/favicon.png">
+      <link rel="icon" href="../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.14">
     
     
       
-        <title>Services - athackst/workstation_setup</title>
+        <title>Install appimage - athackst/workstation_setup</title>
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.342714a4.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.342714a4.min.css">
       
         
-        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
       
       
 
@@ -48,11 +48,11 @@
       
     
     
-      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
     
-      <link rel="stylesheet" href="../stylesheets/extra.css">
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
     
-    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
   
@@ -90,7 +90,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#services" class="md-skip">
+        <a href="#install-appimage" class="md-skip">
           Skip to content
         </a>
       
@@ -110,7 +110,7 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href=".." title="athackst/workstation_setup" class="md-header__button md-logo" aria-label="athackst/workstation_setup" data-md-component="logo">
+    <a href="../.." title="athackst/workstation_setup" class="md-header__button md-logo" aria-label="athackst/workstation_setup" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -130,7 +130,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Services
+              Install appimage
             
           </span>
         </div>
@@ -253,7 +253,7 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href=".." title="athackst/workstation_setup" class="md-nav__button md-logo" aria-label="athackst/workstation_setup" data-md-component="logo">
+    <a href="../.." title="athackst/workstation_setup" class="md-nav__button md-logo" aria-label="athackst/workstation_setup" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -283,7 +283,7 @@
   
   
     <li class="md-nav__item">
-      <a href=".." class="md-nav__link">
+      <a href="../.." class="md-nav__link">
         
   
   
@@ -305,7 +305,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../install" class="md-nav__link">
+      <a href="../../install" class="md-nav__link">
         
   
   
@@ -324,18 +324,20 @@
       
   
   
+    
   
   
+  
     
     
     
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
         
           
           <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
@@ -351,7 +353,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
             Scripts
@@ -365,7 +367,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../scripts/" class="md-nav__link">
+      <a href="../" class="md-nav__link">
         
   
   
@@ -388,7 +390,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../scripts/docker-decendents/" class="md-nav__link">
+      <a href="../docker-decendents/" class="md-nav__link">
         
   
   
@@ -411,7 +413,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../scripts/docker-images-update/" class="md-nav__link">
+      <a href="../docker-images-update/" class="md-nav__link">
         
   
   
@@ -434,7 +436,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../scripts/docker-services-start/" class="md-nav__link">
+      <a href="../docker-services-start/" class="md-nav__link">
         
   
   
@@ -457,7 +459,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../scripts/docker-services-stop/" class="md-nav__link">
+      <a href="../docker-services-stop/" class="md-nav__link">
         
   
   
@@ -480,7 +482,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../scripts/docker-services-update/" class="md-nav__link">
+      <a href="../docker-services-update/" class="md-nav__link">
         
   
   
@@ -503,7 +505,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../scripts/gif-gen/" class="md-nav__link">
+      <a href="../gif-gen/" class="md-nav__link">
         
   
   
@@ -523,10 +525,30 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../scripts/install-appimage/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Install appimage
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -537,6 +559,48 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#install-appimage" class="md-nav__link">
+    <span class="md-ellipsis">
+      install-appimage
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="install-appimage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      Usage:
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -549,7 +613,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../scripts/remove-dupes/" class="md-nav__link">
+      <a href="../remove-dupes/" class="md-nav__link">
         
   
   
@@ -610,7 +674,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../scripts/utilities/get_google_drive_file/" class="md-nav__link">
+      <a href="../utilities/get_google_drive_file/" class="md-nav__link">
         
   
   
@@ -633,7 +697,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../scripts/utilities/keep_to_obsidian/" class="md-nav__link">
+      <a href="../utilities/keep_to_obsidian/" class="md-nav__link">
         
   
   
@@ -709,7 +773,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../workspaces/" class="md-nav__link">
+      <a href="../../workspaces/" class="md-nav__link">
         
   
   
@@ -732,7 +796,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../workspaces/bazel/" class="md-nav__link">
+      <a href="../../workspaces/bazel/" class="md-nav__link">
         
   
   
@@ -755,7 +819,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../workspaces/dev_release/" class="md-nav__link">
+      <a href="../../workspaces/dev_release/" class="md-nav__link">
         
   
   
@@ -778,7 +842,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../workspaces/dev_release_vscode/" class="md-nav__link">
+      <a href="../../workspaces/dev_release_vscode/" class="md-nav__link">
         
   
   
@@ -801,7 +865,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../workspaces/multistage/" class="md-nav__link">
+      <a href="../../workspaces/multistage/" class="md-nav__link">
         
   
   
@@ -824,7 +888,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../workspaces/ros_melodic_vscode/" class="md-nav__link">
+      <a href="../../workspaces/ros_melodic_vscode/" class="md-nav__link">
         
   
   
@@ -851,20 +915,18 @@
       
   
   
-    
   
   
-  
     
     
     
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
         
           
           <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
@@ -880,7 +942,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             Services
@@ -891,32 +953,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    Services
-    
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../services/" class="md-nav__link">
         
   
   
@@ -927,53 +967,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
-    <span class="md-ellipsis">
-      Overview
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#installation-usage" class="md-nav__link">
-    <span class="md-ellipsis">
-      Installation &amp; Usage
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#managing-installed-services" class="md-nav__link">
-    <span class="md-ellipsis">
-      Managing Installed Services
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -986,7 +979,7 @@
   
   
     <li class="md-nav__item">
-      <a href="auto-commit/" class="md-nav__link">
+      <a href="../../services/auto-commit/" class="md-nav__link">
         
   
   
@@ -1016,7 +1009,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../LICENSE" class="md-nav__link">
+      <a href="../../LICENSE" class="md-nav__link">
         
   
   
@@ -1048,8 +1041,6 @@
   
   
   
-    
-  
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
@@ -1058,29 +1049,26 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#install-appimage" class="md-nav__link">
     <span class="md-ellipsis">
-      Overview
+      install-appimage
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="install-appimage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      Usage:
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#installation-usage" class="md-nav__link">
-    <span class="md-ellipsis">
-      Installation &amp; Usage
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#managing-installed-services" class="md-nav__link">
-    <span class="md-ellipsis">
-      Managing Installed Services
-    </span>
-  </a>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1100,22 +1088,21 @@
 
 
 
-<h1 id="services">Services</h1>
-<h2 id="overview">Overview</h2>
-<p>This directory contains various <strong>useful services</strong> that automate common tasks, improve workflow efficiency, and simplify system management.</p>
-<h2 id="installation-usage">Installation &amp; Usage</h2>
-<p>Each service is <strong>self-contained</strong> and has its own installation and uninstallation scripts.<br />
-🔹 Navigate to the service directory<br />
-🔹 Run the <code>install.sh</code> script<br />
-🔹 Start using the service  </p>
-<h2 id="managing-installed-services">Managing Installed Services</h2>
-<p>Once installed, services run automatically.<br />
-To check a running service:</p>
-<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>systemctl<span class="w"> </span>status<span class="w"> </span>service_name
+  <h1>Install appimage</h1>
+
+<h2 id="install-appimage">install-appimage</h2>
+<p>Integrate an AppImage into the Applications menu and command line</p>
+<h3 id="usage">Usage:</h3>
+<div class="highlight"><pre><span></span><code>./install-appimage.sh<span class="w"> </span>/path/to/App.AppImage<span class="w"> </span><span class="se">\</span>
+<span class="w">   </span><span class="o">[</span>--name<span class="w"> </span><span class="s2">&quot;Nice Name&quot;</span><span class="o">]</span><span class="w"> </span><span class="se">\</span>
+<span class="w">   </span><span class="o">[</span>--categories<span class="w"> </span><span class="s2">&quot;Utility;&quot;</span><span class="o">]</span><span class="w"> </span><span class="se">\</span>
+<span class="w">   </span><span class="o">[</span>--cmd<span class="w"> </span><span class="s2">&quot;commandname&quot;</span><span class="o">]</span>
 </code></pre></div>
-<p>To restart a service:</p>
-<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>service_name
-</code></pre></div>
+<p>Notes:</p>
+<ul>
+<li>User-scope only (no sudo needed). Creates a launcher in ~/.local/share/applications</li>
+<li>Tries to extract an icon from the AppImage; you can swap it later by editing the .desktop.</li>
+</ul>
 
 
 
@@ -1278,12 +1265,12 @@ To check a running service:</p>
     
     
       
-      <script id="__config" type="application/json">{"base": "..", "features": ["search.suggest", "search.highlight", "search.share"], "search": "../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"base": "../..", "features": ["search.suggest", "search.highlight", "search.share"], "search": "../../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.13a4f30d.min.js"></script>
+      <script src="../../assets/javascripts/bundle.13a4f30d.min.js"></script>
       
-        <script src="../javascripts/config.js"></script>
+        <script src="../../javascripts/config.js"></script>
       
         <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
       
