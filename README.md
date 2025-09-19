@@ -7,7 +7,7 @@ Scripts to capture my workstation setups
 Install pre-requirements:
 
 ```bash
-sudo apt install -y git python3-pip
+sudo apt install -y git
 git clone git@github.com:athackst/workstation_setup.git
 ```
 
@@ -15,7 +15,7 @@ git clone git@github.com:athackst/workstation_setup.git
 
 Set up user [dotfiles](install.md)
 
-```
+```bash
 ./install.sh
 ```
 
@@ -48,7 +48,7 @@ I have been playing with the idea of doing all/most development inside of docker
 
 - [workspaces](workspaces/README.md) for example development processes
 
-!!! info 
+!!! info
 
     Dockerfiles have been moved to [athackst/dockerfiles](https://github.com/athackst/dockerfiles)
 

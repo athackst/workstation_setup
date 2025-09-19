@@ -1,4 +1,5 @@
-#!/usr/bin/bash
+#!/usr/bin/env bash
+set -euo pipefail
 
 # md
 # Removes duplicate files between two folders by comparing their checksums.
