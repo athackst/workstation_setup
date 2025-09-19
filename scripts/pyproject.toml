@@ -59,3 +59,4 @@ packages= ["workstation_setup"]
 "docker-services-update.sh" = "bin/docker-services-update"
 "gif-gen.sh" = "bin/gif-gen"
 "remove-dupes.sh" = "bin/remove-dupes"
+"install-appimage.sh" = "bin/install-appimage"
