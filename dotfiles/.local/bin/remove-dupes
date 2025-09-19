@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/usr/bin/env bash
 
 # md
 # Removes duplicate files between two folders by comparing their checksums.
