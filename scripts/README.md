@@ -1,17 +1,26 @@
-# Scripts
+# Overview
 
 This folder contains scripts and installable programs that I find useful.
 
-## Installation
-
-To install:
+## Layout
 
 ```bash
-pip install .
+├─ bin/ # installed into ~/.local/bin by install.sh
+└─ utils/ # not installed; run from repo only
 ```
 
-After installation, all programs in this directory will be available from the commandline.
+## Authoring conventions
 
-## Utilities
+All scripts should follow these basics:
 
-Utility scripts in the `utilities` folder can be run locally and are not installed with this package.
+- Shebang and strict mode:
+
+    ```bash
+    #!/usr/bin/env bash
+    set -euo pipefail
+    ```
+
+- Be executable: `chmod +x scripts/bin/<name>`
+- Provide `-h|--help` usage.
+- Avoid reading from TTY unless necessary
+- Keep `bin/` flat (no subdirectories)
