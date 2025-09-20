@@ -8,28 +8,28 @@
       
       
       
-        <link rel="canonical" href="https://athackst.github.io/workstation_setup/scripts/docker-services-stop/">
+        <link rel="canonical" href="https://athackst.github.io/workstation_setup/scripts/bin/docker-services-start/">
       
       
-        <link rel="prev" href="../docker-services-start/">
+        <link rel="prev" href="../docker-images-update/">
       
       
-        <link rel="next" href="../docker-services-update/">
+        <link rel="next" href="../docker-services-stop/">
       
       
-      <link rel="icon" href="../../assets/images/favicon.png">
+      <link rel="icon" href="../../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.14">
     
     
       
-        <title>Docker services stop - athackst/workstation_setup</title>
+        <title>Docker services start - athackst/workstation_setup</title>
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.342714a4.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.342714a4.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.06af60db.min.css">
       
       
 
@@ -48,11 +48,11 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
+      <link rel="stylesheet" href="../../../assets/_mkdocstrings.css">
     
-      <link rel="stylesheet" href="../../stylesheets/extra.css">
+      <link rel="stylesheet" href="../../../stylesheets/extra.css">
     
-    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
   
@@ -90,7 +90,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#docker-services-stop" class="md-skip">
+        <a href="#docker-services-start" class="md-skip">
           Skip to content
         </a>
       
@@ -110,7 +110,7 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../.." title="athackst/workstation_setup" class="md-header__button md-logo" aria-label="athackst/workstation_setup" data-md-component="logo">
+    <a href="../../.." title="athackst/workstation_setup" class="md-header__button md-logo" aria-label="athackst/workstation_setup" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -130,7 +130,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Docker services stop
+              Docker services start
             
           </span>
         </div>
@@ -253,7 +253,7 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../.." title="athackst/workstation_setup" class="md-nav__button md-logo" aria-label="athackst/workstation_setup" data-md-component="logo">
+    <a href="../../.." title="athackst/workstation_setup" class="md-nav__button md-logo" aria-label="athackst/workstation_setup" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -283,7 +283,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../.." class="md-nav__link">
+      <a href="../../.." class="md-nav__link">
         
   
   
@@ -305,7 +305,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../install" class="md-nav__link">
+      <a href="../../../install" class="md-nav__link">
         
   
   
@@ -367,12 +367,12 @@
   
   
     <li class="md-nav__item">
-      <a href="../" class="md-nav__link">
+      <a href="../../" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Scripts
+    Overview
     
   </span>
   
@@ -382,6 +382,46 @@
   
 
               
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Bin
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            Bin
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
             
               
                 
@@ -433,29 +473,6 @@
                 
   
   
-  
-  
-    <li class="md-nav__item">
-      <a href="../docker-services-start/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Docker services start
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
     
   
   
@@ -471,7 +488,7 @@
   
   
   <span class="md-ellipsis">
-    Docker services stop
+    Docker services start
     
   </span>
   
@@ -484,7 +501,7 @@
   
   
   <span class="md-ellipsis">
-    Docker services stop
+    Docker services start
     
   </span>
   
@@ -505,13 +522,13 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#docker-services-stop" class="md-nav__link">
+  <a href="#docker-services-start" class="md-nav__link">
     <span class="md-ellipsis">
-      docker-services-stop
+      docker-services-start
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="docker-services-stop">
+    <nav class="md-nav" aria-label="docker-services-start">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -524,9 +541,9 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#images" class="md-nav__link">
+  <a href="#dockers" class="md-nav__link">
     <span class="md-ellipsis">
-      Images
+      Dockers
     </span>
   </a>
   
@@ -541,6 +558,29 @@
   
 </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../docker-services-stop/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Docker services stop
+    
+  </span>
+  
+
+      </a>
     </li>
   
 
@@ -638,6 +678,14 @@
 
               
             
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
               
                 
   
@@ -653,15 +701,15 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_10" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" >
         
           
-          <label class="md-nav__link" for="__nav_3_10" id="__nav_3_10_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
             
   
   
   <span class="md-ellipsis">
-    Utilities
+    Utils
     
   </span>
   
@@ -669,10 +717,10 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_10_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_3_10">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3">
             <span class="md-nav__icon md-icon"></span>
-            Utilities
+            Utils
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -683,7 +731,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../utilities/get_google_drive_file/" class="md-nav__link">
+      <a href="../../utils/get_google_drive_file/" class="md-nav__link">
         
   
   
@@ -706,7 +754,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../utilities/keep_to_obsidian/" class="md-nav__link">
+      <a href="../../utils/keep_to_obsidian/" class="md-nav__link">
         
   
   
@@ -782,7 +830,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../workspaces/" class="md-nav__link">
+      <a href="../../../workspaces/" class="md-nav__link">
         
   
   
@@ -805,7 +853,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../workspaces/bazel/" class="md-nav__link">
+      <a href="../../../workspaces/bazel/" class="md-nav__link">
         
   
   
@@ -828,7 +876,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../workspaces/dev_release/" class="md-nav__link">
+      <a href="../../../workspaces/dev_release/" class="md-nav__link">
         
   
   
@@ -851,7 +899,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../workspaces/dev_release_vscode/" class="md-nav__link">
+      <a href="../../../workspaces/dev_release_vscode/" class="md-nav__link">
         
   
   
@@ -874,7 +922,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../workspaces/multistage/" class="md-nav__link">
+      <a href="../../../workspaces/multistage/" class="md-nav__link">
         
   
   
@@ -897,7 +945,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../workspaces/ros_melodic_vscode/" class="md-nav__link">
+      <a href="../../../workspaces/ros_melodic_vscode/" class="md-nav__link">
         
   
   
@@ -965,12 +1013,12 @@
   
   
     <li class="md-nav__item">
-      <a href="../../services/" class="md-nav__link">
+      <a href="../../../services/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Services
+    Overview
     
   </span>
   
@@ -988,7 +1036,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../services/auto-commit/" class="md-nav__link">
+      <a href="../../../services/auto-commit/" class="md-nav__link">
         
   
   
@@ -1018,7 +1066,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../LICENSE" class="md-nav__link">
+      <a href="../../../LICENSE" class="md-nav__link">
         
   
   
@@ -1058,13 +1106,13 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#docker-services-stop" class="md-nav__link">
+  <a href="#docker-services-start" class="md-nav__link">
     <span class="md-ellipsis">
-      docker-services-stop
+      docker-services-start
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="docker-services-stop">
+    <nav class="md-nav" aria-label="docker-services-start">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1077,9 +1125,9 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#images" class="md-nav__link">
+  <a href="#dockers" class="md-nav__link">
     <span class="md-ellipsis">
-      Images
+      Dockers
     </span>
   </a>
   
@@ -1106,17 +1154,17 @@
 
 
 
-  <h1>Docker services stop</h1>
+  <h1>Docker services start</h1>
 
-<h2 id="docker-services-stop">docker-services-stop</h2>
-<p>Stop all my common docker services</p>
+<h2 id="docker-services-start">docker-services-start</h2>
+<p>Starts all my common docker services</p>
 <h3 id="usage">Usage</h3>
-<div class="highlight"><pre><span></span><code>docker-services-stop
+<div class="highlight"><pre><span></span><code>docker-services-start
 </code></pre></div>
-<h3 id="images">Images</h3>
+<h3 id="dockers">Dockers</h3>
 <ul>
 <li>registry</li>
-<li>notes</li>
+<li>notes mkdocs server</li>
 <li>watchtower</li>
 </ul>
 
@@ -1281,12 +1329,12 @@
     
     
       
-      <script id="__config" type="application/json">{"base": "../..", "features": ["search.suggest", "search.highlight", "search.share"], "search": "../../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"base": "../../..", "features": ["search.suggest", "search.highlight", "search.share"], "search": "../../../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.13a4f30d.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.13a4f30d.min.js"></script>
       
-        <script src="../../javascripts/config.js"></script>
+        <script src="../../../javascripts/config.js"></script>
       
         <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
       
