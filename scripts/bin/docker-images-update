@@ -12,29 +12,48 @@ set -euo pipefail
 # docker-images-update
 # ```
 #
+# /md
+
+# Show usage/help and exit
+show_help() {
+cat <<'EOF'
+Usage: docker-images-update [options]
+
+Pulls the latest docker images for my most-used images and prunes unused images.
+
+Options:
+  -h, --help    Display this help and exit
+EOF
+}
+
+case "${1:-}" in
+  -h|--help) show_help; exit 0 ;;
+esac
+
+# Clean up dangling images
 docker system prune -f
-#
+
+
+# md
 # ### Images
 #
 # This pulls the latest images for:
 #
-docker pull ubuntu:22.04
-docker pull mcr.microsoft.com/devcontainers/base:jammy
+docker pull ubuntu:24.04
+docker pull mcr.microsoft.com/devcontainers/base:ubuntu
 # - kinetic images needed for deepracer
 docker pull althack/ros:kinetic-base
 docker pull althack/ros:kinetic-dev
-# - Latest ros release (noetic)
+# - Latest ros release (noetic - last release)
 docker pull althack/ros:noetic-base
 docker pull althack/ros:noetic-dev
 docker pull althack/ros:noetic-gazebo
-# - Latest ros2 release (humble)
-docker pull althack/ros2:humble-base
-docker pull althack/ros2:humble-dev
-docker pull althack/ros2:humble-gazebo
-# - Latest ignition release (harmonic)
+# - Latest ros2 release (jazzy)
+docker pull althack/ros2:jazzy-base
+docker pull althack/ros2:jazzy-dev
+docker pull althack/ros2:jazzy-gazebo
+# - Latest ignition release (jetty)
 docker pull althack/gz:harmonic-dev
 # - Latest mkdocs simple plugin
 docker pull althack/mkdocs-simple-plugin
-# - Latest github pages
-docker pull althack/github:pages-dev
 # /md
