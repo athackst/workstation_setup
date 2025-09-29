@@ -18,7 +18,7 @@
 		"editor.quickSuggestions": {
 			"strings": true
 		},
-		"editor.defaultFormatter": "ms-azuretools.vscode-docker"
+		"editor.defaultFormatter": "docker.docker"
 	},
 	"[json]": {
 		"editor.defaultFormatter": "vscode.json-language-features"
@@ -35,7 +35,7 @@
 		"editor.tabSize": 4
 	},
 	"[shellscript]": {
-		"editor.defaultFormatter": "foxundermoon.shell-format"
+		"editor.defaultFormatter": "shakram02.bash-beautify"
 	},
 	"[yaml]": {
 		"editor.defaultFormatter": "redhat.vscode-yaml"
