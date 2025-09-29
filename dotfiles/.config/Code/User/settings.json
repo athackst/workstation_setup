@@ -5,14 +5,31 @@
         ],
         "editor.tabSize": 2
     },
+    "[dockercompose]": {
+        "editor.insertSpaces": true,
+        "editor.tabSize": 2,
+        "editor.autoIndent": "advanced",
+        "editor.quickSuggestions": {
+            "other": true,
+            "comments": false,
+            "strings": true
+        },
+        "editor.defaultFormatter": "redhat.vscode-yaml"
+    },
     "[dockerfile]": {
-        "editor.defaultFormatter": "ms-azuretools.vscode-docker",
+        "editor.defaultFormatter": "docker.docker",
         "editor.quickSuggestions": {
             "strings": true
         }
     },
+    "[github-actions-workflow]": {
+        "editor.defaultFormatter": "redhat.vscode-yaml"
+    },
     "[html]": {
         "editor.defaultFormatter": "vscode.html-language-features"
+    },
+    "[javascript]": {
+        "editor.defaultFormatter": "vscode.typescript-language-features"
     },
     "[json]": {
         "editor.defaultFormatter": "vscode.json-language-features"
@@ -23,7 +40,8 @@
     "[markdown]": {
         "editor.wordWrap": "wordWrapColumn",
         "editor.wordWrapColumn": 80,
-        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.defaultFormatter": "yzhang.markdown-all-in-one",
+        "editor.tabSize": 4
     },
     "[python]": {
         "editor.tabSize": 4
@@ -49,8 +67,63 @@
         ".vscode-insiders",
         "settings.json"
     ],
+    "cSpell.userWords": [
+        "althack",
+        "appbar",
+        "arithmatex",
+        "athackst",
+        "augustocdias",
+        "autolinks",
+        "bierner",
+        "blockparser",
+        "blockprocessor",
+        "blockprocessors",
+        "Blockquotes",
+        "cooldown",
+        "devcontainers",
+        "frontmatter",
+        "gfmdownx",
+        "gitpython",
+        "htmlproofer",
+        "infty",
+        "javascripts",
+        "linenums",
+        "magiclink",
+        "maint",
+        "mathjax",
+        "mkdocs",
+        "mypy",
+        "olist",
+        "PIPESTATUS",
+        "postprocessors",
+        "pycache",
+        "pygments",
+        "pymdown",
+        "pymdownx",
+        "pypa",
+        "pypi",
+        "pyproject",
+        "sdist",
+        "sigstore",
+        "strikethrough",
+        "subkeys",
+        "superfences",
+        "Tabata",
+        "tasklist",
+        "testpypi",
+        "Thackston",
+        "toggleable",
+        "topbar",
+        "treeprocessor",
+        "treeprocessors",
+        "ulist",
+        "unitcoverage"
+    ],
+    "containers.containerClient": "com.microsoft.visualstudio.containers.docker",
     "diffEditor.ignoreTrimWhitespace": false,
     "diffEditor.renderSideBySide": true,
+    "docker.extension.enableComposeLanguageServer": false,
+    "dotfiles.repository": "https://github.com/athackst/workstation_setup.git",
     "editor.bracketPairColorization.enabled": true,
     "editor.inlineSuggest.enabled": true,
     "editor.minimap.enabled": false,
@@ -67,32 +140,8 @@
     "files.autoSave": "afterDelay",
     "files.insertFinalNewline": true,
     "files.trimFinalNewlines": true,
-    "grunt.autoDetect": "off",
-    "gulp.autoDetect": "off",
-    "jake.autoDetect": "off",
-    "npm.autoDetect": "off",
-    "remote.autoForwardPortsSource": "hybrid",
-    "terminal.integrated.fontFamily": "monospace",
-    "terminal.integrated.scrollback": 10000,
-    "terminal.integrated.tabs.enabled": true,
-    "typescript.tsc.autoDetect": "off",
-    "workbench.colorTheme": "Visual Studio Dark",
-    "workbench.editor.enablePreviewFromQuickOpen": true,
-    "workbench.editorAssociations": {
-        "filenamePattern": "*.ipynb",
-        "viewType": "jupyter.notebook.ipynb"
-    },
-    "yaml.schemas": {
-        "http://raw.githubusercontent.com/SchemaStore/schemastore/master/src/schemas/json/github-workflow.json": [
-            "/.github/workflows/*"
-        ],
-        "http://raw.githubusercontent.com/SchemaStore/schemastore/master/src/schemas/json/dependabot-2.0.json": [
-            "dependabot.yml"
-        ],
-        "file:///home/vscode/.vscode-server/extensions/docsmsft.docs-yaml-1.0.5/dist/toc.schema.json": "/toc\\.yml/i"
-    },
-    "git.confirmSync": false,
     "git.autofetch": true,
+    "git.confirmSync": false,
     "gitlens.views.scm.grouped.views": {
         "commits": true,
         "branches": false,
@@ -105,20 +154,31 @@
         "searchAndCompare": false,
         "launchpad": false
     },
+    "grunt.autoDetect": "off",
+    "gulp.autoDetect": "off",
+    "jake.autoDetect": "off",
+    "npm.autoDetect": "off",
     "redhat.telemetry.enabled": false,
-    "codeium.enableConfig": {
-        "*": true,
-        "starlark": true
+    "remote.autoForwardPortsSource": "hybrid",
+    "terminal.integrated.fontFamily": "monospace",
+    "terminal.integrated.scrollback": 10000,
+    "terminal.integrated.tabs.enabled": true,
+    "typescript.tsc.autoDetect": "off",
+    "workbench.colorTheme": "Visual Studio Dark",
+    "workbench.editor.enablePreviewFromQuickOpen": true,
+    "yaml.schemas": {
+        "http://raw.githubusercontent.com/SchemaStore/schemastore/master/src/schemas/json/github-workflow.json": [
+            "/.github/workflows/*"
+        ],
+        "http://raw.githubusercontent.com/SchemaStore/schemastore/master/src/schemas/json/dependabot-2.0.json": [
+            "dependabot.yml"
+        ],
+        "file:///home/vscode/.vscode-server/extensions/docsmsft.docs-yaml-1.0.5/dist/toc.schema.json": "/toc\\.yml/i",
+        "file:///home/allison.thackston/.vscode-server/extensions/atlassian.atlascode-3.8.18/resources/schemas/pipelines-schema.json": "bitbucket-pipelines.yml"
     },
-    "dotfiles.repository": "https://github.com/athackst/workstation_setup.git",
+    
     "settingsSync.ignoredExtensions": [
         "shopify.ruby-lsp",
         "codeium.codeium"
     ],
-    "[javascript]": {
-        "editor.defaultFormatter": "vscode.typescript-language-features"
-    },
-    "cSpell.userWords": [
-        "athackst"
-    ]
 }
