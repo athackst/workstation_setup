@@ -46,11 +46,17 @@ _g_remote() {
 }
 
 # Stash changes if there are any
+# return 1 if no stash created
 try_stash() {
-  if [[ -n $(git status --porcelain) ]]; then
-    git stash
+  before=$(git rev-parse -q --verify refs/stash 2>/dev/null || echo none)
+  git stash push -u
+  after=$(git rev-parse -q --verify refs/stash 2>/dev/null || echo none)
+
+  if [ "$before" != "$after" ]; then
+    echo "A new stash was created: $after"
     return 0
   else
+    echo "No stash created."
     return 1
   fi
 }
@@ -67,8 +73,8 @@ pop_stash() {
 g_mk() {
   try_stash
   local stashed=$?
-  git branch $1 $(_g_base_branch) --no-track
-  git checkout $1
+  git fetch --all
+  git switch -c $1 $(_g_base_branch)
   pop_stash $stashed
 }
 # List all of the branches
@@ -106,11 +112,8 @@ g_up() {
 }
 # Sync the local branch with the remote
 g_sync() {
-  try_stash
-  local stashed=$?
   git fetch -p
-  git rebase $(_g_base_branch)
-  pop_stash $stashed
+  git rebase --autostash $(_g_base_branch)
 }
 # Sync and update branch on remote
 g_syncup() {
