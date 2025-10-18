@@ -46,11 +46,17 @@ _g_remote() {
 }
 
 # Stash changes if there are any
+# return 1 if no stash created
 try_stash() {
-  if [[ -n $(git status --porcelain) ]]; then
-    git stash
+  before=$(git rev-parse -q --verify refs/stash 2>/dev/null || echo none)
+  git stash push -u
+  after=$(git rev-parse -q --verify refs/stash 2>/dev/null || echo none)
+
+  if [ "$before" != "$after" ]; then
+    echo "A new stash was created: $after"
     return 0
   else
+    echo "No stash created."
     return 1
   fi
 }

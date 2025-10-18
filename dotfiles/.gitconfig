@@ -34,3 +34,5 @@
 	path = ~/.gitconfig.user
 [safe]
 	directory = /opt/brt
+[advice]
+	skippedCherryPicks = false
