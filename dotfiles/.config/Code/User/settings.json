@@ -174,11 +174,11 @@
             "dependabot.yml"
         ],
         "file:///home/vscode/.vscode-server/extensions/docsmsft.docs-yaml-1.0.5/dist/toc.schema.json": "/toc\\.yml/i",
-        "file:///home/allison.thackston/.vscode-server/extensions/atlassian.atlascode-3.8.18/resources/schemas/pipelines-schema.json": "bitbucket-pipelines.yml"
+        "file:///home/allison.thackston/.vscode-server/extensions/atlassian.atlascode-4.0.0/resources/schemas/pipelines-schema.json": "bitbucket-pipelines.yml"
     },
     
     "settingsSync.ignoredExtensions": [
         "shopify.ruby-lsp",
         "codeium.codeium"
-    ],
+    ]
 }

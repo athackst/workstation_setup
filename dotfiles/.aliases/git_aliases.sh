@@ -73,8 +73,8 @@ pop_stash() {
 g_mk() {
   try_stash
   local stashed=$?
-  git branch $1 $(_g_base_branch) --no-track
-  git checkout $1
+  git fetch --all
+  git switch -c $1 $(_g_base_branch)
   pop_stash $stashed
 }
 # List all of the branches
@@ -112,11 +112,8 @@ g_up() {
 }
 # Sync the local branch with the remote
 g_sync() {
-  try_stash
-  local stashed=$?
   git fetch -p
-  git rebase $(_g_base_branch)
-  pop_stash $stashed
+  git rebase --autostash $(_g_base_branch)
 }
 # Sync and update branch on remote
 g_syncup() {
