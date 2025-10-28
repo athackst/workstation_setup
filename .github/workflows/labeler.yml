@@ -1,6 +1,6 @@
 name: Labeler
 on:
-  pull_request_target:
+  pull_request:
   workflow_dispatch:
 
 permissions:
@@ -11,6 +11,7 @@ jobs:
     permissions:
       contents: read
       pull-requests: write
+      issues: write
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -23,9 +24,7 @@ jobs:
 
       - name: Label
         id: label
-        uses: athackst/labeler@feature/create-labels
-        with:
-          create: true
+        uses: actions/labeler
 
       - name: Debug labels
         env:
