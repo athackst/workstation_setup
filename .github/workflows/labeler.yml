@@ -24,7 +24,7 @@ jobs:
 
       - name: Label
         id: label
-        uses: actions/labeler@main
+        uses: athackst/labeler@feature/label-metadata
 
       - name: Debug labels
         env:

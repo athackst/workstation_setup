@@ -36,4 +36,4 @@ test-label:
   - changed-files:
     - any-glob-to-any-file: [".github/**", ".vscode/**"]
   - description: "This is just a test"
-  - color: "9B3864"
+  - color: "7c24a2"
