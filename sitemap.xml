@@ -1,15 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
-         <loc>https://athackst.github.io/workstation_setup/</loc>
+         <loc>https://athackst.github.io/workstation_setup/services/auto-commit/</loc>
          <lastmod>2026-01-15</lastmod>
     </url>
     <url>
-         <loc>https://athackst.github.io/workstation_setup/workspaces/dev_release/</loc>
+         <loc>https://athackst.github.io/workstation_setup/scripts/bin/docker-images-update/</loc>
          <lastmod>2026-01-15</lastmod>
     </url>
     <url>
          <loc>https://athackst.github.io/workstation_setup/workspaces/</loc>
+         <lastmod>2026-01-15</lastmod>
+    </url>
+    <url>
+         <loc>https://athackst.github.io/workstation_setup/services/</loc>
+         <lastmod>2026-01-15</lastmod>
+    </url>
+    <url>
+         <loc>https://athackst.github.io/workstation_setup/LICENSE/</loc>
+         <lastmod>2026-01-15</lastmod>
+    </url>
+    <url>
+         <loc>https://athackst.github.io/workstation_setup/scripts/</loc>
+         <lastmod>2026-01-15</lastmod>
+    </url>
+    <url>
+         <loc>https://athackst.github.io/workstation_setup/workspaces/bazel/</loc>
+         <lastmod>2026-01-15</lastmod>
+    </url>
+    <url>
+         <loc>https://athackst.github.io/workstation_setup/scripts/bin/remove-dupes/</loc>
+         <lastmod>2026-01-15</lastmod>
+    </url>
+    <url>
+         <loc>https://athackst.github.io/workstation_setup/scripts/bin/docker-decendents/</loc>
+         <lastmod>2026-01-15</lastmod>
+    </url>
+    <url>
+         <loc>https://athackst.github.io/workstation_setup/install/</loc>
          <lastmod>2026-01-15</lastmod>
     </url>
     <url>
@@ -21,39 +49,11 @@
          <lastmod>2026-01-15</lastmod>
     </url>
     <url>
-         <loc>https://athackst.github.io/workstation_setup/workspaces/bazel/</loc>
-         <lastmod>2026-01-15</lastmod>
-    </url>
-    <url>
-         <loc>https://athackst.github.io/workstation_setup/scripts/bin/docker-services-stop/</loc>
-         <lastmod>2026-01-15</lastmod>
-    </url>
-    <url>
-         <loc>https://athackst.github.io/workstation_setup/install/</loc>
-         <lastmod>2026-01-15</lastmod>
-    </url>
-    <url>
-         <loc>https://athackst.github.io/workstation_setup/workspaces/ros_melodic_vscode/</loc>
-         <lastmod>2026-01-15</lastmod>
-    </url>
-    <url>
-         <loc>https://athackst.github.io/workstation_setup/scripts/</loc>
-         <lastmod>2026-01-15</lastmod>
-    </url>
-    <url>
-         <loc>https://athackst.github.io/workstation_setup/scripts/bin/remove-dupes/</loc>
-         <lastmod>2026-01-15</lastmod>
-    </url>
-    <url>
-         <loc>https://athackst.github.io/workstation_setup/services/</loc>
-         <lastmod>2026-01-15</lastmod>
-    </url>
-    <url>
          <loc>https://athackst.github.io/workstation_setup/workspaces/multistage/</loc>
          <lastmod>2026-01-15</lastmod>
     </url>
     <url>
-         <loc>https://athackst.github.io/workstation_setup/scripts/utils/get_google_drive_file/</loc>
+         <loc>https://athackst.github.io/workstation_setup/</loc>
          <lastmod>2026-01-15</lastmod>
     </url>
     <url>
@@ -61,19 +61,15 @@
          <lastmod>2026-01-15</lastmod>
     </url>
     <url>
-         <loc>https://athackst.github.io/workstation_setup/LICENSE/</loc>
-         <lastmod>2026-01-15</lastmod>
-    </url>
-    <url>
          <loc>https://athackst.github.io/workstation_setup/workspaces/dev_release_vscode/</loc>
          <lastmod>2026-01-15</lastmod>
     </url>
     <url>
-         <loc>https://athackst.github.io/workstation_setup/scripts/bin/docker-images-update/</loc>
+         <loc>https://athackst.github.io/workstation_setup/scripts/utils/keep_to_obsidian/</loc>
          <lastmod>2026-01-15</lastmod>
     </url>
     <url>
-         <loc>https://athackst.github.io/workstation_setup/scripts/bin/docker-decendents/</loc>
+         <loc>https://athackst.github.io/workstation_setup/scripts/utils/get_google_drive_file/</loc>
          <lastmod>2026-01-15</lastmod>
     </url>
     <url>
@@ -81,11 +77,15 @@
          <lastmod>2026-01-15</lastmod>
     </url>
     <url>
-         <loc>https://athackst.github.io/workstation_setup/services/auto-commit/</loc>
+         <loc>https://athackst.github.io/workstation_setup/scripts/bin/docker-services-stop/</loc>
          <lastmod>2026-01-15</lastmod>
     </url>
     <url>
-         <loc>https://athackst.github.io/workstation_setup/scripts/utils/keep_to_obsidian/</loc>
+         <loc>https://athackst.github.io/workstation_setup/workspaces/dev_release/</loc>
+         <lastmod>2026-01-15</lastmod>
+    </url>
+    <url>
+         <loc>https://athackst.github.io/workstation_setup/workspaces/ros_melodic_vscode/</loc>
          <lastmod>2026-01-15</lastmod>
     </url>
 </urlset>
