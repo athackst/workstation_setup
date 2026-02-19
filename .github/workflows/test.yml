@@ -19,29 +19,9 @@ jobs:
         run: |
           ./install.sh
 
-  test-docs:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v6
-      - name: Setup config
-        uses: athackst/athackst.mkdocs@main
-      - name: Build docs
-        uses: athackst/mkdocs-simple-plugin@main
-        with:
-          push: false
-      - name: Htmlproofer
-        uses: athackst/htmlproofer-action@main
-        with:
-          directory: site
-          ignore_urls: |
-            https://twitter.com/althack
-            https://fonts.gstatic.com
-
   complete:
     needs:
       - dotfiles
-      - test-docs
     runs-on: ubuntu-latest
     steps:
       - name: Check
