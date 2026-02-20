@@ -10,6 +10,7 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
+      actions: write
     uses: athackst/ci/.github/workflows/ci_updater.yml@main
     with:
       template-ref: main

@@ -4,6 +4,8 @@ on:
   pull_request:
   push:
     branches: [main]
+  release:
+    types: [published]
 
 jobs:
   site-pr:
@@ -14,6 +16,7 @@ jobs:
     uses: athackst/ci/.github/workflows/mkdocs_site.yml@main
     with:
       pages: false
+      version: 
 
     secrets: inherit
 
@@ -27,5 +30,21 @@ jobs:
     uses: athackst/ci/.github/workflows/mkdocs_site.yml@main
     with:
       pages: true
+      version: 
 
     secrets: inherit
+
+
+  site-release:
+    if: ${{ github.event_name == 'release' && github.event.action == 'published' }}
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
+    uses: athackst/ci/.github/workflows/mkdocs_site.yml@main
+    with:
+      pages: true
+      version: 
+      release-tag: ${{ github.event.release.tag_name }}
+    secrets: inherit
+
