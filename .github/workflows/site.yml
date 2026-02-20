@@ -1,0 +1,31 @@
+name: Site
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  site-pr:
+    if: ${{ github.event_name == 'pull_request' }}
+    permissions:
+      contents: read
+
+    uses: athackst/ci/.github/workflows/mkdocs_site.yml@main
+    with:
+      pages: false
+
+    secrets: inherit
+
+  site-main:
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
+
+    uses: athackst/ci/.github/workflows/mkdocs_site.yml@main
+    with:
+      pages: true
+
+    secrets: inherit
