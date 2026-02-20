@@ -13,7 +13,6 @@ jobs:
       actions: write
     uses: athackst/ci/.github/workflows/ci_updater.yml@main
     with:
-      template-ref: main
       create-pr: true
       push-changes: true
     secrets: inherit
