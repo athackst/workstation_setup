@@ -1,5 +1,5 @@
 # Changes here will be overwritten by Copier; NEVER EDIT MANUALLY
-_commit: d9a4587
+_commit: f219fce
 _src_path: gh:athackst/ci
 bump_script_path: ''
 site_generator: mkdocs

@@ -22,4 +22,5 @@ jobs:
       pull-requests: write
     uses: athackst/ci/.github/workflows/pr_automation.yml@main
 
-    secrets: inherit
+    secrets:
+      token: ${{ secrets.CI_BOT_TOKEN }}
