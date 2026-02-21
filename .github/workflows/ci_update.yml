@@ -15,4 +15,5 @@ jobs:
     with:
       create-pr: true
       push-changes: true
-    secrets: inherit
+    secrets:
+      token: ${{ secrets.CI_BOT_TOKEN }}
