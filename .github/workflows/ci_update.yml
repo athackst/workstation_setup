@@ -1,9 +1,14 @@
-name: CI update
+name: CI Update
 
 on:
-  schedule:
-    - cron: "17 3 * * *"
+  repository_dispatch:
+    types:
+      - ci-update
   workflow_dispatch:
+
+concurrency:
+  group: "ci-update-${{ github.ref }}"
+  cancel-in-progress: false
 
 jobs:
   ci-update:
@@ -14,7 +19,6 @@ jobs:
     uses: athackst/ci/.github/workflows/ci_updater.yml@main
     with:
       create-pr: true
-      push-changes: true
       automerge: true
     secrets:
       token: ${{ secrets.CI_BOT_TOKEN }}

@@ -7,17 +7,18 @@ on:
   release:
     types: [published]
 
+concurrency:
+  group: "site-${{ github.event.pull_request.number || github.ref }}"
+  cancel-in-progress: false
+
 jobs:
   site-pr:
     if: ${{ github.event_name == 'pull_request' }}
     permissions:
       contents: read
-
     uses: athackst/ci/.github/workflows/mkdocs_site.yml@main
     with:
       pages: false
-      version: 
-
     secrets: inherit
 
   site-main:
@@ -26,14 +27,10 @@ jobs:
       contents: write
       pages: write
       id-token: write
-
     uses: athackst/ci/.github/workflows/mkdocs_site.yml@main
     with:
       pages: true
-      version: 
-
     secrets: inherit
-
 
   site-release:
     if: ${{ github.event_name == 'release' && github.event.action == 'published' }}
@@ -44,7 +41,4 @@ jobs:
     uses: athackst/ci/.github/workflows/mkdocs_site.yml@main
     with:
       pages: true
-      version: 
-      release-tag: ${{ github.event.release.tag_name }}
     secrets: inherit
-
