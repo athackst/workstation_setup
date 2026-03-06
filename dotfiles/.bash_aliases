@@ -150,3 +150,8 @@ function htmlproofer_action() {
 	url_swap="^\/${base_dir}:,^\/dev:,^\/v\d+\.\d+\.\d+:"
 	docker run -v ${curr_dir}:/site -e INPUT_IGNORE_URLS=${ignore} -e INPUT_URL_SWAP=${url_swap} althack/htmlproofer:latest
 }
+
+##########################
+# Trash
+##########################
+alias rm='trash -v'

@@ -3,3 +3,5 @@ site/
 
 __pycache__
 docs/
+
+*.token

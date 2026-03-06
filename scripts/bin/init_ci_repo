@@ -1,0 +1,134 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+usage() {
+  cat <<'EOF_USAGE'
+Initialize a repository to use athackst/ci workflows.
+
+What this script does:
+1) Applies the CI Copier template to the current repository.
+2) Sets CI_BOT_TOKEN as a GitHub Actions secret on the repository.
+
+Usage:
+  tools/init_ci_repo.sh [options]
+
+Options:
+  --repo <owner/repo>         Repository slug. Auto-detected if omitted.
+  --source <copier-source>    Copier source (default: gh:athackst/ci).
+  --template-ref <ref>        Copier vcs ref (default: main).
+  --secret-name <name>        Secret name to set (default: CI_BOT_TOKEN).
+  --token-file <path>         Read token value from file.
+  -i, --interactive           Ask Copier template questions interactively.
+  --skip-secret               Skip setting the GitHub secret.
+  --help                      Show this help.
+
+Token input precedence:
+1) --token-file
+2) CI_BOT_TOKEN env var
+3) interactive prompt
+
+Example:
+  CI_BOT_TOKEN=ghp_xxx tools/init_ci_repo.sh --repo athackst/my-repo
+  tools/init_ci_repo.sh --repo athackst/my-repo --interactive
+EOF_USAGE
+}
+
+require_cmd() {
+  local cmd="$1"
+  command -v "$cmd" >/dev/null 2>&1 || {
+    echo "Missing required command: $cmd" >&2
+    exit 1
+  }
+}
+
+REPO=""
+SOURCE="gh:athackst/ci"
+TEMPLATE_REF="main"
+SECRET_NAME="CI_BOT_TOKEN"
+TOKEN_FILE=""
+SKIP_SECRET="false"
+INTERACTIVE="false"
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --repo)
+      REPO="${2:-}"
+      shift 2
+      ;;
+    --source)
+      SOURCE="${2:-}"
+      shift 2
+      ;;
+    --template-ref)
+      TEMPLATE_REF="${2:-}"
+      shift 2
+      ;;
+    --secret-name)
+      SECRET_NAME="${2:-}"
+      shift 2
+      ;;
+    --token-file)
+      TOKEN_FILE="${2:-}"
+      shift 2
+      ;;
+    -i|--interactive)
+      INTERACTIVE="true"
+      shift 1
+      ;;
+    --skip-secret)
+      SKIP_SECRET="true"
+      shift 1
+      ;;
+    --help|-h)
+      usage
+      exit 0
+      ;;
+    *)
+      echo "Unknown argument: $1" >&2
+      usage
+      exit 1
+      ;;
+  esac
+done
+
+require_cmd gh
+require_cmd copier
+require_cmd git
+
+if [[ -z "$REPO" ]]; then
+  if gh repo view --json nameWithOwner --jq .nameWithOwner >/dev/null 2>&1; then
+    REPO="$(gh repo view --json nameWithOwner --jq .nameWithOwner)"
+  else
+    echo "--repo was not provided and repo auto-detect failed." >&2
+    exit 1
+  fi
+fi
+
+echo "Repo: $REPO"
+echo "Copier source: $SOURCE"
+echo "Copier ref: $TEMPLATE_REF"
+
+COPIER_CMD=(copy --trust --vcs-ref "$TEMPLATE_REF")
+if [[ "$INTERACTIVE" == "false" ]]; then
+  COPIER_CMD+=(--defaults)
+else
+  echo "Interactive mode enabled: prompting for Copier template values."
+fi
+COPIER_CMD+=("$SOURCE" .)
+
+echo "Applying template with Copier..."
+copier "${COPIER_CMD[@]}"
+
+if [[ "$SKIP_SECRET" == "true" ]]; then
+  echo "Skipping secret setup (--skip-secret)."
+  exit 0
+fi
+
+SECRET_CMD=("$SCRIPT_DIR/set_ci_bot_token" "--repo" "$REPO" "--secret-name" "$SECRET_NAME")
+if [[ -n "$TOKEN_FILE" ]]; then
+  SECRET_CMD+=("--token-file" "$TOKEN_FILE")
+fi
+
+"${SECRET_CMD[@]}"
