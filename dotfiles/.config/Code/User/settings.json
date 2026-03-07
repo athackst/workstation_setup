@@ -81,6 +81,7 @@
         "Blockquotes",
         "cooldown",
         "devcontainers",
+        "fontawesome",
         "frontmatter",
         "gfmdownx",
         "gitpython",
@@ -92,6 +93,7 @@
         "maint",
         "mathjax",
         "mkdocs",
+        "mkdocstrings",
         "mypy",
         "olist",
         "PIPESTATUS",
@@ -181,5 +183,13 @@
         "shopify.ruby-lsp",
         "codeium.codeium"
     ],
-    "terminal.integrated.suggest.enabled": false
+    "terminal.integrated.suggest.enabled": false,
+    "githubPullRequests.pullBranch": "never",
+    "yaml.customTags": [
+      "tag:yaml.org,2002:python/name:materialx.emoji.twemoji",
+      "tag:yaml.org,2002:python/name:materialx.emoji.to_svg",
+      "tag:yaml.org,2002:python/name:pymdownx.emoji.gemoji",
+      "tag:yaml.org,2002:python/name:pymdownx.emoji.to_png",
+      "tag:yaml.org,2002:python/name:pymdownx.superfences.fence_code_format",        
+    ]
 }
