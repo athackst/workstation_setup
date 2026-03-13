@@ -1,9 +1,6 @@
 name: test
 
 on:
-  push:
-    branches:
-      - main
   workflow_dispatch:
   pull_request:
 
@@ -19,9 +16,18 @@ jobs:
         run: |
           ./install.sh
 
+  test-site:
+    permissions:
+      contents: read
+    uses: athackst/ci/.github/workflows/mkdocs_site.yml@main
+    with:
+      pages: false
+    secrets: inherit
+
   complete:
     needs:
       - dotfiles
+      - test-site
     runs-on: ubuntu-latest
     steps:
       - name: Check
