@@ -155,3 +155,8 @@ function htmlproofer_action() {
 # Trash
 ##########################
 alias rm='trash -v'
+
+###########################
+# Autocompletes
+###########################
+eval "$(_CI_BOT_COMPLETE=bash_source ci_bot)"
