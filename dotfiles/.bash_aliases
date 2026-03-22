@@ -139,6 +139,36 @@ function noetic_gazebo() {
   docker run -it --rm -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix -u ros althack/ros:noetic-gazebo gazebo
 }
 
+########################
+# Docker
+########################
+function docker-images-update() {
+  docker system prune -f
+  docker pull ubuntu:24.04
+  docker pull mcr.microsoft.com/devcontainers/base:jammy
+  docker pull althack/ros2:jazzy-base
+  docker pull althack/ros2:jazzy-dev
+  docker pull althack/ros2:jazzy-gazebo
+  docker pull althack/gz:jetty-dev
+  docker pull althack/mkdocs-simple-plugin
+}
+
+function docker-services-start() {
+  docker run -d -p 5000:5000 --restart=always --name registry registry:2
+  docker run -d -p 8123:8000 --restart=always --name notes -v ~/Notes:/docs -e THEME=material -e SITE_DIR="/test" althack/mkdocs-simple-plugin:latest
+  docker run -d --restart=always --name watchtower --volume /var/run/docker.sock:/var/run/docker.sock containrrr/watchtower --include-restarting --cleanup
+}
+
+function docker-services-stop() {
+  docker update --restart=no registry
+  docker update --restart=no notes
+  docker update --restart=no watchtower
+}
+
+function docker-services-update() {
+  docker run --rm -t --name watchtower-update --volume /var/run/docker.sock:/var/run/docker.sock containrrr/watchtower --include-restarting --cleanup --run-once
+}
+
 #######################
 # HTML Proofer
 #######################
@@ -155,8 +185,8 @@ function htmlproofer_action() {
 # Aliases
 ##########################
 alias rm='trash -v'
-alias ci-bot-athackst='ci-bot setup --token-file "$HOME/.config/tokens/athackst_ci_bot.token'
-alias ci-bot-althack='ci-bot setup --token-file "$HOME/.config/tokens/althack_ci_bot.token'
+alias ci-bot-athackst='ci-bot setup --token-file "$HOME/.config/tokens/athackst_ci_bot.token"'
+alias ci-bot-althack='ci-bot setup --token-file "$HOME/.config/tokens/althack_ci_bot.token"'
 alias git-use-althack='git-use althack'
 alias git-use-athackst='git-use athackst'
 
