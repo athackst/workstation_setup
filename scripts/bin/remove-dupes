@@ -12,11 +12,35 @@ set -euo pipefail
 # ```
 # /md
 
-# Check if correct number of arguments are supplied
+usage() {
+    cat <<EOF
+Usage: $0 [--refresh] <folder_a_path> <folder_b_path>
+
+Deduplicate files between two folders by checksum.
+If a file exists in both Folder A and Folder B, the file in Folder B is deleted.
+EOF
+}
+
+REFRESH=false
+
+while [[ $# -gt 0 ]]; do
+    case "${1:-}" in
+        -h|--help)
+            usage
+            exit 0
+            ;;
+        --refresh)
+            REFRESH=true
+            shift
+            ;;
+        *)
+            break
+            ;;
+    esac
+done
+
 if [ "$#" -ne 2 ]; then
-    echo "Usage: $0 <folder_a_path> <folder_b_path>"
-    echo "This script deduplicates files between two folders by comparing their checksums."
-    echo "If a file exists in both Folder A and Folder B, the file in Folder B will be deleted."
+    usage
     exit 1
 fi
 
@@ -34,25 +58,51 @@ if [ ! -d "$folder_b" ]; then
     exit 1
 fi
 
-# Replace '/' with '-' in folder names for the checksum file names
-folder_a_name=$(echo "$folder_a" | tr '/' '-')
-folder_b_name=$(echo "$folder_b" | tr '/' '-')
+folder_a="$(realpath "$folder_a")"
+folder_b="$(realpath "$folder_b")"
 
-# Construct the checksum file names using the folder names
-folder_a_checksums="${folder_a_name}_checksums.txt"
-folder_b_checksums="${folder_b__name}_cecksums.txt"
+checksums_file() {
+    local folder="$1"
+    echo "$folder/.checksums"
+}
 
-# Generate checksums for Folder A
-find "$folder_a" -type f -exec md5sum {} + > $folder_a_checksums
+write_checksums_manifest() {
+    local folder="$1"
+    local output="$2"
 
-# Generate checksums for Folder B, excluding Folder A
-find "$folder_b" -type f -not -path "$folder_a/*" -exec md5sum {} + > $folder_b_checksums
+    echo "Computing checksums for $folder"
+    (
+        cd "$folder"
+        find . -type f ! -name .checksums -print0 | while IFS= read -r -d '' file; do
+            local_path="${file#./}"
+            checksum="$(md5sum "$local_path" | awk '{print $1}')"
+            printf '%s  %s\n' "$checksum" "$local_path"
+        done
+    ) > "$output"
+}
 
-# Compare checksums and delete duplicates in Folder B
-awk '{print $1}' $folder_a_checksums | while read -r checksum_a; do
-    file_b=$(grep "$checksum_a" $folder_b_checksums | awk '{print $2}')
-    if [ -n "$file_b" ]; then
-        rm "$file_b"
-        echo "Deleted: $file_b"
-    fi
+folder_a_checksums="$(checksums_file "$folder_a")"
+folder_b_checksums="$(checksums_file "$folder_b")"
+
+if $REFRESH || [ ! -f "$folder_a_checksums" ]; then
+    write_checksums_manifest "$folder_a" "$folder_a_checksums"
+else
+    echo "Using cached checksums for $folder_a"
+fi
+
+if $REFRESH || [ ! -f "$folder_b_checksums" ]; then
+    write_checksums_manifest "$folder_b" "$folder_b_checksums"
+else
+    echo "Using cached checksums for $folder_b"
+fi
+
+awk '{print $1}' "$folder_a_checksums" | sort -u | while read -r checksum_a; do
+    while IFS= read -r matched_line; do
+        relative_path="${matched_line#*  }"
+        file_b="$folder_b/$relative_path"
+        if [ -n "$file_b" ] && [ -f "$file_b" ]; then
+            rm "$file_b"
+            echo "Deleted: $file_b"
+        fi
+    done < <(grep "^${checksum_a}  " "$folder_b_checksums" || true)
 done
