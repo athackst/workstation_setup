@@ -41,14 +41,11 @@ All scripts should follow these basics:
 
 ## Git Account Switching
 
-These small helpers rewrite a repo remote to use your SSH host aliases during account migration:
-
-- `git-use-athackst`
-- `git-use-althack`
+`git-use` rewrites a repo remote to use one of your GitHub SSH host aliases during account migration.
 
 Example:
 
 ```bash
-git-use-athackst
-git-use-althack
+git-use athackst
+git-use althack
 ```

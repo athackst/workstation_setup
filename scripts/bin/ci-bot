@@ -1,0 +1,520 @@
+#!/usr/bin/env python3
+"""Manage CI template setup and token distribution for GitHub repositories."""
+
+from __future__ import annotations
+
+import json
+import os
+import subprocess
+import sys
+from dataclasses import dataclass
+from datetime import datetime, timezone
+from pathlib import Path
+from typing import Any
+
+import click
+
+
+DEFAULT_SOURCE = "gh:athackst/ci"
+DEFAULT_TEMPLATE_REF = "main"
+DEFAULT_SECRET_NAME = "CI_BOT_TOKEN"
+DEFAULT_TOKEN_FILE = Path("~/.config/tokens/ci_bot.token").expanduser()
+DEFAULT_REGISTRY_PATH = Path("~/.config/ci_bot/repos.json").expanduser()
+
+
+@dataclass
+class RepoConfig:
+    repo: str
+    source: str
+    template_ref: str
+    secret_name: str
+    path: str | None = None
+    token_file: str | None = None
+    added_at: str | None = None
+    last_setup_at: str | None = None
+    last_update_at: str | None = None
+    last_token_refresh_at: str | None = None
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "source": self.source,
+            "template_ref": self.template_ref,
+            "secret_name": self.secret_name,
+            "path": self.path,
+            "token_file": self.token_file,
+            "added_at": self.added_at,
+            "last_setup_at": self.last_setup_at,
+            "last_update_at": self.last_update_at,
+            "last_token_refresh_at": self.last_token_refresh_at,
+        }
+
+    @classmethod
+    def from_dict(cls, repo: str, data: dict[str, Any]) -> "RepoConfig":
+        return cls(
+            repo=repo,
+            source=data.get("source", DEFAULT_SOURCE),
+            template_ref=data.get("template_ref", DEFAULT_TEMPLATE_REF),
+            secret_name=data.get("secret_name", DEFAULT_SECRET_NAME),
+            path=data.get("path"),
+            token_file=data.get("token_file"),
+            added_at=data.get("added_at"),
+            last_setup_at=data.get("last_setup_at"),
+            last_update_at=data.get("last_update_at"),
+            last_token_refresh_at=data.get("last_token_refresh_at"),
+        )
+
+
+def now_utc() -> str:
+    return datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
+
+
+def require_cmd(cmd: str) -> None:
+    if not shutil_which(cmd):
+        raise click.ClickException(f"Missing required command: {cmd}")
+
+
+def shutil_which(cmd: str) -> str | None:
+    for directory in os.environ.get("PATH", "").split(os.pathsep):
+        candidate = Path(directory) / cmd
+        if candidate.is_file() and os.access(candidate, os.X_OK):
+            return str(candidate)
+    return None
+
+
+def run(cmd: list[str], cwd: str | None = None, capture_output: bool = False) -> str | None:
+    try:
+        completed = subprocess.run(
+            cmd,
+            cwd=cwd,
+            check=True,
+            text=True,
+            capture_output=capture_output,
+        )
+    except subprocess.CalledProcessError as exc:
+        stderr = (exc.stderr or "").strip()
+        stdout = (exc.stdout or "").strip()
+        detail = stderr or stdout or f"Command failed: {' '.join(cmd)}"
+        raise click.ClickException(detail) from exc
+    if capture_output:
+        return (completed.stdout or "").strip()
+    return None
+
+
+def detect_repo() -> str:
+    require_cmd("gh")
+    return run(["gh", "repo", "view", "--json", "nameWithOwner", "--jq", ".nameWithOwner"], capture_output=True)  # type: ignore[return-value]
+
+
+def normalize_token(token: str) -> str:
+    return token.strip()
+
+
+def write_token_file(token_file: Path, token_value: str) -> str:
+    token_file.parent.mkdir(parents=True, exist_ok=True)
+    token_file.write_text(f"{token_value}\n", encoding="utf-8")
+    click.echo(f"Saved token to {token_file}")
+    return str(token_file)
+
+
+def prompt_for_token() -> str:
+    token_value = normalize_token(click.prompt("Enter CI token", hide_input=True))
+    if not token_value:
+        raise click.ClickException("Token value is empty; refusing to continue.")
+    return token_value
+
+
+def read_or_prompt_token(token_file: str | None) -> tuple[str, str | None]:
+    requested_path = Path(token_file).expanduser() if token_file else None
+
+    if requested_path and requested_path.is_file():
+        return normalize_token(requested_path.read_text(encoding="utf-8")), str(requested_path)
+
+    if requested_path:
+        token_value = prompt_for_token()
+        return token_value, write_token_file(requested_path, token_value)
+
+    token_value = normalize_token(os.environ.get("CI_BOT_TOKEN", ""))
+    if token_value:
+        return token_value, None
+
+    if DEFAULT_TOKEN_FILE.is_file():
+        return normalize_token(DEFAULT_TOKEN_FILE.read_text(encoding="utf-8")), str(DEFAULT_TOKEN_FILE)
+
+    token_value = prompt_for_token()
+    return token_value, write_token_file(DEFAULT_TOKEN_FILE, token_value)
+
+
+def resolve_supplied_token(token: str | None, token_file: Path) -> tuple[str, str]:
+    if token is not None:
+        token_value = normalize_token(token)
+        if not token_value:
+            raise click.ClickException("Token value is empty; refusing to continue.")
+        return token_value, write_token_file(token_file, token_value)
+
+    if token_file.is_file():
+        token_value = normalize_token(token_file.read_text(encoding="utf-8"))
+        if token_value:
+            return token_value, str(token_file)
+
+    token_value = prompt_for_token()
+    return token_value, write_token_file(token_file, token_value)
+
+
+def resolve_token_value(token_file: str | None) -> tuple[str, str | None]:
+    return read_or_prompt_token(token_file)
+
+
+def load_registry(registry_path: Path) -> dict[str, Any]:
+    if not registry_path.exists():
+        return {"repos": {}}
+    try:
+        data = json.loads(registry_path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        raise click.ClickException(f"Registry file is not valid JSON: {registry_path}") from exc
+    if not isinstance(data, dict):
+        raise click.ClickException(f"Registry file must contain a JSON object: {registry_path}")
+    data.setdefault("repos", {})
+    if not isinstance(data["repos"], dict):
+        raise click.ClickException(f"Registry file 'repos' field must be an object: {registry_path}")
+    return data
+
+
+def save_registry(registry_path: Path, data: dict[str, Any]) -> None:
+    registry_path.parent.mkdir(parents=True, exist_ok=True)
+    registry_path.write_text(json.dumps(data, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+
+def get_repo_config(registry: dict[str, Any], repo: str) -> RepoConfig | None:
+    data = registry["repos"].get(repo)
+    if data is None:
+        return None
+    return RepoConfig.from_dict(repo, data)
+
+
+def upsert_repo_config(registry: dict[str, Any], config: RepoConfig) -> None:
+    existing = registry["repos"].get(config.repo, {})
+    merged = {**existing, **{k: v for k, v in config.to_dict().items() if v is not None}}
+    registry["repos"][config.repo] = merged
+
+
+def require_repo_config(registry: dict[str, Any], repo: str) -> RepoConfig:
+    config = get_repo_config(registry, repo)
+    if config is None:
+        raise click.ClickException(
+            f"Repo '{repo}' is not registered. Run 'ci-bot setup' or 'ci-bot repo add --repo {repo}'."
+        )
+    return config
+
+
+def apply_template(source: str, template_ref: str, interactive: bool, cwd: str) -> None:
+    require_cmd("copier")
+    cmd = ["copier", "copy", "--trust", "--vcs-ref", template_ref]
+    if not interactive:
+        cmd.append("--defaults")
+    cmd.extend([source, "."])
+    click.echo(f"Applying template {source}@{template_ref} in {cwd}")
+    run(cmd, cwd=cwd)
+
+
+def update_template(template_ref: str, interactive: bool, cwd: str) -> None:
+    require_cmd("copier")
+    cmd = ["copier", "update", "--trust", "--vcs-ref", template_ref]
+    if not interactive:
+        cmd.append("--defaults")
+    click.echo(f"Updating template in {cwd} with ref {template_ref}")
+    run(cmd, cwd=cwd)
+
+
+def set_secret(repo: str, secret_name: str, token_value: str) -> None:
+    require_cmd("gh")
+    run(["gh", "secret", "set", secret_name, "--repo", repo, "--body", token_value])
+
+
+def repo_targets(
+    registry: dict[str, Any],
+    repo: str | None,
+    all_repos: bool,
+    cwd_repo_fallback: bool = True,
+) -> list[str]:
+    if all_repos:
+        repos = sorted(registry["repos"].keys())
+        if not repos:
+            raise click.ClickException("No repos are registered.")
+        return repos
+    if repo:
+        return [repo]
+    if cwd_repo_fallback:
+        return [detect_repo()]
+    raise click.ClickException("Provide --repo or --all.")
+
+
+@click.group(context_settings={"help_option_names": ["-h", "--help"]})
+@click.option(
+    "--registry-file",
+    type=click.Path(dir_okay=False, path_type=Path),
+    default=DEFAULT_REGISTRY_PATH,
+    show_default=str(DEFAULT_REGISTRY_PATH),
+    help="Path to the ci-bot JSON registry.",
+)
+@click.pass_context
+def cli(ctx: click.Context, registry_file: Path) -> None:
+    """Manage CI template setup and token refreshes for repositories."""
+    ctx.ensure_object(dict)
+    ctx.obj["registry_file"] = registry_file.expanduser()
+
+
+@cli.command()
+@click.option("--repo", help="Repository slug (owner/repo). Auto-detected if omitted.")
+@click.option("--source", default=DEFAULT_SOURCE, show_default=True, help="Copier template source.")
+@click.option("--template-ref", default=DEFAULT_TEMPLATE_REF, show_default=True, help="Copier template ref.")
+@click.option("--secret-name", default=DEFAULT_SECRET_NAME, show_default=True, help="GitHub Actions secret name.")
+@click.option("--token-file", type=click.Path(dir_okay=False, path_type=Path), help="Read token value from file.")
+@click.option("--skip-secret", is_flag=True, help="Skip setting the GitHub secret.")
+@click.option("-i", "--interactive", is_flag=True, help="Prompt for Copier template values instead of using defaults.")
+@click.pass_context
+def setup(
+    ctx: click.Context,
+    repo: str | None,
+    source: str,
+    template_ref: str,
+    secret_name: str,
+    token_file: Path | None,
+    skip_secret: bool,
+    interactive: bool,
+) -> None:
+    """Apply the CI template, optionally set the token, and register the repo."""
+    require_cmd("git")
+    repo = repo or detect_repo()
+    cwd = os.getcwd()
+    apply_template(source, template_ref, interactive=interactive, cwd=cwd)
+
+    resolved_token_path = str(token_file.expanduser()) if token_file else None
+    token_value = None
+    token_source_path = resolved_token_path
+    if not skip_secret:
+        token_value, token_source_path = resolve_token_value(resolved_token_path)
+        click.echo(f"Using secret from {token_source_path} to set secret '{secret_name}' on {repo}")
+        set_secret(repo, secret_name, resolved_token_path)
+
+    registry_path: Path = ctx.obj["registry_file"]
+    registry = load_registry(registry_path)
+    timestamp = now_utc()
+    config = RepoConfig(
+        repo=repo,
+        source=source,
+        template_ref=template_ref,
+        secret_name=secret_name,
+        path=cwd,
+        token_file=token_source_path,
+        added_at=get_repo_config(registry, repo).added_at if get_repo_config(registry, repo) else timestamp,
+        last_setup_at=timestamp,
+        last_token_refresh_at=timestamp if token_value is not None else None,
+    )
+    upsert_repo_config(registry, config)
+    save_registry(registry_path, registry)
+    click.echo(f"Registered {repo} in {registry_path}")
+
+
+@cli.command()
+@click.option("--repo", help="Repository slug (owner/repo). Defaults to the current repo.")
+@click.option("--path", type=click.Path(file_okay=False, path_type=Path), help="Repo path. Defaults to the registered path or cwd.")
+@click.option("--template-ref", help="Override the registered Copier ref.")
+@click.option("-i", "--interactive", is_flag=True, help="Prompt for Copier values instead of using defaults.")
+@click.pass_context
+def update(
+    ctx: click.Context,
+    repo: str | None,
+    path: Path | None,
+    template_ref: str | None,
+    interactive: bool,
+) -> None:
+    """Run copier update using the repo's existing Copier answers file."""
+    repo = repo or detect_repo()
+    registry_path: Path = ctx.obj["registry_file"]
+    registry = load_registry(registry_path)
+    config = require_repo_config(registry, repo)
+
+    target_path = path.expanduser() if path else Path(config.path or os.getcwd()).expanduser()
+    if not target_path.exists():
+        raise click.ClickException(
+            f"Repo path does not exist: {target_path}. Re-run setup here or pass --path."
+        )
+
+    template_ref = template_ref or config.template_ref
+    update_template(template_ref, interactive=interactive, cwd=str(target_path))
+
+    config.path = str(target_path)
+    config.template_ref = template_ref
+    config.last_update_at = now_utc()
+    upsert_repo_config(registry, config)
+    save_registry(registry_path, registry)
+    click.echo(f"Updated registry for {repo}")
+
+
+@cli.group()
+def token() -> None:
+    """Manage local CI token files and refresh repo secrets."""
+
+
+def refresh_token_for_targets(
+    registry_path: Path,
+    token_file: Path,
+    token_value: str,
+) -> None:
+    registry = load_registry(registry_path)
+    normalized_token_file = str(token_file.expanduser())
+    targets: list[RepoConfig] = []
+
+    for repo_name in sorted(registry["repos"].keys()):
+        config = get_repo_config(registry, repo_name)
+        if config is None:
+            continue
+        if config.token_file == normalized_token_file:
+            targets.append(config)
+
+    if not targets:
+        raise click.ClickException(f"No registered repos use token file: {normalized_token_file}")
+
+    timestamp = now_utc()
+
+    for config in targets:
+        set_secret(config.repo, config.secret_name, token_value)
+        config.last_token_refresh_at = timestamp
+        upsert_repo_config(registry, config)
+
+    save_registry(registry_path, registry)
+    click.echo(f"Refreshed token for {len(targets)} repo(s)")
+
+
+@token.command("set")
+@click.option(
+    "--token-file",
+    type=click.Path(dir_okay=False, path_type=Path),
+    required=True,
+    help="Token file to write.",
+)
+@click.option("--token", help="Token value to save. Prompts if omitted.")
+def token_set(
+    token_file: Path,
+    token: str | None,
+) -> None:
+    """Save a CI token to a local token file."""
+    resolve_supplied_token(token, token_file.expanduser())
+
+
+@token.command("list")
+@click.pass_context
+def token_list(ctx: click.Context) -> None:
+    """List token files referenced by registered repos."""
+    registry = load_registry(ctx.obj["registry_file"])
+    token_files: dict[str, list[str]] = {}
+
+    for repo_name in sorted(registry["repos"].keys()):
+        config = get_repo_config(registry, repo_name)
+        if config is None or not config.token_file:
+            continue
+        token_files.setdefault(config.token_file, []).append(repo_name)
+
+    if not token_files:
+        click.echo("No token files registered.")
+        return
+
+    for token_file, repos in sorted(token_files.items()):
+        click.echo(f"{token_file}\t{len(repos)} repo(s)")
+
+
+@token.command("refresh")
+@click.option(
+    "--token-file",
+    type=click.Path(dir_okay=False, path_type=Path),
+    required=True,
+    help="Token file to save and refresh from.",
+)
+@click.option("--token", help="Token value to save before refreshing repos. Prompts if omitted.")
+@click.pass_context
+def token_refresh(
+    ctx: click.Context,
+    token_file: Path,
+    token: str | None,
+) -> None:
+    """Save a token file and refresh all repos registered with it."""
+    token_value, _ = resolve_supplied_token(token, token_file.expanduser())
+    refresh_token_for_targets(ctx.obj["registry_file"], token_file.expanduser(), token_value)
+
+
+@cli.group()
+def repo() -> None:
+    """Manage the local repo registry."""
+
+
+@repo.command("list")
+@click.pass_context
+def repo_list(ctx: click.Context) -> None:
+    """List registered repos."""
+    registry = load_registry(ctx.obj["registry_file"])
+    repos = sorted(registry["repos"].items())
+    if not repos:
+        click.echo("No repos registered.")
+        return
+    for name, data in repos:
+        source = data.get("source", DEFAULT_SOURCE)
+        template_ref = data.get("template_ref", DEFAULT_TEMPLATE_REF)
+        path = data.get("path", "-")
+        click.echo(f"{name}\tsource={source}\tref={template_ref}\tpath={path}")
+
+
+@repo.command("add")
+@click.option("--repo", "repo_name", required=True, help="Repository slug (owner/repo).")
+@click.option("--source", default=DEFAULT_SOURCE, show_default=True, help="Copier template source.")
+@click.option("--template-ref", default=DEFAULT_TEMPLATE_REF, show_default=True, help="Copier template ref.")
+@click.option("--secret-name", default=DEFAULT_SECRET_NAME, show_default=True, help="GitHub Actions secret name.")
+@click.option("--path", type=click.Path(file_okay=False, path_type=Path), help="Optional local checkout path.")
+@click.option("--token-file", type=click.Path(dir_okay=False, path_type=Path), help="Optional token file for this repo.")
+@click.pass_context
+def repo_add(
+    ctx: click.Context,
+    repo_name: str,
+    source: str,
+    template_ref: str,
+    secret_name: str,
+    path: Path | None,
+    token_file: Path | None,
+) -> None:
+    """Add or update a repo in the local registry."""
+    registry_path: Path = ctx.obj["registry_file"]
+    registry = load_registry(registry_path)
+    existing = get_repo_config(registry, repo_name)
+    timestamp = now_utc()
+    config = RepoConfig(
+        repo=repo_name,
+        source=source,
+        template_ref=template_ref,
+        secret_name=secret_name,
+        path=str(path.expanduser()) if path else (existing.path if existing else None),
+        token_file=str(token_file.expanduser()) if token_file else (existing.token_file if existing else None),
+        added_at=existing.added_at if existing else timestamp,
+    )
+    upsert_repo_config(registry, config)
+    save_registry(registry_path, registry)
+    click.echo(f"Saved {repo_name} to {registry_path}")
+
+
+@repo.command("remove")
+@click.option("--repo", "repo_name", required=True, help="Repository slug (owner/repo).")
+@click.pass_context
+def repo_remove(ctx: click.Context, repo_name: str) -> None:
+    """Remove a repo from the local registry."""
+    registry_path: Path = ctx.obj["registry_file"]
+    registry = load_registry(registry_path)
+    if registry["repos"].pop(repo_name, None) is None:
+        raise click.ClickException(f"Repo '{repo_name}' is not registered.")
+    save_registry(registry_path, registry)
+    click.echo(f"Removed {repo_name} from {registry_path}")
+
+
+if __name__ == "__main__":
+    try:
+        cli()
+    except KeyboardInterrupt:
+        click.echo("Interrupted.", err=True)
+        sys.exit(130)
