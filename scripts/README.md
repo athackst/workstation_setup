@@ -27,14 +27,28 @@ All scripts should follow these basics:
 
 ## CI Bot
 
-`bin/ci_bot` is a Python + Click CLI for managing CI template setup and token refreshes.
+`bin/ci-bot` is a Python + Click CLI for managing CI template setup and token refreshes.
 
 - Registry file: `~/.config/ci_bot/repos.json`
 - Default token file: `~/.config/tokens/ci_bot.token`
 - Main commands:
-  - `ci_bot setup`
-  - `ci_bot update`
-  - `ci_bot token set`
-  - `ci_bot token list`
-  - `ci_bot token refresh`
-  - `ci_bot repo list|add|remove`
+  - `ci-bot setup`
+  - `ci-bot update`
+  - `ci-bot token set`
+  - `ci-bot token list`
+  - `ci-bot token refresh`
+  - `ci-bot repo list|add|remove`
+
+## Git Account Switching
+
+These small helpers rewrite a repo remote to use your SSH host aliases during account migration:
+
+- `git-use-athackst`
+- `git-use-althack`
+
+Example:
+
+```bash
+git-use-athackst
+git-use-althack
+```
