@@ -294,7 +294,7 @@ def setup(
     if not skip_secret:
         token_value, token_source_path = resolve_token_value(resolved_token_path)
         click.echo(f"Using secret from {token_source_path} to set secret '{secret_name}' on {repo}")
-        set_secret(repo, secret_name, resolved_token_path)
+        set_secret(repo, secret_name, token_value)
 
     registry_path: Path = ctx.obj["registry_file"]
     registry = load_registry(registry_path)
@@ -378,6 +378,7 @@ def refresh_token_for_targets(
     timestamp = now_utc()
 
     for config in targets:
+        click.echo(f"Using secret from {token_file} to set secret '{config.secret_name}' on {config.repo}")
         set_secret(config.repo, config.secret_name, token_value)
         config.last_token_refresh_at = timestamp
         upsert_repo_config(registry, config)
