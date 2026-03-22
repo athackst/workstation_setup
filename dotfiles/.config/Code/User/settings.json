@@ -71,6 +71,7 @@
     "cSpell.userWords": [
         "althack",
         "appbar",
+        "argjson",
         "arithmatex",
         "athackst",
         "augustocdias",
@@ -82,21 +83,27 @@
         "Blockquotes",
         "cooldown",
         "devcontainers",
+        "dockerfiles",
+        "elif",
         "fontawesome",
         "frontmatter",
         "gfmdownx",
         "gitpython",
+        "gomod",
         "htmlproofer",
         "infty",
         "javascripts",
         "linenums",
         "magiclink",
         "maint",
+        "mapfile",
         "mathjax",
         "mkdocs",
         "mkdocstrings",
         "mypy",
         "olist",
+        "pdfs",
+        "pipefail",
         "PIPESTATUS",
         "postprocessors",
         "pycache",
@@ -106,6 +113,7 @@
         "pypa",
         "pypi",
         "pyproject",
+        "pyyaml",
         "sdist",
         "sigstore",
         "strikethrough",
@@ -145,6 +153,7 @@
     "files.trimFinalNewlines": true,
     "git.autofetch": true,
     "git.confirmSync": false,
+    "git.openRepositoryInParentFolders": "always",
     "gitlens.views.scm.grouped.views": {
         "commits": true,
         "branches": false,
@@ -179,18 +188,17 @@
         "file:///home/vscode/.vscode-server/extensions/docsmsft.docs-yaml-1.0.5/dist/toc.schema.json": "/toc\\.yml/i",
         "file:///home/allison.thackston/.vscode-server/extensions/atlassian.atlascode-4.0.11/resources/schemas/pipelines-schema.json": "bitbucket-pipelines.yml"
     },
-    
     "settingsSync.ignoredExtensions": [
         "shopify.ruby-lsp",
         "codeium.codeium"
     ],
     "terminal.integrated.suggest.enabled": false,
-    "githubPullRequests.pullBranch": "never",
+    "terminal.integrated.initialHint": false,
     "yaml.customTags": [
       "tag:yaml.org,2002:python/name:materialx.emoji.twemoji",
       "tag:yaml.org,2002:python/name:materialx.emoji.to_svg",
       "tag:yaml.org,2002:python/name:pymdownx.emoji.gemoji",
       "tag:yaml.org,2002:python/name:pymdownx.emoji.to_png",
-      "tag:yaml.org,2002:python/name:pymdownx.superfences.fence_code_format",        
+      "tag:yaml.org,2002:python/name:pymdownx.superfences.fence_code_format",
     ]
 }
