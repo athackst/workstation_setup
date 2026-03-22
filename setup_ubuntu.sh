@@ -8,7 +8,4 @@ $DIR/setup/vscode.sh
 $DIR/setup/docker.sh
 $DIR/setup/gh.sh
 
-cd $DIR/scripts
-pip install .
-
 $DIR/install.sh
