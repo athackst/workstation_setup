@@ -1,5 +1,5 @@
 # Changes here will be overwritten by Copier; NEVER EDIT MANUALLY
-_commit: f2eda01
+_commit: 34f407c
 _src_path: gh:athackst/ci
 bump_script_path: ''
 release_template: '## What''s changed
