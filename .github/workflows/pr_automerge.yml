@@ -6,8 +6,16 @@ name: PR Automerge
 on:
   pull_request_target:
     types:
+      - opened
+      - synchronize
+      - reopened
+      - ready_for_review
       - labeled
       - unlabeled
+
+concurrency:
+  group: "pr-automerge-${{ github.event.pull_request.number || github.ref }}"
+  cancel-in-progress: true
 
 jobs:
   pr-automerge:
