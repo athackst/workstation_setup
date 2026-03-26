@@ -6,24 +6,48 @@ usage() {
 Point the current repo's origin at a GitHub SSH alias/account.
 
 Usage:
-  git-use <account>
+  git-use <account> [email]
 
 Examples:
   git-use athackst
   git-use althack
+  git-use athackst 12345678+athackst@users.noreply.github.com
+  git-use althack althack@users.noreply.github.com
 EOF
 }
 
-ACCOUNT="${1:-}"
+ACCOUNT=""
+EMAIL=""
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    -h|--help)
+      usage
+      exit 0
+      ;;
+    -*)
+      echo "Unknown option: $1" >&2
+      usage
+      exit 1
+      ;;
+    *)
+      if [[ -z "$ACCOUNT" ]]; then
+        ACCOUNT="$1"
+      elif [[ -z "$EMAIL" ]]; then
+        EMAIL="$1"
+      else
+        echo "Too many arguments: $1" >&2
+        usage
+        exit 1
+      fi
+      shift
+      ;;
+  esac
+done
 
 if [[ -z "$ACCOUNT" ]]; then
   usage
   exit 1
-fi
-
-if [[ "$ACCOUNT" == "-h" || "$ACCOUNT" == "--help" ]]; then
-  usage
-  exit 0
 fi
 
 git rev-parse --is-inside-work-tree >/dev/null 2>&1 || {
@@ -41,3 +65,8 @@ new_url="git@github-${ACCOUNT}:${ACCOUNT}/${repo_name}.git"
 
 git remote set-url origin "$new_url"
 echo "origin -> $new_url"
+
+if [[ -n "$EMAIL" ]]; then
+  git config user.email "$EMAIL"
+  echo "user.email -> $EMAIL (local)"
+fi
