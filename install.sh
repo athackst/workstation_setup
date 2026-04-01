@@ -164,9 +164,9 @@ deploy_dir() {
     echo "Installed dir: $dst"
 }
 
-deploy_config_tree() {
+deploy_tree() {
     local src_root="$1" dst_root="$2"
-    echo "Syncing config tree: $src_root -> $dst_root"
+    echo "Syncing tree: $src_root -> $dst_root"
     find "$src_root" \( -type f -o -type l \) -print0 | while IFS= read -r -d '' item; do
         local rel="${item#$src_root/}"
         local dst="$dst_root/$rel"
@@ -302,9 +302,17 @@ fi
 # --- ~/.config tree (files/symlinks within) ---
 if [ -d "$DOTROOT/.config" ] && ask_for_confirmation "Sync dotfiles/.config into ~/.config?"; then
     mkdir -p "$HOME/.config"
-    deploy_config_tree "$DOTROOT/.config" "$HOME/.config"
+    deploy_tree "$DOTROOT/.config" "$HOME/.config"
 else
     echo "Skipping ~/.config sync"
+fi
+
+# --- ~/.codex/skills (dir) ---
+if [ -d "$DOTROOT/.codex" ] && ask_for_confirmation "Sync dotfiles/.codex/skills into ~/.codex/skills?"; then
+    mkdir -p "$HOME/.codex/skills"
+    deploy_dir "$DOTROOT/.codex/skills" "$HOME/.codex/skills"
+else
+    echo "Skipping ~/.codex sync"
 fi
 
 # --- ~/.local/bin (optional scripts) ---
