@@ -1,0 +1,4 @@
+interface:
+  display_name: "Split PR"
+  short_description: "Plan and manage dependency-ordered stacked PR branches."
+  default_prompt: "Use $split to create a coherent, easy-to-review stacked PR chain and verify local branch-level tests."
