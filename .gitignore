@@ -5,3 +5,4 @@ __pycache__
 docs/
 
 *.token
+dotfiles/.codex/skills/.system

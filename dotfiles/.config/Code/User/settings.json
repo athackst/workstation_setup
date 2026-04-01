@@ -76,13 +76,16 @@
         "athackst",
         "augustocdias",
         "autolinks",
+        "autopep",
         "bierner",
         "blockparser",
         "blockprocessor",
         "blockprocessors",
         "Blockquotes",
         "cooldown",
+        "cuda",
         "devcontainers",
+        "distros",
         "dockerfiles",
         "elif",
         "fontawesome",
@@ -100,6 +103,7 @@
         "mathjax",
         "mkdocs",
         "mkdocstrings",
+        "moby",
         "mypy",
         "olist",
         "pdfs",
@@ -115,6 +119,7 @@
         "pyproject",
         "pyyaml",
         "sdist",
+        "seccomp",
         "sigstore",
         "strikethrough",
         "subkeys",
@@ -127,7 +132,9 @@
         "topbar",
         "treeprocessor",
         "treeprocessors",
+        "twxs",
         "ulist",
+        "uncrustify",
         "unitcoverage"
     ],
     "containers.containerClient": "com.microsoft.visualstudio.containers.docker",
@@ -199,6 +206,16 @@
       "tag:yaml.org,2002:python/name:materialx.emoji.to_svg",
       "tag:yaml.org,2002:python/name:pymdownx.emoji.gemoji",
       "tag:yaml.org,2002:python/name:pymdownx.emoji.to_png",
-      "tag:yaml.org,2002:python/name:pymdownx.superfences.fence_code_format",
-    ]
+      "tag:yaml.org,2002:python/name:pymdownx.superfences.fence_code_format"
+    ],
+    "json.schemaDownload.trustedDomains": {
+        "https://developer.microsoft.com/json-schemas/": true,
+        "https://json-schema.org/": true,
+        "https://json.schemastore.org/": true,
+        "https://raw.githubusercontent.com/devcontainers/spec/": true,
+        "https://raw.githubusercontent.com/microsoft/vscode/": true,
+        "https://schemastore.azurewebsites.net/": true,
+        "https://www.schemastore.org/": true,
+        "https://raw.githubusercontent.com/DavidAnson/markdownlint/v0.40.0/schema/markdownlint-config-schema.json": true
+    }
 }
