@@ -3,8 +3,11 @@
 
 from __future__ import annotations
 
+import argparse
+import getpass
 import json
 import os
+import shlex
 import subprocess
 import sys
 from dataclasses import dataclass
@@ -12,14 +15,16 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-import click
-
 
 DEFAULT_SOURCE = "gh:athackst/ci"
 DEFAULT_TEMPLATE_REF = "main"
 DEFAULT_SECRET_NAME = "CI_BOT_TOKEN"
 DEFAULT_TOKEN_FILE = Path("~/.config/tokens/ci_bot.token").expanduser()
 DEFAULT_REGISTRY_PATH = Path("~/.config/ci_bot/repos.json").expanduser()
+
+
+class CIBotError(Exception):
+    """User-facing CLI error."""
 
 
 @dataclass
@@ -68,9 +73,13 @@ def now_utc() -> str:
     return datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
 
 
+def echo(msg: str, err: bool = False) -> None:
+    print(msg, file=sys.stderr if err else sys.stdout)
+
+
 def require_cmd(cmd: str) -> None:
     if not shutil_which(cmd):
-        raise click.ClickException(f"Missing required command: {cmd}")
+        raise CIBotError(f"Missing required command: {cmd}")
 
 
 def shutil_which(cmd: str) -> str | None:
@@ -94,7 +103,7 @@ def run(cmd: list[str], cwd: str | None = None, capture_output: bool = False) ->
         stderr = (exc.stderr or "").strip()
         stdout = (exc.stdout or "").strip()
         detail = stderr or stdout or f"Command failed: {' '.join(cmd)}"
-        raise click.ClickException(detail) from exc
+        raise CIBotError(detail) from exc
     if capture_output:
         return (completed.stdout or "").strip()
     return None
@@ -112,14 +121,14 @@ def normalize_token(token: str) -> str:
 def write_token_file(token_file: Path, token_value: str) -> str:
     token_file.parent.mkdir(parents=True, exist_ok=True)
     token_file.write_text(f"{token_value}\n", encoding="utf-8")
-    click.echo(f"Saved token to {token_file}")
+    echo(f"Saved token to {token_file}")
     return str(token_file)
 
 
 def prompt_for_token() -> str:
-    token_value = normalize_token(click.prompt("Enter CI token", hide_input=True))
+    token_value = normalize_token(getpass.getpass("Enter CI token: "))
     if not token_value:
-        raise click.ClickException("Token value is empty; refusing to continue.")
+        raise CIBotError("Token value is empty; refusing to continue.")
     return token_value
 
 
@@ -148,7 +157,7 @@ def resolve_supplied_token(token: str | None, token_file: Path) -> tuple[str, st
     if token is not None:
         token_value = normalize_token(token)
         if not token_value:
-            raise click.ClickException("Token value is empty; refusing to continue.")
+            raise CIBotError("Token value is empty; refusing to continue.")
         return token_value, write_token_file(token_file, token_value)
 
     if token_file.is_file():
@@ -170,12 +179,12 @@ def load_registry(registry_path: Path) -> dict[str, Any]:
     try:
         data = json.loads(registry_path.read_text(encoding="utf-8"))
     except json.JSONDecodeError as exc:
-        raise click.ClickException(f"Registry file is not valid JSON: {registry_path}") from exc
+        raise CIBotError(f"Registry file is not valid JSON: {registry_path}") from exc
     if not isinstance(data, dict):
-        raise click.ClickException(f"Registry file must contain a JSON object: {registry_path}")
+        raise CIBotError(f"Registry file must contain a JSON object: {registry_path}")
     data.setdefault("repos", {})
     if not isinstance(data["repos"], dict):
-        raise click.ClickException(f"Registry file 'repos' field must be an object: {registry_path}")
+        raise CIBotError(f"Registry file 'repos' field must be an object: {registry_path}")
     return data
 
 
@@ -200,7 +209,7 @@ def upsert_repo_config(registry: dict[str, Any], config: RepoConfig) -> None:
 def require_repo_config(registry: dict[str, Any], repo: str) -> RepoConfig:
     config = get_repo_config(registry, repo)
     if config is None:
-        raise click.ClickException(
+        raise CIBotError(
             f"Repo '{repo}' is not registered. Run 'ci-bot setup' or 'ci-bot repo add --repo {repo}'."
         )
     return config
@@ -212,7 +221,7 @@ def apply_template(source: str, template_ref: str, interactive: bool, cwd: str) 
     if not interactive:
         cmd.append("--defaults")
     cmd.extend([source, "."])
-    click.echo(f"Applying template {source}@{template_ref} in {cwd}")
+    echo(f"Applying template {source}@{template_ref} in {cwd}")
     run(cmd, cwd=cwd)
 
 
@@ -221,139 +230,13 @@ def update_template(template_ref: str, interactive: bool, cwd: str) -> None:
     cmd = ["copier", "update", "--trust", "--vcs-ref", template_ref]
     if not interactive:
         cmd.append("--defaults")
-    click.echo(f"Updating template in {cwd} with ref {template_ref}")
+    echo(f"Updating template in {cwd} with ref {template_ref}")
     run(cmd, cwd=cwd)
 
 
 def set_secret(repo: str, secret_name: str, token_value: str) -> None:
     require_cmd("gh")
     run(["gh", "secret", "set", secret_name, "--repo", repo, "--body", token_value])
-
-
-def repo_targets(
-    registry: dict[str, Any],
-    repo: str | None,
-    all_repos: bool,
-    cwd_repo_fallback: bool = True,
-) -> list[str]:
-    if all_repos:
-        repos = sorted(registry["repos"].keys())
-        if not repos:
-            raise click.ClickException("No repos are registered.")
-        return repos
-    if repo:
-        return [repo]
-    if cwd_repo_fallback:
-        return [detect_repo()]
-    raise click.ClickException("Provide --repo or --all.")
-
-
-@click.group(context_settings={"help_option_names": ["-h", "--help"]})
-@click.option(
-    "--registry-file",
-    type=click.Path(dir_okay=False, path_type=Path),
-    default=DEFAULT_REGISTRY_PATH,
-    show_default=str(DEFAULT_REGISTRY_PATH),
-    help="Path to the ci-bot JSON registry.",
-)
-@click.pass_context
-def cli(ctx: click.Context, registry_file: Path) -> None:
-    """Manage CI template setup and token refreshes for repositories."""
-    ctx.ensure_object(dict)
-    ctx.obj["registry_file"] = registry_file.expanduser()
-
-
-@cli.command()
-@click.option("--repo", help="Repository slug (owner/repo). Auto-detected if omitted.")
-@click.option("--source", default=DEFAULT_SOURCE, show_default=True, help="Copier template source.")
-@click.option("--template-ref", default=DEFAULT_TEMPLATE_REF, show_default=True, help="Copier template ref.")
-@click.option("--secret-name", default=DEFAULT_SECRET_NAME, show_default=True, help="GitHub Actions secret name.")
-@click.option("--token-file", type=click.Path(dir_okay=False, path_type=Path), help="Read token value from file.")
-@click.option("--skip-secret", is_flag=True, help="Skip setting the GitHub secret.")
-@click.option("-i", "--interactive", is_flag=True, help="Prompt for Copier template values instead of using defaults.")
-@click.pass_context
-def setup(
-    ctx: click.Context,
-    repo: str | None,
-    source: str,
-    template_ref: str,
-    secret_name: str,
-    token_file: Path | None,
-    skip_secret: bool,
-    interactive: bool,
-) -> None:
-    """Apply the CI template, optionally set the token, and register the repo."""
-    require_cmd("git")
-    repo = repo or detect_repo()
-    cwd = os.getcwd()
-    apply_template(source, template_ref, interactive=interactive, cwd=cwd)
-
-    resolved_token_path = str(token_file.expanduser()) if token_file else None
-    token_value = None
-    token_source_path = resolved_token_path
-    if not skip_secret:
-        token_value, token_source_path = resolve_token_value(resolved_token_path)
-        click.echo(f"Using secret from {token_source_path} to set secret '{secret_name}' on {repo}")
-        set_secret(repo, secret_name, token_value)
-
-    registry_path: Path = ctx.obj["registry_file"]
-    registry = load_registry(registry_path)
-    timestamp = now_utc()
-    config = RepoConfig(
-        repo=repo,
-        source=source,
-        template_ref=template_ref,
-        secret_name=secret_name,
-        path=cwd,
-        token_file=token_source_path,
-        added_at=get_repo_config(registry, repo).added_at if get_repo_config(registry, repo) else timestamp,
-        last_setup_at=timestamp,
-        last_token_refresh_at=timestamp if token_value is not None else None,
-    )
-    upsert_repo_config(registry, config)
-    save_registry(registry_path, registry)
-    click.echo(f"Registered {repo} in {registry_path}")
-
-
-@cli.command()
-@click.option("--repo", help="Repository slug (owner/repo). Defaults to the current repo.")
-@click.option("--path", type=click.Path(file_okay=False, path_type=Path), help="Repo path. Defaults to the registered path or cwd.")
-@click.option("--template-ref", help="Override the registered Copier ref.")
-@click.option("-i", "--interactive", is_flag=True, help="Prompt for Copier values instead of using defaults.")
-@click.pass_context
-def update(
-    ctx: click.Context,
-    repo: str | None,
-    path: Path | None,
-    template_ref: str | None,
-    interactive: bool,
-) -> None:
-    """Run copier update using the repo's existing Copier answers file."""
-    repo = repo or detect_repo()
-    registry_path: Path = ctx.obj["registry_file"]
-    registry = load_registry(registry_path)
-    config = require_repo_config(registry, repo)
-
-    target_path = path.expanduser() if path else Path(config.path or os.getcwd()).expanduser()
-    if not target_path.exists():
-        raise click.ClickException(
-            f"Repo path does not exist: {target_path}. Re-run setup here or pass --path."
-        )
-
-    template_ref = template_ref or config.template_ref
-    update_template(template_ref, interactive=interactive, cwd=str(target_path))
-
-    config.path = str(target_path)
-    config.template_ref = template_ref
-    config.last_update_at = now_utc()
-    upsert_repo_config(registry, config)
-    save_registry(registry_path, registry)
-    click.echo(f"Updated registry for {repo}")
-
-
-@cli.group()
-def token() -> None:
-    """Manage local CI token files and refresh repo secrets."""
 
 
 def refresh_token_for_targets(
@@ -373,41 +256,81 @@ def refresh_token_for_targets(
             targets.append(config)
 
     if not targets:
-        raise click.ClickException(f"No registered repos use token file: {normalized_token_file}")
+        raise CIBotError(f"No registered repos use token file: {normalized_token_file}")
 
     timestamp = now_utc()
 
     for config in targets:
-        click.echo(f"Using secret from {token_file} to set secret '{config.secret_name}' on {config.repo}")
+        echo(f"Using secret from {token_file} to set secret '{config.secret_name}' on {config.repo}")
         set_secret(config.repo, config.secret_name, token_value)
         config.last_token_refresh_at = timestamp
         upsert_repo_config(registry, config)
 
     save_registry(registry_path, registry)
-    click.echo(f"Refreshed token for {len(targets)} repo(s)")
+    echo(f"Refreshed token for {len(targets)} repo(s)")
 
 
-@token.command("set")
-@click.option(
-    "--token-file",
-    type=click.Path(dir_okay=False, path_type=Path),
-    required=True,
-    help="Token file to write.",
-)
-@click.option("--token", help="Token value to save. Prompts if omitted.")
-def token_set(
-    token_file: Path,
-    token: str | None,
-) -> None:
-    """Save a CI token to a local token file."""
-    resolve_supplied_token(token, token_file.expanduser())
+def cmd_setup(args: argparse.Namespace, registry_path: Path) -> None:
+    require_cmd("git")
+    repo = args.repo or detect_repo()
+    cwd = os.getcwd()
+    apply_template(args.source, args.template_ref, interactive=args.interactive, cwd=cwd)
+
+    resolved_token_path = str(Path(args.token_file).expanduser()) if args.token_file else None
+    token_value = None
+    token_source_path = resolved_token_path
+    if not args.skip_secret:
+        token_value, token_source_path = resolve_token_value(resolved_token_path)
+        echo(f"Using secret from {token_source_path} to set secret '{args.secret_name}' on {repo}")
+        set_secret(repo, args.secret_name, token_value)
+
+    registry = load_registry(registry_path)
+    timestamp = now_utc()
+    existing = get_repo_config(registry, repo)
+    config = RepoConfig(
+        repo=repo,
+        source=args.source,
+        template_ref=args.template_ref,
+        secret_name=args.secret_name,
+        path=cwd,
+        token_file=token_source_path,
+        added_at=existing.added_at if existing else timestamp,
+        last_setup_at=timestamp,
+        last_token_refresh_at=timestamp if token_value is not None else None,
+    )
+    upsert_repo_config(registry, config)
+    save_registry(registry_path, registry)
+    echo(f"Registered {repo} in {registry_path}")
 
 
-@token.command("list")
-@click.pass_context
-def token_list(ctx: click.Context) -> None:
-    """List token files referenced by registered repos."""
-    registry = load_registry(ctx.obj["registry_file"])
+def cmd_update(args: argparse.Namespace, registry_path: Path) -> None:
+    repo = args.repo or detect_repo()
+    registry = load_registry(registry_path)
+    config = require_repo_config(registry, repo)
+
+    target_path = Path(args.path).expanduser() if args.path else Path(config.path or os.getcwd()).expanduser()
+    if not target_path.exists():
+        raise CIBotError(
+            f"Repo path does not exist: {target_path}. Re-run setup here or pass --path."
+        )
+
+    template_ref = args.template_ref or config.template_ref
+    update_template(template_ref, interactive=args.interactive, cwd=str(target_path))
+
+    config.path = str(target_path)
+    config.template_ref = template_ref
+    config.last_update_at = now_utc()
+    upsert_repo_config(registry, config)
+    save_registry(registry_path, registry)
+    echo(f"Updated registry for {repo}")
+
+
+def cmd_token_save(args: argparse.Namespace, _registry_path: Path) -> None:
+    resolve_supplied_token(args.token, Path(args.token_file).expanduser())
+
+
+def cmd_token_list(_args: argparse.Namespace, registry_path: Path) -> None:
+    registry = load_registry(registry_path)
     token_files: dict[str, list[str]] = {}
 
     for repo_name in sorted(registry["repos"].keys()):
@@ -417,105 +340,329 @@ def token_list(ctx: click.Context) -> None:
         token_files.setdefault(config.token_file, []).append(repo_name)
 
     if not token_files:
-        click.echo("No token files registered.")
+        echo("No token files registered.")
         return
 
     for token_file, repos in sorted(token_files.items()):
-        click.echo(f"{token_file}\t{len(repos)} repo(s)")
+        echo(f"{token_file}\t{len(repos)} repo(s)")
 
 
-@token.command("refresh")
-@click.option(
-    "--token-file",
-    type=click.Path(dir_okay=False, path_type=Path),
-    required=True,
-    help="Token file to save and refresh from.",
-)
-@click.option("--token", help="Token value to save before refreshing repos. Prompts if omitted.")
-@click.pass_context
-def token_refresh(
-    ctx: click.Context,
-    token_file: Path,
-    token: str | None,
-) -> None:
-    """Save a token file and refresh all repos registered with it."""
-    token_value, _ = resolve_supplied_token(token, token_file.expanduser())
-    refresh_token_for_targets(ctx.obj["registry_file"], token_file.expanduser(), token_value)
+def cmd_token_refresh(args: argparse.Namespace, registry_path: Path) -> None:
+    token_file = Path(args.token_file).expanduser()
+    token_value, _ = resolve_supplied_token(args.token, token_file)
+    refresh_token_for_targets(registry_path, token_file, token_value)
 
 
-@cli.group()
-def repo() -> None:
-    """Manage the local repo registry."""
-
-
-@repo.command("list")
-@click.pass_context
-def repo_list(ctx: click.Context) -> None:
-    """List registered repos."""
-    registry = load_registry(ctx.obj["registry_file"])
+def cmd_repo_list(_args: argparse.Namespace, registry_path: Path) -> None:
+    registry = load_registry(registry_path)
     repos = sorted(registry["repos"].items())
     if not repos:
-        click.echo("No repos registered.")
+        echo("No repos registered.")
         return
     for name, data in repos:
         source = data.get("source", DEFAULT_SOURCE)
         template_ref = data.get("template_ref", DEFAULT_TEMPLATE_REF)
         path = data.get("path", "-")
-        click.echo(f"{name}\tsource={source}\tref={template_ref}\tpath={path}")
+        echo(f"{name}\tsource={source}\tref={template_ref}\tpath={path}")
 
 
-@repo.command("add")
-@click.option("--repo", "repo_name", required=True, help="Repository slug (owner/repo).")
-@click.option("--source", default=DEFAULT_SOURCE, show_default=True, help="Copier template source.")
-@click.option("--template-ref", default=DEFAULT_TEMPLATE_REF, show_default=True, help="Copier template ref.")
-@click.option("--secret-name", default=DEFAULT_SECRET_NAME, show_default=True, help="GitHub Actions secret name.")
-@click.option("--path", type=click.Path(file_okay=False, path_type=Path), help="Optional local checkout path.")
-@click.option("--token-file", type=click.Path(dir_okay=False, path_type=Path), help="Optional token file for this repo.")
-@click.pass_context
-def repo_add(
-    ctx: click.Context,
-    repo_name: str,
-    source: str,
-    template_ref: str,
-    secret_name: str,
-    path: Path | None,
-    token_file: Path | None,
-) -> None:
-    """Add or update a repo in the local registry."""
-    registry_path: Path = ctx.obj["registry_file"]
+def cmd_repo_add(args: argparse.Namespace, registry_path: Path) -> None:
     registry = load_registry(registry_path)
-    existing = get_repo_config(registry, repo_name)
+    existing = get_repo_config(registry, args.repo)
     timestamp = now_utc()
     config = RepoConfig(
-        repo=repo_name,
-        source=source,
-        template_ref=template_ref,
-        secret_name=secret_name,
-        path=str(path.expanduser()) if path else (existing.path if existing else None),
-        token_file=str(token_file.expanduser()) if token_file else (existing.token_file if existing else None),
+        repo=args.repo,
+        source=args.source,
+        template_ref=args.template_ref,
+        secret_name=args.secret_name,
+        path=str(Path(args.path).expanduser()) if args.path else (existing.path if existing else None),
+        token_file=str(Path(args.token_file).expanduser()) if args.token_file else (existing.token_file if existing else None),
         added_at=existing.added_at if existing else timestamp,
     )
     upsert_repo_config(registry, config)
     save_registry(registry_path, registry)
-    click.echo(f"Saved {repo_name} to {registry_path}")
+    echo(f"Saved {args.repo} to {registry_path}")
 
 
-@repo.command("remove")
-@click.option("--repo", "repo_name", required=True, help="Repository slug (owner/repo).")
-@click.pass_context
-def repo_remove(ctx: click.Context, repo_name: str) -> None:
-    """Remove a repo from the local registry."""
-    registry_path: Path = ctx.obj["registry_file"]
+def cmd_repo_remove(args: argparse.Namespace, registry_path: Path) -> None:
     registry = load_registry(registry_path)
-    if registry["repos"].pop(repo_name, None) is None:
-        raise click.ClickException(f"Repo '{repo_name}' is not registered.")
+    if registry["repos"].pop(args.repo, None) is None:
+        raise CIBotError(f"Repo '{args.repo}' is not registered.")
     save_registry(registry_path, registry)
-    click.echo(f"Removed {repo_name} from {registry_path}")
+    echo(f"Removed {args.repo} from {registry_path}")
+
+
+def cmd_repo_token(args: argparse.Namespace, registry_path: Path) -> None:
+    repo = args.repo or detect_repo()
+    registry = load_registry(registry_path)
+    existing = get_repo_config(registry, repo)
+
+    selected_token_file: Path | None = None
+    if args.token_file:
+        selected_token_file = Path(args.token_file).expanduser()
+    elif existing and existing.token_file:
+        selected_token_file = Path(existing.token_file).expanduser()
+
+    if selected_token_file is not None:
+        token_value, token_source_path = resolve_supplied_token(args.token, selected_token_file)
+    elif args.token is not None:
+        token_value = normalize_token(args.token)
+        if not token_value:
+            raise CIBotError("Token value is empty; refusing to continue.")
+        token_source_path = None
+    else:
+        token_value, token_source_path = resolve_token_value(None)
+
+    secret_name = args.secret_name or (existing.secret_name if existing else DEFAULT_SECRET_NAME)
+    echo(f"Using secret from {token_source_path or 'inline value'} to set secret '{secret_name}' on {repo}")
+    set_secret(repo, secret_name, token_value)
+
+    timestamp = now_utc()
+    config = RepoConfig(
+        repo=repo,
+        source=existing.source if existing else DEFAULT_SOURCE,
+        template_ref=existing.template_ref if existing else DEFAULT_TEMPLATE_REF,
+        secret_name=secret_name,
+        path=existing.path if existing else None,
+        token_file=token_source_path if token_source_path is not None else (existing.token_file if existing else None),
+        added_at=existing.added_at if existing else timestamp,
+        last_token_refresh_at=timestamp,
+    )
+    upsert_repo_config(registry, config)
+    save_registry(registry_path, registry)
+    echo(f"Updated token for {repo}")
+
+
+def build_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(
+        prog="ci-bot",
+        description="Manage CI template setup and token refreshes for repositories.",
+    )
+    parser.add_argument(
+        "--registry-file",
+        default=str(DEFAULT_REGISTRY_PATH),
+        help=f"Path to the ci-bot JSON registry. (default: {DEFAULT_REGISTRY_PATH})",
+    )
+
+    subparsers = parser.add_subparsers(dest="command", required=True)
+
+    setup = subparsers.add_parser("setup", help="Apply template, set secret, and register repo")
+    setup.add_argument("--repo", help="Repository slug (owner/repo). Auto-detected if omitted.")
+    setup.add_argument("--source", default=DEFAULT_SOURCE, help=f"Copier template source. (default: {DEFAULT_SOURCE})")
+    setup.add_argument("--template-ref", default=DEFAULT_TEMPLATE_REF, help=f"Copier template ref. (default: {DEFAULT_TEMPLATE_REF})")
+    setup.add_argument("--secret-name", default=DEFAULT_SECRET_NAME, help=f"GitHub Actions secret name. (default: {DEFAULT_SECRET_NAME})")
+    setup.add_argument("--token-file", help="Read token value from file.")
+    setup.add_argument("--skip-secret", action="store_true", help="Skip setting the GitHub secret.")
+    setup.add_argument("-i", "--interactive", action="store_true", help="Prompt for Copier template values instead of using defaults.")
+    setup.set_defaults(func=cmd_setup)
+
+    update = subparsers.add_parser("update", help="Run copier update for a registered repo")
+    update.add_argument("--repo", help="Repository slug (owner/repo). Defaults to the current repo.")
+    update.add_argument("--path", help="Repo path. Defaults to the registered path or cwd.")
+    update.add_argument("--template-ref", help="Override the registered Copier ref.")
+    update.add_argument("-i", "--interactive", action="store_true", help="Prompt for Copier values instead of using defaults.")
+    update.set_defaults(func=cmd_update)
+
+    token = subparsers.add_parser("token", help="Manage local CI token files and refresh repo secrets")
+    token_sub = token.add_subparsers(dest="token_command", required=True)
+
+    token_save = token_sub.add_parser("save", help="Save a CI token to a local token file")
+    token_save.add_argument("--token-file", required=True, help="Token file to write.")
+    token_save.add_argument("--token", help="Token value to save. Prompts if omitted.")
+    token_save.set_defaults(func=cmd_token_save)
+
+    token_list = token_sub.add_parser("list", help="List token files referenced by registered repos")
+    token_list.set_defaults(func=cmd_token_list)
+
+    token_refresh = token_sub.add_parser("refresh", help="Save token and refresh all repos using that token file")
+    token_refresh.add_argument("--token-file", required=True, help="Token file to save and refresh from.")
+    token_refresh.add_argument("--token", help="Token value to save before refreshing repos. Prompts if omitted.")
+    token_refresh.set_defaults(func=cmd_token_refresh)
+
+    repo = subparsers.add_parser("repo", help="Manage the local repo registry")
+    repo_sub = repo.add_subparsers(dest="repo_command", required=True)
+
+    repo_list = repo_sub.add_parser("list", help="List registered repos")
+    repo_list.set_defaults(func=cmd_repo_list)
+
+    repo_add = repo_sub.add_parser("add", help="Add or update a repo in the local registry")
+    repo_add.add_argument("--repo", required=True, help="Repository slug (owner/repo).")
+    repo_add.add_argument("--source", default=DEFAULT_SOURCE, help=f"Copier template source. (default: {DEFAULT_SOURCE})")
+    repo_add.add_argument("--template-ref", default=DEFAULT_TEMPLATE_REF, help=f"Copier template ref. (default: {DEFAULT_TEMPLATE_REF})")
+    repo_add.add_argument("--secret-name", default=DEFAULT_SECRET_NAME, help=f"GitHub Actions secret name. (default: {DEFAULT_SECRET_NAME})")
+    repo_add.add_argument("--path", help="Optional local checkout path.")
+    repo_add.add_argument("--token-file", help="Optional token file for this repo.")
+    repo_add.set_defaults(func=cmd_repo_add)
+
+    repo_remove = repo_sub.add_parser("remove", help="Remove a repo from the local registry")
+    repo_remove.add_argument("--repo", required=True, help="Repository slug (owner/repo).")
+    repo_remove.set_defaults(func=cmd_repo_remove)
+
+    repo_token = repo_sub.add_parser("token", help="Set a repo secret token without applying/updating templates")
+    repo_token.add_argument("--repo", help="Repository slug (owner/repo). Defaults to the current repo.")
+    repo_token.add_argument("--secret-name", help="Override the secret name (defaults to registered value).")
+    repo_token.add_argument("--token-file", help="Read/save token using this file.")
+    repo_token.add_argument("--token", help="Token value to save/use. Prompts if omitted.")
+    repo_token.set_defaults(func=cmd_repo_token)
+
+    return parser
+
+
+def completion_items(words: list[str], cword: int) -> list[str]:
+    if not words:
+        return []
+
+    current = words[cword] if cword < len(words) else ""
+    prev = words[cword - 1] if cword > 0 else ""
+
+    needs_path_value = {"--registry-file", "--token-file", "--path"}
+    needs_scalar_value = {"--repo", "--source", "--template-ref", "--secret-name", "--token"}
+
+    if prev in needs_path_value:
+        return ["__FILE__"]
+    if prev in needs_scalar_value:
+        return []
+
+    root_commands = ["setup", "update", "token", "repo"]
+    root_options = ["-h", "--help", "--registry-file"]
+
+    setup_options = ["--repo", "--source", "--template-ref", "--secret-name", "--token-file", "--skip-secret", "-i", "--interactive"]
+    update_options = ["--repo", "--path", "--template-ref", "-i", "--interactive"]
+    token_options = ["-h", "--help"]
+    token_subcommands = ["save", "list", "refresh"]
+    token_save_options = ["--token-file", "--token"]
+    token_refresh_options = ["--token-file", "--token"]
+    repo_options = ["-h", "--help"]
+    repo_subcommands = ["list", "add", "remove", "token"]
+    repo_add_options = ["--repo", "--source", "--template-ref", "--secret-name", "--path", "--token-file"]
+    repo_remove_options = ["--repo"]
+    repo_token_options = ["--repo", "--secret-name", "--token-file", "--token"]
+
+    state = "root"
+    sub_cmd = None
+    expect_value = False
+
+    for token in words[1:cword]:
+        if expect_value:
+            expect_value = False
+            continue
+
+        if token in needs_path_value or token in needs_scalar_value:
+            expect_value = True
+            continue
+
+        if state == "root":
+            if token in root_commands:
+                state = token
+        elif state == "token":
+            if token in token_subcommands:
+                sub_cmd = token
+                state = f"token_{token}"
+        elif state == "repo":
+            if token in repo_subcommands:
+                sub_cmd = token
+                state = f"repo_{token}"
+
+    if current.startswith("-"):
+        if state == "root":
+            return root_options
+        if state == "setup":
+            return setup_options
+        if state == "update":
+            return update_options
+        if state == "token":
+            return token_options
+        if state == "token_save":
+            return token_save_options
+        if state == "token_refresh":
+            return token_refresh_options
+        if state == "repo":
+            return repo_options
+        if state == "repo_add":
+            return repo_add_options
+        if state == "repo_remove":
+            return repo_remove_options
+        if state == "repo_token":
+            return repo_token_options
+
+    if state == "root":
+        return root_commands + root_options
+    if state == "token" and sub_cmd is None:
+        return token_subcommands + token_options
+    if state == "repo" and sub_cmd is None:
+        return repo_subcommands + repo_options
+
+    return []
+
+
+def emit_bash_source() -> None:
+    script = r'''_ci_bot_completion() {
+  local IFS=$'\n'
+  local current_word="${COMP_WORDS[COMP_CWORD]}"
+  local output
+  output="$(_CI_BOT_COMPLETE=bash_complete COMP_WORDS="${COMP_WORDS[*]}" COMP_CWORD="$COMP_CWORD" ci-bot 2>/dev/null)"
+
+  if [[ "$output" == "__FILE__" ]]; then
+    COMPREPLY=( $(compgen -f -- "$current_word") )
+  else
+    COMPREPLY=( $(compgen -W "$output" -- "$current_word") )
+  fi
+}
+complete -o default -F _ci_bot_completion ci-bot
+'''
+    print(script, end="")
+
+
+def run_completion() -> int:
+    mode = os.environ.get("_CI_BOT_COMPLETE")
+    if not mode:
+        return 1
+
+    if mode == "bash_source":
+        emit_bash_source()
+        return 0
+
+    if mode == "bash_complete":
+        comp_words = os.environ.get("COMP_WORDS", "")
+        comp_cword = int(os.environ.get("COMP_CWORD", "0") or "0")
+        words = shlex.split(comp_words)
+        if not words:
+            words = ["ci-bot"]
+        items = completion_items(words, comp_cword)
+        print("\n".join(items), end="")
+        return 0
+
+    return 1
+
+
+def normalize_compat_argv(argv: list[str]) -> list[str]:
+    # Backward compatibility: `ci-bot token set` -> `ci-bot token save`.
+    if len(argv) >= 2 and argv[0] == "token" and argv[1] == "set":
+        updated = list(argv)
+        updated[1] = "save"
+        return updated
+    return argv
+
+
+def main(argv: list[str] | None = None) -> int:
+    completion_rc = run_completion()
+    if completion_rc == 0:
+        return 0
+
+    parser = build_parser()
+
+    try:
+        args = parser.parse_args(normalize_compat_argv(list(argv if argv is not None else sys.argv[1:])))
+        registry_path = Path(args.registry_file).expanduser()
+        args.func(args, registry_path)
+        return 0
+    except KeyboardInterrupt:
+        echo("Interrupted.", err=True)
+        return 130
+    except CIBotError as exc:
+        echo(str(exc), err=True)
+        return 1
 
 
 if __name__ == "__main__":
-    try:
-        cli()
-    except KeyboardInterrupt:
-        click.echo("Interrupted.", err=True)
-        sys.exit(130)
+    sys.exit(main())
