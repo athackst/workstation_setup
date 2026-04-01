@@ -1,0 +1,4 @@
+interface:
+  display_name: "Commit Staged"
+  short_description: "Commit only the staged diff cleanly"
+  default_prompt: "Use $commit-staged to create a commit from the current staged changes and print the exact message used."
