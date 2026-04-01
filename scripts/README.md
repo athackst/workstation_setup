@@ -27,17 +27,17 @@ All scripts should follow these basics:
 
 ## CI Bot
 
-`bin/ci-bot` is a Python + Click CLI for managing CI template setup and token refreshes.
+`bin/ci-bot` is a Python + argparse CLI for managing CI template setup and token refreshes.
 
 - Registry file: `~/.config/ci_bot/repos.json`
 - Default token file: `~/.config/tokens/ci_bot.token`
 - Main commands:
   - `ci-bot setup`
   - `ci-bot update`
-  - `ci-bot token set`
+  - `ci-bot token save`
   - `ci-bot token list`
   - `ci-bot token refresh`
-  - `ci-bot repo list|add|remove`
+  - `ci-bot repo list|add|remove|token`
 
 ## Git Account Switching
 
