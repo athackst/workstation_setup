@@ -6,3 +6,4 @@ docs/
 
 *.token
 dotfiles/.codex/skills/.system
+.codex
