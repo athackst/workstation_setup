@@ -12,7 +12,7 @@ Given the current work relative to `origin/main` (or another explicit base), do 
 1. **Plan** a stack of small, reviewable PRs.
 2. **Materialize** that stack as one review commit per branch.
 
-The stack should prefer semantic boundaries over file boundaries.
+The stack should prefer semantic boundaries over file boundaries. When semantic boundaries cut across a single file, plan for hunk/line-level splits and call them out explicitly.
 
 ## Hard invariants
 
@@ -40,6 +40,7 @@ If helper scripts are available, prefer them:
 
 - `python3 <skill_dir>/scripts/collect_diff.py --base origin/main`
 - `python3 <skill_dir>/scripts/status.py`
+- `python3 <skill_dir>/scripts/extract_hunks.py --path <file> --base origin/main --source HEAD`
 
 Resolve `<skill_dir>` against this skill folder first.
 
@@ -63,6 +64,7 @@ Prefer this order when applicable:
 - interface changes with the first implementation that requires them
 - migrations before code that relies on them
 - generated files only when they are necessary for correctness or buildability
+- tightly coupled code and logging that is required for the behavior to function
 
 ### Split apart
 
@@ -70,6 +72,7 @@ Prefer this order when applicable:
 - broad renames from feature logic
 - cleanup that obscures the core change
 - unrelated package changes even if edited in the same session
+- cross-cutting debug/telemetry/logging from the functional changes they instrument (when the behavior works without them)
 
 ## Plan format
 
@@ -85,7 +88,7 @@ When proposing or validating a stack plan JSON, read and follow [`references/pla
 - Prefer more, smaller PRs when uncertain.
 - Present the plan clearly before rewriting history.
 
-When a file contains changes for multiple PRs, call that out explicitly and describe the hunks to separate.
+When a file contains changes for multiple PRs, call that out explicitly and describe the hunks (line ranges or functions) to separate. It is acceptable to split a single file across PRs; prefer semantic grouping over keeping files intact. If you need line-level splits, add `hunks` patches to the plan JSON and materialize them.
 
 ### 2) Materialize the stack
 
