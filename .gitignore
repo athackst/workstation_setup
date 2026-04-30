@@ -5,5 +5,8 @@ __pycache__
 docs/
 
 *.token
-dotfiles/.codex/skills/.system
+# ignore everything named .codex (files + dirs)
 .codex
+
+# re-include directories named .codex
+!.codex/
