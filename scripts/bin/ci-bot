@@ -4,7 +4,6 @@
 from __future__ import annotations
 
 import argparse
-import getpass
 import json
 import os
 import shlex
@@ -18,8 +17,10 @@ from typing import Any
 
 DEFAULT_SOURCE = "gh:athackst/ci"
 DEFAULT_TEMPLATE_REF = "main"
+DEFAULT_ANSWERS_FILE = ".copier-answers.ci.yml"
 DEFAULT_SECRET_NAME = "CI_BOT_TOKEN"
 DEFAULT_TOKEN_FILE = Path("~/.config/tokens/ci_bot.token").expanduser()
+DEFAULT_TOKEN_DIR = Path("~/.config/tokens").expanduser()
 DEFAULT_REGISTRY_PATH = Path("~/.config/ci_bot/repos.json").expanduser()
 
 
@@ -126,10 +127,27 @@ def write_token_file(token_file: Path, token_value: str) -> str:
 
 
 def prompt_for_token() -> str:
-    token_value = normalize_token(getpass.getpass("Enter CI token: "))
+    token_value = normalize_token(input("Enter CI token: "))
     if not token_value:
         raise CIBotError("Token value is empty; refusing to continue.")
     return token_value
+
+
+def normalize_token_name(name: str) -> str:
+    normalized = name.strip()
+    if not normalized:
+        raise CIBotError("Token name is empty; refusing to continue.")
+    if "/" in normalized or "\\" in normalized:
+        raise CIBotError("Token name must not contain path separators.")
+    return normalized
+
+
+def prompt_for_token_name() -> str:
+    return normalize_token_name(input("Token name: "))
+
+
+def token_file_for_name(name: str) -> Path:
+    return DEFAULT_TOKEN_DIR / f"{normalize_token_name(name)}.token"
 
 
 def read_or_prompt_token(token_file: str | None) -> tuple[str, str | None]:
@@ -185,6 +203,9 @@ def load_registry(registry_path: Path) -> dict[str, Any]:
     data.setdefault("repos", {})
     if not isinstance(data["repos"], dict):
         raise CIBotError(f"Registry file 'repos' field must be an object: {registry_path}")
+    data.setdefault("tokens", {})
+    if not isinstance(data["tokens"], dict):
+        raise CIBotError(f"Registry file 'tokens' field must be an object: {registry_path}")
     return data
 
 
@@ -206,6 +227,19 @@ def upsert_repo_config(registry: dict[str, Any], config: RepoConfig) -> None:
     registry["repos"][config.repo] = merged
 
 
+def register_token_file(registry: dict[str, Any], token_file: Path, name: str | None = None) -> None:
+    token_path = str(token_file.expanduser())
+    existing = registry.setdefault("tokens", {}).get(token_path, {})
+    data = {
+        **existing,
+        "path": token_path,
+        "added_at": existing.get("added_at", now_utc()),
+    }
+    if name:
+        data["name"] = normalize_token_name(name)
+    registry["tokens"][token_path] = data
+
+
 def require_repo_config(registry: dict[str, Any], repo: str) -> RepoConfig:
     config = get_repo_config(registry, repo)
     if config is None:
@@ -217,7 +251,15 @@ def require_repo_config(registry: dict[str, Any], repo: str) -> RepoConfig:
 
 def apply_template(source: str, template_ref: str, interactive: bool, cwd: str) -> None:
     require_cmd("copier")
-    cmd = ["copier", "copy", "--trust", "--vcs-ref", template_ref]
+    cmd = [
+        "copier",
+        "copy",
+        "--trust",
+        "--vcs-ref",
+        template_ref,
+        "--answers-file",
+        DEFAULT_ANSWERS_FILE,
+    ]
     if not interactive:
         cmd.append("--defaults")
     cmd.extend([source, "."])
@@ -227,7 +269,15 @@ def apply_template(source: str, template_ref: str, interactive: bool, cwd: str) 
 
 def update_template(template_ref: str, interactive: bool, cwd: str) -> None:
     require_cmd("copier")
-    cmd = ["copier", "update", "--trust", "--vcs-ref", template_ref]
+    cmd = [
+        "copier",
+        "update",
+        "--trust",
+        "--vcs-ref",
+        template_ref,
+        "--answers-file",
+        DEFAULT_ANSWERS_FILE,
+    ]
     if not interactive:
         cmd.append("--defaults")
     echo(f"Updating template in {cwd} with ref {template_ref}")
@@ -325,13 +375,35 @@ def cmd_update(args: argparse.Namespace, registry_path: Path) -> None:
     echo(f"Updated registry for {repo}")
 
 
-def cmd_token_save(args: argparse.Namespace, _registry_path: Path) -> None:
-    resolve_supplied_token(args.token, Path(args.token_file).expanduser())
+def cmd_token_add(args: argparse.Namespace, registry_path: Path) -> None:
+    registry = load_registry(registry_path)
+
+    if args.token_file:
+        token_file = Path(args.token_file).expanduser()
+        if token_file.is_file():
+            register_token_file(registry, token_file, args.name)
+            save_registry(registry_path, registry)
+            echo(f"Registered token file {token_file}")
+            return
+
+        resolve_supplied_token(args.token, token_file)
+        register_token_file(registry, token_file, args.name)
+        save_registry(registry_path, registry)
+        echo(f"Registered token file {token_file}")
+        return
+
+    name = args.name or prompt_for_token_name()
+    token_file = token_file_for_name(name)
+    resolve_supplied_token(args.token, token_file)
+    register_token_file(registry, token_file, name)
+    save_registry(registry_path, registry)
+    echo(f"Registered token file {token_file}")
 
 
 def cmd_token_list(_args: argparse.Namespace, registry_path: Path) -> None:
     registry = load_registry(registry_path)
     token_files: dict[str, list[str]] = {}
+    registered_tokens = registry.get("tokens", {})
 
     for repo_name in sorted(registry["repos"].keys()):
         config = get_repo_config(registry, repo_name)
@@ -339,16 +411,32 @@ def cmd_token_list(_args: argparse.Namespace, registry_path: Path) -> None:
             continue
         token_files.setdefault(config.token_file, []).append(repo_name)
 
-    if not token_files:
+    all_token_paths = sorted(set(token_files) | set(registered_tokens))
+    if not all_token_paths:
         echo("No token files registered.")
         return
 
-    for token_file, repos in sorted(token_files.items()):
-        echo(f"{token_file}\t{len(repos)} repo(s)")
+    for token_file in all_token_paths:
+        repos = token_files.get(token_file, [])
+        token_data = registered_tokens.get(token_file, {})
+        name = token_data.get("name")
+        name_part = f"name={name}\t" if name else ""
+        echo(f"{token_file}\t{name_part}{len(repos)} repo(s)")
+
+
+def cmd_token_show(args: argparse.Namespace, _registry_path: Path) -> None:
+    if not args.name and not args.token_file:
+        raise CIBotError("Provide a token name or --token-file.")
+    token_file = Path(args.token_file).expanduser() if args.token_file else token_file_for_name(args.name)
+    if not token_file.is_file():
+        raise CIBotError(f"Token file does not exist: {token_file}")
+    echo(normalize_token(token_file.read_text(encoding="utf-8")))
 
 
 def cmd_token_refresh(args: argparse.Namespace, registry_path: Path) -> None:
-    token_file = Path(args.token_file).expanduser()
+    if not args.name and not args.token_file:
+        raise CIBotError("Provide a token name or --token-file.")
+    token_file = Path(args.token_file).expanduser() if args.token_file else token_file_for_name(args.name)
     token_value, _ = resolve_supplied_token(args.token, token_file)
     refresh_token_for_targets(registry_path, token_file, token_value)
 
@@ -466,16 +554,27 @@ def build_parser() -> argparse.ArgumentParser:
     token = subparsers.add_parser("token", help="Manage local CI token files and refresh repo secrets")
     token_sub = token.add_subparsers(dest="token_command", required=True)
 
-    token_save = token_sub.add_parser("save", help="Save a CI token to a local token file")
-    token_save.add_argument("--token-file", required=True, help="Token file to write.")
-    token_save.add_argument("--token", help="Token value to save. Prompts if omitted.")
-    token_save.set_defaults(func=cmd_token_save)
+    token_add = token_sub.add_parser("add", help="Add a CI token file to the local token list")
+    token_add.add_argument("name", nargs="?", help="Token name. Uses ~/.config/tokens/<name>.token when --token-file is omitted.")
+    token_add.add_argument("--token-file", help="Token file to register or write.")
+    token_add.add_argument("--token", help="Token value to save. Prompts if omitted when writing a token file.")
+    token_add.set_defaults(func=cmd_token_add)
 
     token_list = token_sub.add_parser("list", help="List token files referenced by registered repos")
     token_list.set_defaults(func=cmd_token_list)
 
-    token_refresh = token_sub.add_parser("refresh", help="Save token and refresh all repos using that token file")
-    token_refresh.add_argument("--token-file", required=True, help="Token file to save and refresh from.")
+    token_show = token_sub.add_parser("show", help="Print a local CI token")
+    token_show.add_argument("name", nargs="?", help="Token name. Uses ~/.config/tokens/<name>.token when --token-file is omitted.")
+    token_show.add_argument("--token-file", help="Token file to print.")
+    token_show.set_defaults(func=cmd_token_show)
+
+    token_refresh = token_sub.add_parser(
+        "refresh",
+        help="Update GitHub Actions secrets for repos using a token file",
+        description="Updates GitHub Actions secrets for every registered repo that uses a given token file.",
+    )
+    token_refresh.add_argument("name", nargs="?", help="Token name. Uses ~/.config/tokens/<name>.token when --token-file is omitted.")
+    token_refresh.add_argument("--token-file", help="Token file to save and refresh from.")
     token_refresh.add_argument("--token", help="Token value to save before refreshing repos. Prompts if omitted.")
     token_refresh.set_defaults(func=cmd_token_refresh)
 
@@ -529,8 +628,9 @@ def completion_items(words: list[str], cword: int) -> list[str]:
     setup_options = ["--repo", "--source", "--template-ref", "--secret-name", "--token-file", "--skip-secret", "-i", "--interactive"]
     update_options = ["--repo", "--path", "--template-ref", "-i", "--interactive"]
     token_options = ["-h", "--help"]
-    token_subcommands = ["save", "list", "refresh"]
-    token_save_options = ["--token-file", "--token"]
+    token_subcommands = ["add", "list", "show", "refresh"]
+    token_add_options = ["--token-file", "--token"]
+    token_show_options = ["--token-file"]
     token_refresh_options = ["--token-file", "--token"]
     repo_options = ["-h", "--help"]
     repo_subcommands = ["list", "add", "remove", "token"]
@@ -572,8 +672,10 @@ def completion_items(words: list[str], cword: int) -> list[str]:
             return update_options
         if state == "token":
             return token_options
-        if state == "token_save":
-            return token_save_options
+        if state == "token_add":
+            return token_add_options
+        if state == "token_show":
+            return token_show_options
         if state == "token_refresh":
             return token_refresh_options
         if state == "repo":
@@ -636,10 +738,10 @@ def run_completion() -> int:
 
 
 def normalize_compat_argv(argv: list[str]) -> list[str]:
-    # Backward compatibility: `ci-bot token set` -> `ci-bot token save`.
-    if len(argv) >= 2 and argv[0] == "token" and argv[1] == "set":
+    # Backward compatibility: old token verbs now route to `ci-bot token add`.
+    if len(argv) >= 2 and argv[0] == "token" and argv[1] in {"set", "save"}:
         updated = list(argv)
-        updated[1] = "save"
+        updated[1] = "add"
         return updated
     return argv
 

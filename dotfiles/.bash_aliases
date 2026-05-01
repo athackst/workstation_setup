@@ -193,4 +193,6 @@ alias git-use-athackst='git-use athackst 6098197+athackst@users.noreply.github.c
 ###########################
 # Autocompletes
 ###########################
-eval "$(_CI_BOT_COMPLETE=bash_source ci-bot)"
+if command -v ci-bot &> /dev/null; then
+  eval "$(_CI_BOT_COMPLETE=bash_source ci-bot)"
+fi
