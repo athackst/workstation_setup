@@ -299,6 +299,13 @@ else
     echo "Skipping .gitconfig"
 fi
 
+# --- .ssh/config (file) ---
+if [ -f "$DOTROOT/.ssh/config" ] && ask_for_confirmation "Install .ssh/config?"; then
+    deploy_file "$DOTROOT/.ssh/config" "$HOME/.ssh/config"
+else
+    echo "Skipping .ssh/config"
+fi
+
 # --- ~/.config tree (files/symlinks within) ---
 if [ -d "$DOTROOT/.config" ] && ask_for_confirmation "Sync dotfiles/.config into ~/.config?"; then
     mkdir -p "$HOME/.config"
