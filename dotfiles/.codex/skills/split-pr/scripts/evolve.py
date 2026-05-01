@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import argparse
 
-from common import ensure_git_repo, fetch_base, list_conflicted_files, load_meta, run, save_meta, topological_chain
+from common import ensure_clean_worktree, ensure_git_repo, fetch_base, list_conflicted_files, load_meta, run, save_meta, topological_chain
 
 
 def main() -> int:
@@ -12,6 +12,7 @@ def main() -> int:
     args = parser.parse_args()
 
     ensure_git_repo()
+    ensure_clean_worktree('evolve')
     meta = load_meta()
     base = args.base or meta.get('base', 'origin/main')
     fetch_base(base)

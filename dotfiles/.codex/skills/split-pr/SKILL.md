@@ -7,7 +7,7 @@ description: Plan and manage dependency-ordered stacked PR branches from a branc
 
 ## Goal
 
-Given the current work relative to `origin/main` (or another explicit base), do two jobs:
+Given committed work relative to `origin/main` (or another explicit base), do two jobs:
 
 1. **Plan** a stack of small, reviewable PRs.
 2. **Materialize** that stack as one review commit per branch.
@@ -26,7 +26,7 @@ The stack should prefer semantic boundaries over file boundaries. When semantic 
 
 ## Inputs to gather first
 
-Before proposing a plan, inspect:
+Before proposing a plan, inspect the following. Replace `origin/main` with the explicit base when the user provides one:
 
 - `git status --short`
 - `git branch --show-current`
@@ -36,7 +36,7 @@ Before proposing a plan, inspect:
 - `git log --oneline --decorate --graph origin/main..HEAD`
 - repo-specific build/test commands from repo `AGENTS.md` if present
 
-If helper scripts are available, prefer them:
+If helper scripts are available, prefer them, again replacing `origin/main` with the explicit base when needed:
 
 - `python3 <skill_dir>/scripts/collect_diff.py --base origin/main`
 - `python3 <skill_dir>/scripts/status.py`
@@ -44,7 +44,7 @@ If helper scripts are available, prefer them:
 
 Resolve `<skill_dir>` against this skill folder first.
 
-If the working tree is dirty before history-rewrite operations (`materialize`, `restack`, `evolve`), pause and ask the user whether to commit or stash first.
+If the working tree is dirty before history-rewrite operations (`materialize`, `restack`, `evolve`), pause and ask the user whether to commit or stash first. The materializer uses `HEAD` as the source ref, so uncommitted changes are not included in generated stack branches.
 
 ## Planning rubric
 
@@ -87,8 +87,9 @@ When proposing or validating a stack plan JSON, read and follow [`references/pla
 - Minimize backwards dependencies.
 - Prefer more, smaller PRs when uncertain.
 - Present the plan clearly before rewriting history.
+- For files with changes that belong in multiple PRs, emit per-branch `patches` entries containing the exact unified diffs for the selected hunks.
 
-When a file contains changes for multiple PRs, call that out explicitly and describe the hunks (line ranges or functions) to separate. It is acceptable to split a single file across PRs; prefer semantic grouping over keeping files intact. If you need line-level splits, add `hunks` patches to the plan JSON and materialize them.
+When a file contains changes for multiple PRs, call that out explicitly and describe the hunks (line ranges or functions) to separate. It is acceptable to split a single file across PRs; prefer semantic grouping over keeping files intact. If you need line-level splits, add `patches` entries to the plan JSON and materialize them. `extract_hunks.py` prints the file diff; select or trim the exact hunks yourself before adding them to a plan.
 
 ### 2) Materialize the stack
 
@@ -103,7 +104,9 @@ Recommended flow:
    - `python3 <skill_dir>/scripts/status.py`
 4. Run each branch's local validation commands before declaring the split ready for review.
 
-If the script cannot cleanly separate mixed-file hunks, stop and explain which files need manual staging.
+Plans can mix whole-file `include` entries and explicit hunk-level `patches` entries in the same branch. Use `include` for files that belong wholly to that branch, and use `patches` for files that are split across branches. Do not list the same path in both `include` and `patches` for one branch unless the patch is intentionally meant to apply after the full-file diff. `materialize_stack.py` applies whole-file entries first, then applies each patch entry with `git apply --index --3way`, and creates exactly one commit for the branch.
+
+If a patch cannot be applied, stop and report the branch and patch label or file set that failed.
 
 ## Restacking and evolving
 
@@ -128,7 +131,7 @@ On conflict:
 - stop without destroying metadata
 - tell the user whether the conflict happened during materialize, restack, or evolve
 
-After manual resolution, rerun the same command.
+After manual resolution during `restack` or `evolve`, continue or abort the active rebase with Git before rerunning the helper. For `materialize`, resolve by refining the plan or patch entry, then rerun the materializer.
 
 ## Commit and PR conventions
 

@@ -32,6 +32,14 @@ def ensure_git_repo() -> None:
     run(['git', 'rev-parse', '--git-dir'])
 
 
+def ensure_clean_worktree(operation: str) -> None:
+    status = run(['git', 'status', '--short'], check=False)
+    if status.strip():
+        raise RuntimeError(
+            f'working tree must be clean before {operation}; commit or stash these changes first:\n{status}'
+        )
+
+
 def current_branch() -> str:
     return run(['git', 'branch', '--show-current'])
 
