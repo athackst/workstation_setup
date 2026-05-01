@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import argparse
 
-from common import branch_head, ensure_git_repo, list_conflicted_files, load_meta, run, save_meta
+from common import branch_head, ensure_clean_worktree, ensure_git_repo, list_conflicted_files, load_meta, run, save_meta
 
 
 def main() -> int:
@@ -12,6 +12,7 @@ def main() -> int:
     args = parser.parse_args()
 
     ensure_git_repo()
+    ensure_clean_worktree('restack')
     meta = load_meta()
     branches = meta.get('branches', {})
     if args.branch not in branches:

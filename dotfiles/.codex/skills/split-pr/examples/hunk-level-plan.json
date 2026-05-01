@@ -1,0 +1,40 @@
+{
+  "version": 2,
+  "base": "main",
+  "branches": [
+    {
+      "name": "stack/001-first-hunk",
+      "title": "Update first example line",
+      "description": "Applies only the first hunk in docs/example.txt.",
+      "parents": ["main"],
+      "include": [],
+      "patches": [
+        {
+          "path": "docs/example.txt",
+          "label": "first line hunk",
+          "patch": "diff --git a/docs/example.txt b/docs/example.txt\n--- a/docs/example.txt\n+++ b/docs/example.txt\n@@ -1,5 +1,5 @@\n alpha\n-one\n+ONE\n two\n three\n four\n"
+        }
+      ],
+      "validation": [
+        "git diff --check HEAD~1 HEAD"
+      ]
+    },
+    {
+      "name": "stack/002-second-hunk",
+      "title": "Update second example line",
+      "description": "Applies only the second hunk in docs/example.txt.",
+      "parents": ["stack/001-first-hunk"],
+      "include": [],
+      "patches": [
+        {
+          "path": "docs/example.txt",
+          "label": "second line hunk",
+          "patch": "diff --git a/docs/example.txt b/docs/example.txt\n--- a/docs/example.txt\n+++ b/docs/example.txt\n@@ -3,5 +3,5 @@\n two\n three\n four\n-five\n+FIVE\n omega\n"
+        }
+      ],
+      "validation": [
+        "git diff --check HEAD~1 HEAD"
+      ]
+    }
+  ]
+}

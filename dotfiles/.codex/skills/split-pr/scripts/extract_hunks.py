@@ -23,7 +23,7 @@ def run_diff(base: str, source: str, path: str, context: int) -> str:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description='Extract unified diff hunks for a file to use in stack plan hunks.')
+    parser = argparse.ArgumentParser(description='Print a file diff to select hunks for stack plan patches.')
     parser.add_argument('--path', required=True, help='File path to extract hunks from')
     parser.add_argument('--base', default='origin/main', help='Base ref (default: origin/main)')
     parser.add_argument('--source', default='HEAD', help='Source ref (default: HEAD)')
