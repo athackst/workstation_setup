@@ -34,7 +34,7 @@ All scripts should follow these basics:
 - Main commands:
   - `ci-bot setup`
   - `ci-bot update`
-  - `ci-bot token save`
+  - `ci-bot token add`
   - `ci-bot token list`
   - `ci-bot token refresh`
   - `ci-bot repo list|add|remove|token`
