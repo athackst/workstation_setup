@@ -240,6 +240,22 @@ def register_token_file(registry: dict[str, Any], token_file: Path, name: str | 
     registry["tokens"][token_path] = data
 
 
+def prompt_for_repo() -> str:
+    repo = input("Repository (owner/repo): ").strip()
+    if not repo:
+        raise CIBotError("Repository is empty; refusing to continue.")
+    return repo
+
+
+def resolve_repo_token_file(registry: dict[str, Any], name: str | None) -> str:
+    name = normalize_token_name(name) if name else prompt_for_token_name()
+    token_file = token_file_for_name(name)
+    if not token_file.is_file():
+        resolve_supplied_token(None, token_file)
+    register_token_file(registry, token_file, name)
+    return str(token_file)
+
+
 def require_repo_config(registry: dict[str, Any], repo: str) -> RepoConfig:
     config = get_repo_config(registry, repo)
     if config is None:
@@ -456,20 +472,26 @@ def cmd_repo_list(_args: argparse.Namespace, registry_path: Path) -> None:
 
 def cmd_repo_add(args: argparse.Namespace, registry_path: Path) -> None:
     registry = load_registry(registry_path)
-    existing = get_repo_config(registry, args.repo)
+    repo = args.repo or prompt_for_repo()
+    existing = get_repo_config(registry, repo)
+    token_file = (
+        str(Path(args.token_file).expanduser())
+        if args.token_file
+        else resolve_repo_token_file(registry, args.token_name)
+    )
     timestamp = now_utc()
     config = RepoConfig(
-        repo=args.repo,
+        repo=repo,
         source=args.source,
         template_ref=args.template_ref,
         secret_name=args.secret_name,
         path=str(Path(args.path).expanduser()) if args.path else (existing.path if existing else None),
-        token_file=str(Path(args.token_file).expanduser()) if args.token_file else (existing.token_file if existing else None),
+        token_file=token_file,
         added_at=existing.added_at if existing else timestamp,
     )
     upsert_repo_config(registry, config)
     save_registry(registry_path, registry)
-    echo(f"Saved {args.repo} to {registry_path}")
+    echo(f"Saved {repo} to {registry_path}")
 
 
 def cmd_repo_remove(args: argparse.Namespace, registry_path: Path) -> None:
@@ -585,12 +607,13 @@ def build_parser() -> argparse.ArgumentParser:
     repo_list.set_defaults(func=cmd_repo_list)
 
     repo_add = repo_sub.add_parser("add", help="Add or update a repo in the local registry")
-    repo_add.add_argument("--repo", required=True, help="Repository slug (owner/repo).")
+    repo_add.add_argument("--repo", help="Repository slug (owner/repo). Prompts if omitted.")
     repo_add.add_argument("--source", default=DEFAULT_SOURCE, help=f"Copier template source. (default: {DEFAULT_SOURCE})")
     repo_add.add_argument("--template-ref", default=DEFAULT_TEMPLATE_REF, help=f"Copier template ref. (default: {DEFAULT_TEMPLATE_REF})")
     repo_add.add_argument("--secret-name", default=DEFAULT_SECRET_NAME, help=f"GitHub Actions secret name. (default: {DEFAULT_SECRET_NAME})")
     repo_add.add_argument("--path", help="Optional local checkout path.")
-    repo_add.add_argument("--token-file", help="Optional token file for this repo.")
+    repo_add.add_argument("--token-name", help="Token name. Uses ~/.config/tokens/<name>.token when --token-file is omitted.")
+    repo_add.add_argument("--token-file", help="Optional token file for this repo. Prompts for --token-name behavior if omitted.")
     repo_add.set_defaults(func=cmd_repo_add)
 
     repo_remove = repo_sub.add_parser("remove", help="Remove a repo from the local registry")
@@ -615,7 +638,7 @@ def completion_items(words: list[str], cword: int) -> list[str]:
     prev = words[cword - 1] if cword > 0 else ""
 
     needs_path_value = {"--registry-file", "--token-file", "--path"}
-    needs_scalar_value = {"--repo", "--source", "--template-ref", "--secret-name", "--token"}
+    needs_scalar_value = {"--repo", "--source", "--template-ref", "--secret-name", "--token", "--token-name"}
 
     if prev in needs_path_value:
         return ["__FILE__"]
@@ -634,7 +657,7 @@ def completion_items(words: list[str], cword: int) -> list[str]:
     token_refresh_options = ["--token-file", "--token"]
     repo_options = ["-h", "--help"]
     repo_subcommands = ["list", "add", "remove", "token"]
-    repo_add_options = ["--repo", "--source", "--template-ref", "--secret-name", "--path", "--token-file"]
+    repo_add_options = ["--repo", "--source", "--template-ref", "--secret-name", "--path", "--token-name", "--token-file"]
     repo_remove_options = ["--repo"]
     repo_token_options = ["--repo", "--secret-name", "--token-file", "--token"]
 
