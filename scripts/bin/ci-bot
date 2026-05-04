@@ -853,11 +853,11 @@ def completion_items(words: list[str], cword: int) -> list[str]:
 
 
 def emit_bash_source() -> None:
-    script = r'''_ci_bot3_completion() {
+    script = r'''_ci_bot_completion() {
   local IFS=$'\n'
   local current_word="${COMP_WORDS[COMP_CWORD]}"
   local output
-  output="$(_CI_BOT3_COMPLETE=bash_complete COMP_WORDS="${COMP_WORDS[*]}" COMP_CWORD="$COMP_CWORD" ci-bot 2>/dev/null)"
+  output="$(_CI_BOT_COMPLETE=bash_complete COMP_WORDS="${COMP_WORDS[*]}" COMP_CWORD="$COMP_CWORD" ci-bot 2>/dev/null)"
 
   if [[ "$output" == "__FILE__" ]]; then
     COMPREPLY=( $(compgen -f -- "$current_word") )
@@ -865,13 +865,13 @@ def emit_bash_source() -> None:
     COMPREPLY=( $(compgen -W "$output" -- "$current_word") )
   fi
 }
-complete -o default -F _ci_bot3_completion ci-bot
+complete -o default -F _ci_bot_completion ci-bot
 '''
     print(script, end="")
 
 
 def run_completion() -> int:
-    mode = os.environ.get("_CI_BOT3_COMPLETE")
+    mode = os.environ.get("_CI_BOT_COMPLETE")
     if not mode:
         return 1
     if mode == "bash_source":
