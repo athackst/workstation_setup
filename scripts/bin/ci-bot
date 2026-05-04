@@ -115,6 +115,13 @@ def detect_repo() -> str:
     return run(["gh", "repo", "view", "--json", "nameWithOwner", "--jq", ".nameWithOwner"], capture_output=True)  # type: ignore[return-value]
 
 
+def maybe_detect_repo() -> str | None:
+    try:
+        return detect_repo()
+    except CIBotError:
+        return None
+
+
 def normalize_token(token: str) -> str:
     return token.strip()
 
@@ -144,6 +151,24 @@ def normalize_token_name(name: str) -> str:
 
 def prompt_for_token_name() -> str:
     return normalize_token_name(input("Token name: "))
+
+
+def prompt_with_default(prompt: str, default: str) -> str:
+    value = input(f"{prompt} [{default}]: ").strip()
+    return value or default
+
+
+def prompt_yes_no(prompt: str, default: bool) -> bool:
+    suffix = "Y/n" if default else "y/N"
+    while True:
+        value = input(f"{prompt} [{suffix}]: ").strip().lower()
+        if not value:
+            return default
+        if value in {"y", "yes"}:
+            return True
+        if value in {"n", "no"}:
+            return False
+        echo("Please answer yes or no.", err=True)
 
 
 def token_file_for_name(name: str) -> Path:
@@ -247,6 +272,16 @@ def prompt_for_repo() -> str:
     return repo
 
 
+def prompt_for_repo_with_default(default: str | None) -> str:
+    if default:
+        repo = prompt_with_default("Repository (owner/repo)", default)
+    else:
+        repo = prompt_for_repo()
+    if not repo:
+        raise CIBotError("Repository is empty; refusing to continue.")
+    return repo
+
+
 def resolve_repo_token_file(registry: dict[str, Any], name: str | None) -> str:
     name = normalize_token_name(name) if name else prompt_for_token_name()
     token_file = token_file_for_name(name)
@@ -338,26 +373,67 @@ def refresh_token_for_targets(
 
 def cmd_setup(args: argparse.Namespace, registry_path: Path) -> None:
     require_cmd("git")
-    repo = args.repo or detect_repo()
+    setup_walkthrough = sys.stdin.isatty()
+    detected_repo = args.repo or (maybe_detect_repo() if setup_walkthrough else detect_repo())
+    if setup_walkthrough:
+        echo("ci-bot setup")
+        echo("This will apply the CI template, configure the GitHub secret, and register this repo.")
+
+    repo = args.repo or (
+        prompt_for_repo_with_default(detected_repo) if setup_walkthrough else detected_repo
+    )
+    source = args.source or (
+        prompt_with_default("Copier template source", DEFAULT_SOURCE) if setup_walkthrough else DEFAULT_SOURCE
+    )
+    template_ref = args.template_ref or (
+        prompt_with_default("Copier template ref", DEFAULT_TEMPLATE_REF) if setup_walkthrough else DEFAULT_TEMPLATE_REF
+    )
+    skip_secret = args.skip_secret
+    if not args.skip_secret and setup_walkthrough:
+        skip_secret = not prompt_yes_no("Set the GitHub Actions secret now?", True)
+    secret_name = args.secret_name or (
+        prompt_with_default("GitHub Actions secret name", DEFAULT_SECRET_NAME)
+        if setup_walkthrough and not skip_secret
+        else DEFAULT_SECRET_NAME
+    )
+    interactive = args.interactive
+    if not args.interactive and setup_walkthrough:
+        interactive = prompt_yes_no("Prompt for Copier template values?", False)
+
     cwd = os.getcwd()
-    apply_template(args.source, args.template_ref, interactive=args.interactive, cwd=cwd)
+    if setup_walkthrough:
+        echo("")
+        echo("Step 1: Apply the CI template")
+    apply_template(source, template_ref, interactive=interactive, cwd=cwd)
 
     resolved_token_path = str(Path(args.token_file).expanduser()) if args.token_file else None
     token_value = None
     token_source_path = resolved_token_path
-    if not args.skip_secret:
+    if not skip_secret:
+        if setup_walkthrough:
+            echo("")
+            echo("Step 2: Configure the GitHub Actions secret")
+        if resolved_token_path is None and setup_walkthrough:
+            token_path_value = prompt_with_default("Token file", str(DEFAULT_TOKEN_FILE))
+            resolved_token_path = str(Path(token_path_value).expanduser())
         token_value, token_source_path = resolve_token_value(resolved_token_path)
-        echo(f"Using secret from {token_source_path} to set secret '{args.secret_name}' on {repo}")
-        set_secret(repo, args.secret_name, token_value)
+        echo(f"Using secret from {token_source_path} to set secret '{secret_name}' on {repo}")
+        set_secret(repo, secret_name, token_value)
+    elif setup_walkthrough:
+        echo("")
+        echo("Step 2: Skip GitHub Actions secret")
 
     registry = load_registry(registry_path)
+    if setup_walkthrough:
+        echo("")
+        echo("Step 3: Register this repo locally")
     timestamp = now_utc()
     existing = get_repo_config(registry, repo)
     config = RepoConfig(
         repo=repo,
-        source=args.source,
-        template_ref=args.template_ref,
-        secret_name=args.secret_name,
+        source=source,
+        template_ref=template_ref,
+        secret_name=secret_name,
         path=cwd,
         token_file=token_source_path,
         added_at=existing.added_at if existing else timestamp,
@@ -558,9 +634,9 @@ def build_parser() -> argparse.ArgumentParser:
 
     setup = subparsers.add_parser("setup", help="Apply template, set secret, and register repo")
     setup.add_argument("--repo", help="Repository slug (owner/repo). Auto-detected if omitted.")
-    setup.add_argument("--source", default=DEFAULT_SOURCE, help=f"Copier template source. (default: {DEFAULT_SOURCE})")
-    setup.add_argument("--template-ref", default=DEFAULT_TEMPLATE_REF, help=f"Copier template ref. (default: {DEFAULT_TEMPLATE_REF})")
-    setup.add_argument("--secret-name", default=DEFAULT_SECRET_NAME, help=f"GitHub Actions secret name. (default: {DEFAULT_SECRET_NAME})")
+    setup.add_argument("--source", help=f"Copier template source. (default: {DEFAULT_SOURCE})")
+    setup.add_argument("--template-ref", help=f"Copier template ref. (default: {DEFAULT_TEMPLATE_REF})")
+    setup.add_argument("--secret-name", help=f"GitHub Actions secret name. (default: {DEFAULT_SECRET_NAME})")
     setup.add_argument("--token-file", help="Read token value from file.")
     setup.add_argument("--skip-secret", action="store_true", help="Skip setting the GitHub secret.")
     setup.add_argument("-i", "--interactive", action="store_true", help="Prompt for Copier template values instead of using defaults.")
