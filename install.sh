@@ -314,12 +314,12 @@ else
     echo "Skipping ~/.config sync"
 fi
 
-# --- ~/.codex/skills (dir) ---
-if [ -d "$DOTROOT/.codex" ] && ask_for_confirmation "Sync dotfiles/.codex/skills into ~/.codex/skills?"; then
-    mkdir -p "$HOME/.codex/skills"
-    deploy_dir "$DOTROOT/.codex/skills" "$HOME/.codex/skills"
+# --- ~/.agents/skills (dir) ---
+if [ -d "$DOTROOT/.agents" ] && ask_for_confirmation "Sync dotfiles/.agents into ~/.agents?"; then
+    mkdir -p "$HOME/.agents"
+    deploy_dir "$DOTROOT/.agents" "$HOME/.agents"
 else
-    echo "Skipping ~/.codex sync"
+    echo "Skipping ~/.agents sync"
 fi
 
 # --- ~/.local/bin (optional scripts) ---
