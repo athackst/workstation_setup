@@ -114,19 +114,27 @@ class Shell:
             raise CIBotError(f"Missing required command: {cmd}")
 
     @staticmethod
-    def run(cmd: list[str], cwd: str | None = None, capture_output: bool = False) -> str | None:
+    def run(
+        cmd: list[str],
+        cwd: str | None = None,
+        capture_output: bool = False,
+        input_text: str | None = None,
+        display_cmd: list[str] | None = None,
+    ) -> str | None:
         try:
             completed = subprocess.run(
                 cmd,
                 cwd=cwd,
                 check=True,
                 text=True,
+                input=input_text,
                 capture_output=capture_output,
             )
         except subprocess.CalledProcessError as exc:
             stderr = (exc.stderr or "").strip()
             stdout = (exc.stdout or "").strip()
-            detail = stderr or stdout or f"Command failed: {' '.join(cmd)}"
+            shown_cmd = display_cmd or cmd
+            detail = stderr or stdout or f"Command failed: {' '.join(shown_cmd)}"
             raise CIBotError(detail) from exc
         if capture_output:
             return (completed.stdout or "").strip()
@@ -159,6 +167,27 @@ class Prompts:
             if value in {"n", "no"}:
                 return False
             echo("Please answer yes or no.", err=True)
+
+    @staticmethod
+    def choice(prompt: str, options: list[str], default: int | None = None) -> int:
+        if not options:
+            raise CIBotError(f"{prompt} has no available options.")
+        for index, option in enumerate(options, start=1):
+            marker = " (default)" if default == index else ""
+            echo(f"  {index}. {option}{marker}")
+        while True:
+            suffix = f" [{default}]" if default is not None else ""
+            value = input(f"{prompt}{suffix}: ").strip()
+            if not value and default is not None:
+                return default - 1
+            try:
+                selected = int(value)
+            except ValueError:
+                echo(f"Enter a number between 1 and {len(options)}.", err=True)
+                continue
+            if 1 <= selected <= len(options):
+                return selected - 1
+            echo(f"Enter a number between 1 and {len(options)}.", err=True)
 
     @staticmethod
     def token() -> str:
@@ -274,7 +303,19 @@ class GitHub:
 
     def set_secret(self, repo: str, secret_name: str, token_value: str) -> None:
         Shell.require("gh")
-        Shell.run(["gh", "secret", "set", secret_name, "--repo", repo, "--body", token_value])
+        cmd = ["gh", "secret", "set", secret_name, "--repo", repo]
+        try:
+            Shell.run(cmd, input_text=f"{token_value}\n")
+        except CIBotError as exc:
+            detail = str(exc)
+            if "failed to fetch public key" in detail and "HTTP 403" in detail:
+                raise CIBotError(
+                    f"{detail}\n"
+                    f"gh is authenticated, but it does not have permission to manage Actions secrets for {repo}. "
+                    "Check `gh auth status`, confirm the correct GitHub account is active, and ensure the credential "
+                    "has repository access plus GitHub Actions secrets permission."
+                ) from exc
+            raise
 
 
 class Copier:
@@ -404,13 +445,19 @@ class Commands:
             return Prompts.required("Repository (owner/repo)", self.services.github.maybe_detect_repo())
         return self.services.github.detect_repo()
 
-    def token_file_or_prompt(self, name: str | None, token_file: str | None) -> Path:
+    def token_file_or_prompt(
+        self,
+        name: str | None,
+        token_file: str | None,
+        default_token_file: str | None = None,
+    ) -> Path:
         if token_file:
             return Path(token_file).expanduser()
         if name:
             return token_file_for_name(name)
-        token_name = self.prompt_or_error("Provide a token name or --token-file.", "Token name")
-        return token_file_for_name(token_name)
+        if sys.stdin.isatty():
+            return self.prompt_for_token_file("Select token", default_token_file)
+        raise CIBotError("Provide a token name or --token-file.")
 
     def token_name_default_from_file(self, token_file: str | None) -> str | None:
         if not token_file:
@@ -419,6 +466,67 @@ class Commands:
         if path.parent != DEFAULT_TOKEN_DIR or path.suffix != ".token":
             return None
         return path.stem
+
+    def registered_token_choices(self, default_token_file: str | None = None) -> list[tuple[str, Path]]:
+        tokens = self.services.registry.data.get("tokens", {})
+        repo_token_paths: set[str] = set()
+        for repo_name in sorted(self.services.registry.data["repos"].keys()):
+            config = self.services.registry.repo(repo_name)
+            if config and config.token_file:
+                repo_token_paths.add(str(Path(config.token_file).expanduser()))
+
+        all_token_paths = sorted(set(tokens) | repo_token_paths)
+        choices: list[tuple[str, Path]] = []
+        seen: set[str] = set()
+        for token_path in all_token_paths:
+            path = Path(token_path).expanduser()
+            token_data = tokens.get(str(path), {})
+            name = token_data.get("name") or self.token_name_default_from_file(str(path))
+            label = f"{name} ({path})" if name else str(path)
+            choices.append((label, path))
+            seen.add(str(path))
+
+        if default_token_file:
+            default_path = Path(default_token_file).expanduser()
+            default_key = str(default_path)
+            if default_key not in seen:
+                default_name = self.token_name_default_from_file(default_key)
+                label = f"{default_name} ({default_path})" if default_name else str(default_path)
+                choices.append((label, default_path))
+
+        return choices
+
+    def prompt_for_token_file(self, prompt: str, default_token_file: str | None = None) -> Path:
+        default_path = Path(default_token_file).expanduser() if default_token_file else None
+        choices = self.registered_token_choices(default_token_file)
+        options = [label for label, _path in choices]
+        options.append("Add new token")
+
+        default_index: int | None = None
+        if default_path is not None:
+            for index, (_label, path) in enumerate(choices, start=1):
+                if path == default_path:
+                    default_index = index
+                    break
+
+        selected = Prompts.choice(prompt, options, default_index)
+        if selected == len(choices):
+            return self.create_and_register_token(self.token_name_default_from_file(default_token_file))
+        return choices[selected][1]
+
+    def create_and_register_token(self, default_name: str | None = None) -> Path:
+        token_name = normalize_token_name(Prompts.required("Token name", default_name))
+        token_file = token_file_for_name(token_name)
+        self.services.tokens.resolve_supplied(None, token_file)
+        self.services.registry.register_token_file(token_file, token_name)
+        self.services.registry.save()
+        echo(f"Registered token file {token_file}")
+        return token_file
+
+    def register_selected_token_file(self, token_file: Path) -> str:
+        expanded = token_file.expanduser()
+        self.services.registry.register_token_file(expanded, self.token_name_default_from_file(str(expanded)))
+        return str(expanded)
 
     def resolve_setup_options(self, args: argparse.Namespace) -> SetupOptions:
         walkthrough = sys.stdin.isatty()
@@ -448,7 +556,7 @@ class Commands:
 
         token_file = str(Path(args.token_file).expanduser()) if args.token_file else None
         if not token_file and walkthrough and not skip_secret:
-            token_file = str(Path(Prompts.text("Token file", str(DEFAULT_TOKEN_FILE))).expanduser())
+            token_file = str(self.prompt_for_token_file("Select token", str(DEFAULT_TOKEN_FILE)))
 
         return SetupOptions(
             repo=repo,
@@ -477,6 +585,8 @@ class Commands:
                 echo()
                 echo("Step 2: Configure the GitHub Actions secret")
             token = self.services.tokens.resolve(options.token_file)
+            if token.source_path is not None:
+                self.register_selected_token_file(Path(token.source_path))
             echo(f"Using secret from {token.source_path or 'inline value'} to set secret '{options.secret_name}' on {options.repo}")
             self.services.github.set_secret(options.repo, options.secret_name, token.value)
         elif options.walkthrough:
@@ -532,6 +642,10 @@ class Commands:
             self.services.registry.register_token_file(token_file, args.name)
             self.services.registry.save()
             echo(f"Registered token file {token_file}")
+            return
+
+        if args.token is None and args.name is None and sys.stdin.isatty():
+            self.create_and_register_token()
             return
 
         name = args.name or self.prompt_or_error("Provide a token name or --token-file.", "Token name")
@@ -601,7 +715,7 @@ class Commands:
             echo(f"{name}\tsource={source}\tref={template_ref}\tpath={path}")
 
     def repo_add(self, args: argparse.Namespace) -> None:
-        repo = args.repo or self.prompt_or_error("Provide --repo.", "Repository (owner/repo)")
+        repo = self.repo_or_detect_or_prompt(args.repo)
         existing = self.services.registry.repo(repo)
         source = args.source or (Prompts.text("Copier template source", DEFAULT_SOURCE) if sys.stdin.isatty() else DEFAULT_SOURCE)
         template_ref = args.template_ref or (Prompts.text("Copier template ref", DEFAULT_TEMPLATE_REF) if sys.stdin.isatty() else DEFAULT_TEMPLATE_REF)
@@ -613,6 +727,10 @@ class Commands:
             str(Path(args.token_file).expanduser())
             if args.token_file
             else self.services.tokens.resolve_repo_token_file(self.services.registry, args.token_name)
+            if args.token_name
+            else self.register_selected_token_file(
+                self.token_file_or_prompt(None, None, existing.token_file if existing else None)
+            )
         )
         timestamp = now_utc()
         self.services.registry.upsert_repo(
@@ -645,8 +763,7 @@ class Commands:
         elif args.token_name:
             selected_token_file = token_file_for_name(args.token_name)
         elif sys.stdin.isatty():
-            token_name = Prompts.required("Token name", self.token_name_default_from_file(existing.token_file if existing else None))
-            selected_token_file = token_file_for_name(token_name)
+            selected_token_file = self.prompt_for_token_file("Select token", existing.token_file if existing else None)
         elif existing and existing.token_file:
             selected_token_file = Path(existing.token_file).expanduser()
 
@@ -658,6 +775,7 @@ class Commands:
         )
 
         if selected_token_file:
+            self.register_selected_token_file(selected_token_file)
             token = self.services.tokens.resolve_supplied(args.token, selected_token_file)
         elif args.token is not None:
             token_value = normalize_token(args.token)
@@ -753,7 +871,7 @@ def build_parser(commands: Commands) -> argparse.ArgumentParser:
     repo_list.set_defaults(func=commands.repo_list)
 
     repo_add = repo_sub.add_parser("add", help="Add or update a repo in the local registry")
-    repo_add.add_argument("--repo", help="Repository slug (owner/repo). Prompts if omitted.")
+    repo_add.add_argument("--repo", help="Repository slug (owner/repo). Auto-detected or prompts if omitted.")
     repo_add.add_argument("--source", help=f"Copier template source. (default: {DEFAULT_SOURCE})")
     repo_add.add_argument("--template-ref", help=f"Copier template ref. (default: {DEFAULT_TEMPLATE_REF})")
     repo_add.add_argument("--secret-name", help=f"GitHub Actions secret name. (default: {DEFAULT_SECRET_NAME})")
