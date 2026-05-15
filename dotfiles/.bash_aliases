@@ -196,3 +196,8 @@ alias git-use-athackst='git-use athackst 6098197+athackst@users.noreply.github.c
 if command -v ci-bot &> /dev/null; then
   eval "$(_CI_BOT_COMPLETE=bash_source ci-bot)"
 fi
+
+###########################
+# Agent aliases
+###########################
+alias commit-staged='codex exec --sandbox workspace-write --model gpt-5.4-mini -c '\''model_reasoning_effort="low"'\'' "Use the commit-staged skill to create a commit."'
