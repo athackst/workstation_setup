@@ -13,8 +13,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
       - name: Install dotfiles
-        run: |
-          ./install.sh
+        run: ./install.sh
 
   test-site:
     permissions:
