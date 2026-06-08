@@ -19,10 +19,6 @@ jobs:
     permissions:
       contents: read
     uses: athackst/ci/.github/workflows/mkdocs_site.yml@main
-    with:
-      pages: false
-    secrets:
-      token: ${{ secrets.CI_BOT_TOKEN }}
 
   complete:
     needs:
