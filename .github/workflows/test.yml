@@ -13,16 +13,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
       - name: Install dotfiles
-        run: |
-          ./install.sh
+        run: ./install.sh
 
   test-site:
     permissions:
       contents: read
     uses: athackst/ci/.github/workflows/mkdocs_site.yml@main
-    with:
-      pages: false
-    secrets: inherit
 
   complete:
     needs:
