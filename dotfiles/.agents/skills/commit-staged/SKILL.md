@@ -9,6 +9,10 @@ Inspect only the staged diff and turn it into one commit when the staged set rep
 
 This skill is deliberately narrow: do not fix, format, stage, unstage, regenerate, or otherwise change the worktree while using it.
 
+## Local-Only Constraint
+
+Everything needed for this skill is local. Do not use web search, browse, `tool_search`, connectors, MCP resource discovery, or any other remote lookup step while using `commit-staged`. Read the local `SKILL.md`, inspect the staged diff, and continue.
+
 ## Workflow
 
 1. Run `git diff --staged --stat`.
