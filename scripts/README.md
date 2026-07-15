@@ -38,6 +38,7 @@ All scripts should follow these basics:
   - `ci-bot token list`
   - `ci-bot token refresh`
   - `ci-bot repo list|add|remove|token`
+  - `ci-bot org token`
 
 ## Git Account Switching
 
