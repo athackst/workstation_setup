@@ -169,6 +169,8 @@ function docker-services-update() {
   docker run --rm -t --name watchtower-update --volume /var/run/docker.sock:/var/run/docker.sock containrrr/watchtower --include-restarting --cleanup --run-once
 }
 
+alias docker-prune='docker system prune -af --volumes'
+
 #######################
 # HTML Proofer
 #######################

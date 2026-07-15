@@ -1,10 +1,9 @@
-#/bin/sh
-set -e
+#!/bin/sh
+set -eu
 
-# setup sources
 sudo apt-get update
 
-sudo apt-get install -y \
+sudo apt-get install -y --no-install-recommends \
   bash-completion \
   build-essential \
   cmake \
@@ -15,13 +14,17 @@ sudo apt-get install -y \
   pass \
   python3 \
   python3-pip \
+  python3-venv \
+  pipx \
   snapd \
   software-properties-common \
-  ssh \
+  openssh-client \
   wget
 
-# Uncomment if in version of ubuntu that supports both python and python3
-# sudo apt-get install -y python-is-python3
-# sudo update-alternatives --install /usr/bin/pip pip /usr/bin/pip3 1
-pip install -U pip
-pip install -U autopep8 requests hatch
+export PATH="$HOME/.local/bin:$PATH"
+
+if pipx list --short | grep -qx autopep8; then
+  pipx upgrade autopep8
+else
+  pipx install autopep8
+fi

@@ -3,15 +3,10 @@
 {
 	"name": "Ubuntu",
 	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
-	"image": "mcr.microsoft.com/devcontainers/base:jammy",
+	"image": "mcr.microsoft.com/devcontainers/base:resolute",
 
 	// Features to add to the dev container. More info: https://containers.dev/features.
 	"features": {
-		"ghcr.io/devcontainers/features/python:1": {},
-		"ghcr.io/devcontainers-extra/features/mkdocs:2": {
-			"version": "latest",
-			"plugins": "mkdocs-material pymdown-extensions markdown-gfm-admonition mkdocs-simple-plugin mkdocs-awesome-pages-plugin mkdocstrings mkdocstrings-python mkdocs-macros-plugin"
-		}
 	},
 
 	"runArgs": [
