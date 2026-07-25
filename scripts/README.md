@@ -25,6 +25,36 @@ All scripts should follow these basics:
 - Avoid reading from TTY unless necessary
 - Keep `bin/` flat (no subdirectories)
 
+### Embedded documentation
+
+Documentation for executable files can live alongside the implementation. Place
+Markdown inside a comment block delimited by `md` and `/md`:
+
+````bash
+# md
+# ## Example command
+#
+# Documentation written in Markdown.
+# /md
+````
+
+The repository's documentation website extracts these blocks, removes the
+source-language comment prefix, and publishes them as Markdown. The generated
+filename is the source file's basename with its extension replaced by `.md`:
+
+- `install.sh` → `install.md`
+- `example.py` → `example.md`
+- `ci-bot` → `ci-bot.md`
+
+Treat the embedded block as the source of truth and keep it synchronized with
+the implementation. Do not manually add or edit the generated Markdown file in
+this repository.
+
+Markdown files may link to these generated pages even when the corresponding
+`.md` files do not exist in the repository checkout. Check whether a missing
+link target is produced from an embedded documentation block before treating
+the link as broken.
+
 ## CI Bot
 
 `bin/ci-bot` is a Python + argparse CLI for managing CI template setup and token refreshes.
