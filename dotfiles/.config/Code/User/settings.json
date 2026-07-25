@@ -168,6 +168,8 @@
     "files.trimFinalNewlines": true,
     "git.autofetch": true,
     "git.confirmSync": false,
+    "githubPullRequests.defaultMergeMethod": "squash",
+    "githubPullRequests.quickDiff": true,
     "git.openRepositoryInParentFolders": "always",
     "gitlens.views.scm.grouped.views": {
         "commits": true,
