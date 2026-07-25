@@ -6,13 +6,13 @@
         {
             "label": "mkdocs: build",
             "type": "shell",
-            "command": "mkdocs build -f .devcontainer/mkdocs.yml -d \"$(pwd)/site\"",
+            "command": "docker run --rm --volume \"${env:LOCAL_WORKSPACE_FOLDER}:/docs\" --workdir /docs --user \"$(id -u):$(id -g)\" --env INPUT_THEME=material althack/mkdocs-simple-plugin:latest mkdocs_simple_gen --build",
             "problemMatcher": []
         },
         {
             "label": "mkdocs: serve",
             "type": "shell",
-            "command": "mkdocs serve -f .devcontainer/mkdocs.yml",
+            "command": "docker run --rm --publish 8000:8000 --volume \"${env:LOCAL_WORKSPACE_FOLDER}:/docs\" --env INPUT_THEME=material althack/mkdocs-simple-plugin:latest",
             "problemMatcher": []
         }
     ]
