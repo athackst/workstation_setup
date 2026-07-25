@@ -55,4 +55,4 @@ I have been playing with the idea of doing all/most development inside of docker
 
 ## Services
 
-System useful system services.
+Useful system services are documented in [services](services/README.md).

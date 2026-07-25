@@ -9,7 +9,7 @@ set -euo pipefail
 # ### Usage:
 #
 # ```bash
-# ./install-appimage.sh /path/to/App.AppImage \
+# install-appimage /path/to/App.AppImage \
 #    [--name "Nice Name"] \
 #    [--categories "Utility;"] \
 #    [--cmd "commandname"]

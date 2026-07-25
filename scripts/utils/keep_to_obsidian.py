@@ -9,7 +9,7 @@
 # 2. Extract your Google Keep export file to the google_keep folder.
 # 3. Open a terminal and run the script with the following command:
 #    ```shell
-#    python keep_to_obsidian.py --input path/to/google_keep_export -- output path/to/obsidian_export
+#    python keep_to_obsidian.py --input path/to/google_keep_export --output path/to/obsidian_export
 #    ```
 # 4. Markdown files will be saved in the Obsidian export folder.
 #
@@ -17,8 +17,7 @@
 # - The script will create the Obsidian export folder if it doesn't exist.
 # - The script will overwrite existing Markdown files with the same name.
 # - The script will decode HTML entities in the note content.
-# - The script will use 'Untitled' as the note title if the note doesn't have a title.
-# - The script will ignore notes that don't have any content.
+# - The script will use `Untitled` as the note title if the note doesn't have a title.
 # - The script will ignore notes that don't have a `textContent` field.
 #
 # /md

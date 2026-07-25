@@ -1,6 +1,25 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# md
+# ## git-use
+#
+# Point the current repository's `origin` remote at a GitHub SSH alias/account.
+#
+# Optionally set a local `user.email` for the repository at the same time.
+#
+# ### Usage
+#
+# ```sh
+# git-use --help
+# ```
+#
+# ### Arguments
+#
+# - `account` (required): GitHub account/SSH alias suffix used in `git@github-<account>:...`
+# - `email` (optional): Value to set for local `git config user.email`
+# /md
+
 usage() {
   cat <<'EOF'
 Point the current repo's origin at a GitHub SSH alias/account.

@@ -4,7 +4,7 @@ set -euo pipefail
 # md
 # ## gif-gen
 #
-# Generate a giv from a mpeg
+# Generate an animated GIF from a video file.
 #
 # ### Usage
 #
@@ -20,7 +20,7 @@ time='10'
 width='640'
 
 usage() {
-    echo "usage: gif_gen.sh [[[-f file ] [-o output]  [-s start=0]  [-t time=10] [-w width=640]] | [-h]]"
+    echo "usage: gif-gen [[[-f file] [-o output] [-s start=0] [-t time=10] [-w width=640]] | [-h]]"
 }
 
 while [ "$1" != "" ]; do

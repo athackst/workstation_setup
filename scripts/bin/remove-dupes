@@ -7,8 +7,8 @@ set -euo pipefail
 #
 # ## Usage
 #
-# ```
-# remove_dupes.sh <folder_a> <folder_b>
+# ```sh
+# remove-dupes [--refresh] <folder_a> <folder_b>
 # ```
 # /md
 
