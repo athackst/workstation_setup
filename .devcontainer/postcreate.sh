@@ -3,3 +3,5 @@ set -e
 
 setup/base.sh
 setup/gh.sh
+
+./install.sh
