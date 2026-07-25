@@ -2,14 +2,14 @@
 # md
 # ## Download a google drive file
 #
-# This python script downloads a file from google drive using teh file ID obtained from a shareable link.
+# This Python script downloads a file from Google Drive using the file ID obtained from a shareable link.
 #
 # ### Usage
 #
 # 1. Obtain the file ID from the shareable link of the file.
 # 2. Run the script with the following command:
 #    ```shell
-#    python google_drive.py file_id destination_file_path
+#    python get_google_drive_file.py file_id destination_file_path
 #    ```
 # 3. The file will be saved in the destination path.
 #
@@ -56,7 +56,7 @@ def download_file_from_google_drive(id, destination):
 if __name__ == "__main__":
     import sys
     if len(sys.argv) != 3:
-        print("Usage: python google_drive.py drive_file_id destination_file_path")
+        print("Usage: python get_google_drive_file.py drive_file_id destination_file_path")
     else:
         # TAKE ID FROM SHAREABLE LINK
         file_id = sys.argv[1]

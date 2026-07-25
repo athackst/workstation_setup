@@ -66,17 +66,20 @@ the link as broken.
   - `ci-bot update`
   - `ci-bot token add`
   - `ci-bot token list`
+  - `ci-bot token show`
   - `ci-bot token refresh`
   - `ci-bot repo list|add|remove|token`
   - `ci-bot org token`
 
 ## Git Account Switching
 
-`git-use` rewrites a repo remote to use one of your GitHub SSH host aliases during account migration.
+`git-use` rewrites the current repository's `origin` remote to use a GitHub SSH
+host alias. It can also set the repository-local `user.email`.
 
 Example:
 
 ```bash
 git-use athackst
 git-use althack
+git-use athackst 12345678+athackst@users.noreply.github.com
 ```

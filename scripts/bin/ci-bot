@@ -1,6 +1,29 @@
 #!/usr/bin/env python3
 """Manage CI template setup and token distribution for GitHub repositories."""
 
+# md
+# ## ci-bot
+#
+# Manage CI template setup and token distribution for GitHub repositories.
+#
+# `ci-bot` can apply/update Copier-based CI templates, store token files, refresh GitHub
+# secrets, and track repository settings in a local JSON registry.
+#
+# ### Usage
+#
+# ```sh
+# ci-bot --help
+# ```
+#
+# ### Commands
+#
+# - `setup`: Apply template, set secret, and register a repository
+# - `update`: Run template updates for a registered repository
+# - `token`: Add/list/show local CI token files and refresh GitHub secrets
+# - `repo`: List/add/remove repos and set per-repo secret tokens
+# - `org`: Set organization-level secrets for selected repositories
+# /md
+
 from __future__ import annotations
 
 import argparse
