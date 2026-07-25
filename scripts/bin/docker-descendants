@@ -1,14 +1,14 @@
 #!/usr/bin/python3
 
 # md
-# ## docker-decendents
+# ## docker-descendants
 #
-# Finds all decendents of a docker image.
+# Finds all descendants of a Docker image.
 #
 # ### Usage
 #
 # ```sh
-# docker_descendants <image_id> ...
+# docker-descendants <image_id>
 # ```
 # /md
 
