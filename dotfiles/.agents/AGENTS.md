@@ -1,5 +1,7 @@
 # Global Agent Preferences
 
+- Do not create Git commits unless the user explicitly requests a commit. Keep
+  requested changes in the working tree until then.
 - When a repository contains a `.devcontainer` directory, prefer running build, test, lint, and other project commands with `devcontainer exec` before falling back to host execution.
 
 ## Embedded documentation
