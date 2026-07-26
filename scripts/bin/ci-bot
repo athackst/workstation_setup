@@ -9,6 +9,9 @@
 # `ci-bot` can apply/update Copier-based CI templates, store token files, refresh GitHub
 # secrets, and track repository settings in a local JSON registry.
 #
+# The registry defaults to `~/.config/ci_bot/repos.json`; token files default to
+# `~/.config/tokens/<name>.token`.
+#
 # ### Usage
 #
 # ```sh
@@ -21,12 +24,18 @@
 # - `update`: Run template updates for a registered repository
 # - `token`: Add/list/show local CI token files and refresh GitHub secrets
 # - `repo`: List/add/remove/rename repos and set per-repo secret tokens
-#   - `ci-bot repo rename old-owner/repo new-owner/repo`: Move a registered repo
-#     between owner names while preserving its local settings
-# - `org`: Set organization-level secrets for selected repositories
+# - `org token`: Set an organization-level secret for selected repositories
 #
-# `repo rename` updates the local registry only. Reapply the repository secret
-# after an owner transfer with `ci-bot repo token`.
+# For example, after an owner transfer, update the local registry and reapply
+# the repository secret with:
+#
+# ```sh
+# ci-bot repo rename old-owner/repo new-owner/repo
+# ci-bot repo token --repo new-owner/repo --token-name ci_bot
+# ```
+#
+# `repo rename` updates the local registry only; it does not transfer the
+# GitHub repository or change its Actions secret.
 # /md
 
 from __future__ import annotations

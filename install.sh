@@ -11,7 +11,7 @@ set -euo pipefail
 # ## Quickstart
 #
 # ```sh
-# git clone https://www.github.com/athackst/workstation_setup
+# git clone https://github.com/athackst/workstation_setup.git
 # cd workstation_setup
 # ./install.sh
 # ```

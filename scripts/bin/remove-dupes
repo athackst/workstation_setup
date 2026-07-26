@@ -2,8 +2,8 @@
 set -euo pipefail
 
 # md
-# Removes duplicate files between two folders by comparing their checksums.
-# If a file exists in both Folder A and Folder B, the file in Folder B will be deleted.
+# Removes duplicate content between two folders by comparing file checksums.
+# When the same content exists in both folders, the copy in Folder B is deleted.
 #
 # ## Usage
 #
@@ -17,7 +17,7 @@ usage() {
 Usage: $0 [--refresh] <folder_a_path> <folder_b_path>
 
 Deduplicate files between two folders by checksum.
-If a file exists in both Folder A and Folder B, the file in Folder B is deleted.
+If the same content exists in both folders, the copy in Folder B is deleted.
 EOF
 }
 

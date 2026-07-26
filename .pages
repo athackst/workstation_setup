@@ -1,6 +1,8 @@
 nav:
     - workstation_setup: README.md
-    - Dotfiles: install
+    - Dotfiles:
+        - Installation: install
+        - Bash helpers and aliases: dotfiles
     - Scripts: scripts
     - Workspaces: workspaces
     - Services: services
