@@ -20,8 +20,13 @@
 # - `setup`: Apply template, set secret, and register a repository
 # - `update`: Run template updates for a registered repository
 # - `token`: Add/list/show local CI token files and refresh GitHub secrets
-# - `repo`: List/add/remove repos and set per-repo secret tokens
+# - `repo`: List/add/remove/rename repos and set per-repo secret tokens
+#   - `ci-bot repo rename old-owner/repo new-owner/repo`: Move a registered repo
+#     between owner names while preserving its local settings
 # - `org`: Set organization-level secrets for selected repositories
+#
+# `repo rename` updates the local registry only. Reapply the repository secret
+# after an owner transfer with `ci-bot repo token`.
 # /md
 
 from __future__ import annotations
@@ -335,6 +340,15 @@ class Registry:
     def remove_repo(self, repo: str) -> None:
         if self.data["repos"].pop(repo, None) is None:
             raise CIBotError(f"Repo '{repo}' is not registered.")
+
+    def rename_repo(self, old_repo: str, new_repo: str) -> None:
+        if old_repo == new_repo:
+            raise CIBotError("Source and destination repositories are the same.")
+        if self.repo(old_repo) is None:
+            raise CIBotError(f"Repo '{old_repo}' is not registered.")
+        if self.repo(new_repo) is not None:
+            raise CIBotError(f"Repo '{new_repo}' is already registered.")
+        self.data["repos"][new_repo] = self.data["repos"].pop(old_repo)
 
     def register_token_file(self, token_file: Path, name: str | None = None) -> None:
         token_path = str(token_file.expanduser())
@@ -1083,6 +1097,13 @@ class Commands:
         self.services.registry.save()
         echo(f"Removed {repo} from {self.services.registry.path}")
 
+    def repo_rename(self, args: argparse.Namespace) -> None:
+        split_repo(args.old_repo)
+        split_repo(args.new_repo)
+        self.services.registry.rename_repo(args.old_repo, args.new_repo)
+        self.services.registry.save()
+        echo(f"Renamed {args.old_repo} to {args.new_repo} in {self.services.registry.path}")
+
     def repo_token(self, args: argparse.Namespace) -> None:
         repo = self.repo_or_detect_or_prompt(args.repo)
         existing = self.services.registry.repo(repo)
@@ -1279,6 +1300,11 @@ def build_parser(commands: Commands) -> argparse.ArgumentParser:
     repo_remove.add_argument("--repo", help="Repository slug (owner/repo). Prompts if omitted.")
     repo_remove.set_defaults(func=commands.repo_remove)
 
+    repo_rename = repo_sub.add_parser("rename", help="Rename a repo in the local registry")
+    repo_rename.add_argument("old_repo", help="Existing repository slug (owner/repo).")
+    repo_rename.add_argument("new_repo", help="New repository slug (owner/repo).")
+    repo_rename.set_defaults(func=commands.repo_rename)
+
     repo_token = repo_sub.add_parser("token", help="Set a repo secret token without applying/updating templates")
     repo_token.add_argument("--repo", help="Repository slug (owner/repo). Auto-detected or prompts if omitted.")
     repo_token.add_argument("--secret-name", help="Override the secret name (defaults to registered value; prompts if omitted).")
@@ -1328,9 +1354,10 @@ def completion_items(words: list[str], cword: int) -> list[str]:
     token_show_options = ["--token-file"]
     token_refresh_options = ["--token-file", "--token"]
     repo_options = ["-h", "--help"]
-    repo_subcommands = ["list", "add", "remove", "token"]
+    repo_subcommands = ["list", "add", "remove", "rename", "token"]
     repo_add_options = ["--repo", "--source", "--template-ref", "--secret-name", "--secret-scope", "--org", "--path", "--token-name", "--token-file"]
     repo_remove_options = ["--repo"]
+    repo_rename_options = []
     repo_token_options = ["--repo", "--secret-name", "--secret-scope", "--org", "--token-name", "--token-file", "--token"]
     org_options = ["-h", "--help"]
     org_subcommands = ["token"]
@@ -1374,6 +1401,7 @@ def completion_items(words: list[str], cword: int) -> list[str]:
             "repo": repo_options,
             "repo_add": repo_add_options,
             "repo_remove": repo_remove_options,
+            "repo_rename": repo_rename_options,
             "repo_token": repo_token_options,
             "org": org_options,
             "org_token": org_token_options,

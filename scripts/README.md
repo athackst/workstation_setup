@@ -68,8 +68,19 @@ the link as broken.
   - `ci-bot token list`
   - `ci-bot token show`
   - `ci-bot token refresh`
-  - `ci-bot repo list|add|remove|token`
+  - `ci-bot repo list|add|remove|rename|token`
   - `ci-bot org token`
+
+To update a registered repository after it moves to another owner, preserve its
+local settings with:
+
+```bash
+ci-bot repo rename old-owner/repo new-owner/repo
+ci-bot repo token --repo new-owner/repo --token-name ci_bot
+```
+
+`repo rename` updates the local registry only; it does not transfer the GitHub
+repository or change its Actions secret.
 
 ## Git Account Switching
 
