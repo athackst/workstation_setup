@@ -21,7 +21,12 @@
 # - `update`: Run template updates for a registered repository
 # - `token`: Add/list/show local CI token files and refresh GitHub secrets
 # - `repo`: List/add/remove/rename repos and set per-repo secret tokens
+#   - `ci-bot repo rename old-owner/repo new-owner/repo`: Move a registered repo
+#     between owner names while preserving its local settings
 # - `org`: Set organization-level secrets for selected repositories
+#
+# `repo rename` updates the local registry only. Reapply the repository secret
+# after an owner transfer with `ci-bot repo token`.
 # /md
 
 from __future__ import annotations
