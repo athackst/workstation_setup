@@ -202,4 +202,4 @@ fi
 ###########################
 # Agent aliases
 ###########################
-alias commit-staged='codex exec --sandbox workspace-write --model gpt-5.4-mini -c '\''model_reasoning_effort="low"'\'' "Use the commit-staged skill to create a commit."'
+alias commit-staged='codex exec --sandbox workspace-write --model gpt-5.6-luna -c '\''model_reasoning_effort="low"'\'' "Use the commit-staged skill to create a commit."'
