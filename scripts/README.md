@@ -68,7 +68,7 @@ the link as broken.
   - `ci-bot token list`
   - `ci-bot token show`
   - `ci-bot token refresh`
-  - `ci-bot repo list|add|remove|token`
+  - `ci-bot repo list|add|remove|rename|token`
   - `ci-bot org token`
 
 ## Git Account Switching
