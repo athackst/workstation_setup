@@ -10,3 +10,5 @@ docs/
 
 # re-include directories named .codex
 !.codex/
+
+.venv/
