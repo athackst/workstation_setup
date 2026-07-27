@@ -9,6 +9,7 @@ Install pre-requirements:
 ```bash
 sudo apt install -y git
 git clone git@github.com:athackst/workstation_setup.git
+cd workstation_setup
 ```
 
 ## Set up dotfiles
@@ -19,10 +20,10 @@ Set up user [dotfiles](install.md)
 ./install.sh
 ```
 
-### Get the aliases in a container
+### Get the Git aliases in a container
 
 ```docker
-RUN wget -O /etc/profile.d/git_aliases.sh https://github.com/athackst/workstation_setup/raw/main/dotfiles/.aliases/git_aliases.sh \
+RUN wget -O /etc/profile.d/git_aliases.sh https://raw.githubusercontent.com/athackst/workstation_setup/main/dotfiles/.aliases/git_aliases.sh \
     && echo "source /etc/profile.d/git_aliases.sh" >> "/home/vscode/.bashrc"
 ```
 

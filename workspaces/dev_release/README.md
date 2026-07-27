@@ -4,9 +4,10 @@ This is an example of how to create a docker development workflow
 
 ## Quick start
 
-Run all the steps to get the code, build the development docker and build your code.
+From this directory, run all the steps to get the code, build the development image, build the code, and build the release image.
 
 ```bash
+cd /path/to/workstation_setup/workspaces/dev_release
 make
 ```
 
@@ -38,30 +39,26 @@ make example
 
 ### Set up your workspace
 
-Create a directory to put your source code.
-
-example:
+The workspace uses the ROS 2 Crystal example listed in `.rosinstall`. Create the source directory and fetch it with the setup target:
 
 ```bash
-mkdir -p src
+make setup
 ```
 
-Clone the repositories you would like to build from source
-
-example:
+To use different repositories, edit `.rosinstall` before running `make setup`.
 
 ```bash
-cd src
-git clone https://github.com/ros2/examples.git
+cat src/.rosinstall
 ```
 
 ### Build the dockerfile
 
-Edit the docker file to include all additional resources and build the development dockerfile.  This file is special because it is built with your user id/group/name.  This allows you to build within the docker workspace as yourself.
+Edit `develop.dockerfile` to include any additional resources, then build the development image. It is built with your user ID, group ID, and name so builds run as your host user.
 
 ```bash
-cd ~/workstation_setup/examples/ros2_crystal_example_dev
-docker build -f develop.dockerfile -t althack/ros2:crystal-example-dev  --build-arg UID=$(id -u) --build-arg GID=$(id -g) --build-arg UNAME=$(whoami) .
+docker build -f develop.dockerfile -t althack/ros2:crystal-example-dev \
+  --build-arg UID="$(id -u)" --build-arg GID="$(id -g)" \
+  --build-arg UNAME="$(whoami)" .
 ```
 
 ### Build inside the docker image
@@ -69,8 +66,8 @@ docker build -f develop.dockerfile -t althack/ros2:crystal-example-dev  --build-
 Run the docker image with the build function
 
 ```bash
-cd ~/ros2_ws
-docker run -v $HOME:$HOME althack/ros2:crystal-example-dev /build.sh `pwd`
+docker run -it -v "/home/$(whoami):/home/$(whoami)" \
+  althack/ros2:crystal-example-dev /build.sh "$(pwd)"
 ```
 
 ### Copy install targets into release docker image
@@ -78,5 +75,5 @@ docker run -v $HOME:$HOME althack/ros2:crystal-example-dev /build.sh `pwd`
 Build the release docker image that will copy the install targets into the image
 
 ```bash
-docker build -f release.dockerfile -t ros2:crystal-example-release .
+docker build -f release.dockerfile -t althack/ros2:crystal-example-release .
 ```

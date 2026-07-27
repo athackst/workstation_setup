@@ -15,17 +15,17 @@ You'll need the following packages installed:
 
 ## Usage
 
-Open this directory in vscode
+Open this directory in VS Code from the repository root:
 
 ```bash
-code workstation_setup/examples/ros_melodic_vscode
+code workspaces/ros_melodic_vscode
 ```
 
-It will ask you if you'd like to open using a container.  Hit yes!
+When prompted, choose **Dev Containers: Reopen in Container**.
 
 ### Set up your workspace
 
-The first thing you're going to want to do is set up your workspace.
+Set up the workspace from the directory containing `.rosinstall`:
 
 ```bash
 wstool up
@@ -33,7 +33,7 @@ wstool up
 
 This will download the beginner tutorial code into your workspace.
 
-See [ros beginner tutorials](https://wiki.ros.org/ROS/Tutorials/WritingPublisherSubscriber%28c%2B%2B%29).
+See the [ROS beginner tutorials](https://wiki.ros.org/ROS/Tutorials/WritingPublisherSubscriber%28c%2B%2B%29).
 
 ### Build
 

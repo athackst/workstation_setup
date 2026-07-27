@@ -2,7 +2,9 @@
 
 ## Overview
 
-The **Auto Commit** service monitors a Git repository for file changes and automatically commits them to its corresponding repository. This ensures that any modifications are consistently saved and pushed.
+The **Auto Commit** service monitors a Git repository for file changes, commits them after a quiet period, and pushes the commit to the repository's `origin` remote on the `main` branch.
+
+The service runs as the user who installs it, so that user must have permission to commit and push to the repository.
 
 ## Components
 
@@ -32,7 +34,7 @@ After running the installation script, the service will be **installed and activ
 To check whether the service is running, use:
 
 ```bash
-sudo systemctl status auto_commit_<repo_name>
+sudo systemctl status auto_commit_<repo_name>.service
 ```
 
 ## Uninstallation
@@ -45,15 +47,15 @@ To remove an installed service, **run the uninstall script**:
 
 - The script will **list installed services** and allow you to **select which one(s) to remove**.
 - It will **stop, disable, and remove the systemd service**.
-- The **log file will be deleted**, unless changed.
+- The **service log file will be deleted**.
 
 ### Manually Removing a Service
 
 If needed, you can manually stop and disable a service:
 
 ```bash
-sudo systemctl stop auto_commit_<repo_name>
-sudo systemctl disable auto_commit_<repo_name>
+sudo systemctl stop auto_commit_<repo_name>.service
+sudo systemctl disable auto_commit_<repo_name>.service
 sudo rm /etc/systemd/system/auto_commit_<repo_name>.service
 sudo systemctl daemon-reload
 ```
@@ -77,18 +79,18 @@ sudo systemctl daemon-reload
 - **To restart a service manually**:
 
   ```bash
-  sudo systemctl restart auto_commit_<repo_name>
+  sudo systemctl restart auto_commit_<repo_name>.service
   ```
 
 - **If the service is not working**:
 
   ```bash
-  sudo systemctl status auto_commit_<repo_name>
-  sudo journalctl -u auto_commit_<repo_name> --no-pager --lines=50
+  sudo systemctl status auto_commit_<repo_name>.service
+  sudo journalctl -u auto_commit_<repo_name>.service --no-pager --lines=50
   ```
 
 ## Notes
 
 - If multiple services are installed, they **run independently**.
 - The symbolic link ensures that **updates to `auto_commit.sh` are reflected in all running services**.
-- The service **automatically commits changes after a debounce period and enforces throttling**.
+- The service waits 60 seconds after the last detected change before committing, and also has a 5-minute throttle interval.

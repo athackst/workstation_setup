@@ -31,9 +31,9 @@ __Cons:__
 
 ## Docker development through VS Code ([dev_release_vscode](dev_release_vscode/README.md))
 
-This will use the VS Code docker container [plugin](https://code.visualstudio.com/docs/remote/containers) as the basis of development.
+This will use the VS Code [Dev Containers extension](https://code.visualstudio.com/docs/devcontainers/containers) as the basis of development.
 
-Under-the-hood, vscode is running a docker container and mounting your source code into it. This gives you all the tooling you need to build your code and can enable standardization of tooling including linters.  It also seamlessly integrates with IntelliSense (which is all sorts of awesome) and enables debugging through traditional debuggers ie gdb.
+Under the hood, VS Code runs a Docker container and mounts your source code into it. This gives you the tooling you need to build your code and can standardize tools including linters. It also integrates with IntelliSense and enables debugging through traditional debuggers such as GDB.
 
 It seems to follow the develop-release pattern with docker, where a develop container is created for compiling and a then the built assets can be copied into a deployment container.  It is also possible to support multi-stage, but development would be in a docker-in-docker configuration.
 
@@ -48,7 +48,7 @@ __Cons:__
 
 ## Bazel workspace with VS Code ([bazel](bazel/README.md))
 
-This will use a VS Code docker container [plugin](https://code.visualstudio.com/docs/remote/containers) as the basis of development for a bazel environment.
+This will use the VS Code [Dev Containers extension](https://code.visualstudio.com/docs/devcontainers/containers) as the basis of development for a Bazel environment.
 
 ## ROS melodic workspace ([ros_melodic_vscode](ros_melodic_vscode/README.md))
 

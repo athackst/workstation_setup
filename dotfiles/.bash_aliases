@@ -35,14 +35,14 @@ __bash_prompt() {
 __bash_prompt
 
 ########################
-# bazel shortcus
+# bazel shortcuts
 ########################
 if [ -f $HOME/.aliases/bazel_aliases.sh ]; then
   source $HOME/.aliases/bazel_aliases.sh
 fi
 
 ########################
-# git shortcus
+# git shortcuts
 ########################
 if [ -f $HOME/.aliases/git_aliases.sh ]; then
   source $HOME/.aliases/git_aliases.sh
@@ -52,7 +52,7 @@ fi
 # workspaces
 ########################
 
-# Returns the raw gh auth status displyaing the auth token.
+# Returns the raw gh auth status displaying the auth token.
 # Doc: https://cli.github.com/manual/gh_auth_status
 get_gh_auth_status() {
   gh auth status -t 2>&1
@@ -126,7 +126,7 @@ function mkdocs_athackst() {
 }
 
 ########################
-# Github
+# GitHub
 ########################
 if command -v gh &> /dev/null; then
   eval "$(gh completion -s bash)"

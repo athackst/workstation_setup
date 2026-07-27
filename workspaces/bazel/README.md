@@ -4,62 +4,48 @@ An example workspace with bazel.
 
 ## Installation
 
-You'll need the following packages installed:
+You'll need the following installed:
 
 - [vscode](https://code.visualstudio.com/)
 - [docker](https://docs.docker.com/get-docker/)
+- The [Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
 
 ## Usage
 
-Open this directory in vscode
+Open this directory in VS Code from the repository root:
 
 ```bash
-code workstation_setup/examples/bazel
+code workspaces/bazel
 ```
+
+When prompted, reopen the folder in the development container.
 
 ### Set up your workspace
 
-Run the get_code script, then open this folder in vscode.
+Run the `get_code.sh` script to fetch the example source.
 
 ```bash
 ./get_code.sh
 ```
 
-This will download the bazel example code repository.
+This clones the Bazel examples repository into `src/examples`.
 
-See [bazel tutorials](https://docs.bazel.build/versions/master/tutorial/cpp.html)
+See the [Bazel C++ tutorial](https://bazel.build/start/cpp).
 
 ### Build
 
 #### Tasks
 
-Go to Terminal->Run Build Task or type the shortcut command.
+Go to Terminal → Run Build Task or use the command palette.
 
 !!! Note
-    The working directory for a running task needs to be set to the directory containing a `WORKSPACE` file.
-
-    You can use vscode environment variables to set the worksapce
-
-    ```json
-        {
-            "label": "build stage1",
-            "type": "shell",
-            "options": {
-                "cwd": "${workspaceRoot}/examples/cpp-tutorial/stage1"
-            },
-            "command": "bazel build //main:hello-world",
-            "problemMatcher": [
-                "$gcc"
-            ],
-            "group": "build"
-        },
-    ```
+    The checked-in task definitions currently use `${workspaceRoot}/examples/...`, while `get_code.sh` checks the tutorial out under `src/examples`. Update each task's working directory to `${workspaceFolder}/src/examples/cpp-tutorial/stageN` before using the tasks.
 
 #### Command line
 
-Follow the instructions in the  [bazel tutorials](https://docs.bazel.build/versions/master/tutorial/cpp.html)
+Follow the [Bazel C++ tutorial](https://bazel.build/start/cpp).
 
 ```bash
-cd examples/cpp-tutorial/stage1
+cd src/examples/cpp-tutorial/stage1
 bazel build :all
 ```

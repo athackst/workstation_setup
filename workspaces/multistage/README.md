@@ -1,6 +1,6 @@
 # multistage
 
-This is an example of a multi-stage dockerfile to produce a target image with custom built targets.
+This is an example of a multi-stage Dockerfile that produces a runtime image with custom-built targets.
 
 ## Quick start
 
@@ -10,15 +10,24 @@ This is an example of a multi-stage dockerfile to produce a target image with cu
 make
 ```
 
-### Uninstall
+### Clean up
 
 ```bash
-make uninstall
+rm -rf src
+docker rmi althack/ros2:crystal-example
 ```
 
 ## Step-by-step
 
-### Setup your workspace
+### Set up your workspace
+
+Run the setup script directly, or let `make` invoke it as part of the build:
+
+```bash
+./get_code.sh
+```
+
+The equivalent manual commands are:
 
 ```bash
 mkdir -p src
