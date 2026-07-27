@@ -1,14 +1,13 @@
 ipch
-site/
 
 __pycache__
-docs/
-
-*.token
-# ignore everything named .codex (files + dirs)
-.codex
-
-# re-include directories named .codex
-!.codex/
-
 .venv/
+.env
+
+# Ignore any token files
+*.token
+
+# Ignore generated site files
+docs/
+_site/
+site/
