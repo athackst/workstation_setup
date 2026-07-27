@@ -99,7 +99,7 @@ function create_website_ws() {
 }
 
 ########################
-# mkdocs
+# Local doc site generation
 ########################
 function mkdocs_docker_serve() {
   local port=${1:-"8000"}
@@ -114,16 +114,11 @@ function mkdocs_docker() {
   docker run --rm -v ${PWD}:/docs -w /docs --user $(id -u):$(id -g) -it althack/mkdocs-simple-plugin:latest /bin/bash
 }
 
-function mkdocs_athackst() {
-  curr_dir=$PWD
-  mkdocs_dir="/tmp/athackst.mkdocs"
-  rm -fr ${mkdocs_dir}
-  git clone -b main --depth 1 --single-branch https://github.com/athackst/athackst.mkdocs.git ${mkdocs_dir} \
-    && rm -rf ${mkdocs_dir}/.git/
-  echo "Copying current directory ${curr_dir} to ${mkdocs_dir}"
-  rsync -av ./ ${mkdocs_dir}/
-  (cd ${mkdocs_dir} && mkdocs_docker_serve)
-}
+alias mkdocs-preset-serve='docker run --rm -it --pull always --user "$(id -u):$(id -g)" -p 8000:8000 -v "$PWD:/github/workspace" ghcr.io/athackst/ci:mkdocs-preset-main serve'
+alias mkdocs-preset-build='docker run --rm -it --pull always --user "$(id -u):$(id -g)" -p 8000:8000 -v "$PWD:/github/workspace" ghcr.io/athackst/ci:mkdocs-preset-main build'
+
+alias jekyll-preset-serve='docker run --rm -it --pull always --user "$(id -u):$(id -g)" -p 4000:4000 -v "$PWD:/github/workspace" ghcr.io/athackst/ci:jekyll-preset-main serve'
+alias jekyll-preset-build='docker run --rm -it --pull always --user "$(id -u):$(id -g)" -p 4000:4000 -v "$PWD:/github/workspace" ghcr.io/athackst/ci:jekyll-preset-main build'
 
 ########################
 # GitHub
