@@ -12,28 +12,29 @@ sudo apt-get install -y \
     code # or code-insiders
 
 
-# set up gitconfig
 read -p "Install vscode extensions? (y/N): " yn
 case $yn in
     [Yy]*)
-        # configure code with exensions
-        # Preview PDF files
-        code --install-extension analytic-signal.preview-pdf
-        # Use meld in diffs
-        code --install-extension danielroedl.meld-diff
-        # Git lens for code history and management
-        code --install-extension eamodio.gitlens
-        # Github pull request support
-        code --install-extension GitHub.vscode-pull-request-github
-        # Docker
-        code --install-extension ms-azuretools.vscode-docker
-        # Remote containers
-        code --install-extension ms-vscode-remote.vscode-remote-extensionpack
-        # Octave
-        code --install-extension paulosilva.vsc-octave-debugger
-        code --install-extension toasty-technologies.octave
-        # jupyter
-        code --install-extension ms-toolsai.jupyter
+        # Keep generally useful desktop extensions here. Language runtimes,
+        # debuggers, and other project-specific extensions belong in each
+        # repository's devcontainer configuration.
+        extensions=(
+            analytic-signal.preview-pdf
+            davidanson.vscode-markdownlint
+            eamodio.gitlens
+            esbenp.prettier-vscode
+            github.vscode-github-actions
+            github.vscode-pull-request-github
+            ms-vscode-remote.vscode-remote-extensionpack
+            openai.chatgpt
+            redhat.vscode-yaml
+            streetsidesoftware.code-spell-checker
+            yzhang.markdown-all-in-one
+        )
+
+        for extension in "${extensions[@]}"; do
+            code --install-extension "$extension"
+        done
         ;;
     [Nn]*) ;;
     *) ;;
@@ -44,7 +45,7 @@ read -p "Update user preferences? (y/N): " yn
 case $yn in
     [Yy]*)
         DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" > /dev/null 2>&1 && pwd)"
-        cp -r $DIR/../user/.config/Code/ $HOME/.config/Code/
+        cp -r "$DIR/../dotfiles/.config/Code/" "$HOME/.config/Code/"
         ;;
     [Nn]*) ;;
 
