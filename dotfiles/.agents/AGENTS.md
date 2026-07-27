@@ -20,3 +20,19 @@
 - A Markdown link is not necessarily broken merely because its `.md` target is
   absent from the repository. Before changing or removing such a link, check
   whether the target is generated from an embedded documentation block.
+
+## Personal todo list
+
+My todo list is at `~/.codex/todo.md`.
+
+When I say “add this to my todo list,” append a concise unchecked Markdown item there. Preserve existing items and do not mark anything complete unless I ask.
+
+When I ask to see or manage my todo list, read that file first.
+
+Example todo.md:
+
+```markdown
+# Todo
+
+- [ ] Example task
+```
