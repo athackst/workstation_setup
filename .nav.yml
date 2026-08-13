@@ -1,9 +1,10 @@
+flatten_single_child_sections: true
 nav:
     - workstation_setup: README.md
     - Dotfiles:
-        - Installation: install
+        - Installation: install.md
         - Bash helpers and aliases: dotfiles
     - Scripts: scripts
     - Workspaces: workspaces
     - Services: services
-    - License: LICENSE
+    - License: LICENSE.md
