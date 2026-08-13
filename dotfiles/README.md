@@ -34,15 +34,21 @@ The following helpers use the GitHub CLI:
 Both creation helpers require `gh auth status` to succeed and change into the
 newly cloned repository.
 
-### MkDocs helpers
+### Site gen helpers
 
 - `mkdocs_docker_serve [port]` serves the current directory from the
   `althack/mkdocs-simple-plugin:latest` container. The default port is `8000`.
 - `mkdocs_docker_build` builds the current directory with
   `mkdocs_simple_gen --build` as the current user.
 - `mkdocs_docker` opens an interactive shell in the MkDocs container.
-- `mkdocs_athackst` copies the current directory into a temporary clone of
-  `athackst/athackst.mkdocs` and serves it.
+- `mkdocs-preset-serve` serves the current directory with the managed MkDocs
+  preset on port `8000`.
+- `mkdocs-preset-build` builds the current directory with the managed MkDocs
+  preset.
+- `jekyll-preset-serve` serves the current directory with the managed Jekyll
+  preset on port `4000`.
+- `jekyll-preset-build` builds the current directory with the managed Jekyll
+  preset.
 
 ### GitHub completion
 

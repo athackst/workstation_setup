@@ -99,7 +99,7 @@ function create_website_ws() {
 }
 
 ########################
-# Local doc site generation
+# Local site generation
 ########################
 function mkdocs_docker_serve() {
   local port=${1:-"8000"}
@@ -114,11 +114,11 @@ function mkdocs_docker() {
   docker run --rm -v ${PWD}:/docs -w /docs --user $(id -u):$(id -g) -it althack/mkdocs-simple-plugin:latest /bin/bash
 }
 
-alias mkdocs-preset-serve='docker run --rm -it --pull always --user "$(id -u):$(id -g)" -p 8000:8000 -v "$PWD:/github/workspace" ghcr.io/athackst/ci:mkdocs-preset-main serve'
-alias mkdocs-preset-build='docker run --rm -it --pull always --user "$(id -u):$(id -g)" -p 8000:8000 -v "$PWD:/github/workspace" ghcr.io/athackst/ci:mkdocs-preset-main build'
+alias mkdocs-preset-serve='docker run --rm -it --pull always --user "$(id -u):$(id -g)" -p 8000:8000 -v "$PWD:/github/workspace" ghcr.io/athackst/ci/mkdocs-preset:main serve'
+alias mkdocs-preset-build='docker run --rm -it --pull always --user "$(id -u):$(id -g)" -v "$PWD:/github/workspace" ghcr.io/athackst/ci/mkdocs-preset:main build'
 
-alias jekyll-preset-serve='docker run --rm -it --pull always --user "$(id -u):$(id -g)" -p 4000:4000 -v "$PWD:/github/workspace" ghcr.io/athackst/ci:jekyll-preset-main serve'
-alias jekyll-preset-build='docker run --rm -it --pull always --user "$(id -u):$(id -g)" -p 4000:4000 -v "$PWD:/github/workspace" ghcr.io/athackst/ci:jekyll-preset-main build'
+alias jekyll-preset-serve='docker run --rm -it --pull always --user "$(id -u):$(id -g)" -p 4000:4000 -v "$PWD:/github/workspace" ghcr.io/athackst/ci/jekyll-preset:main serve'
+alias jekyll-preset-build='docker run --rm -it --pull always --user "$(id -u):$(id -g)" -v "$PWD:/github/workspace" ghcr.io/athackst/ci/jekyll-preset:main build'
 
 ########################
 # GitHub
