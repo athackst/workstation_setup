@@ -28,8 +28,6 @@ The following helpers use the GitHub CLI:
 - `get_gh_username [auth_status]` extracts the active username.
 - `create_ros2_ws <name>` creates and clones a private ROS 2 workspace from
   `athackst/vscode_ros2_workspace`.
-- `create_website_ws <name>` creates and clones a private website workspace
-  from `athackst/vscode_website_workspace`.
 
 Both creation helpers require `gh auth status` to succeed and change into the
 newly cloned repository.

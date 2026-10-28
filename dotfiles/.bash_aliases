@@ -82,22 +82,6 @@ function create_ros2_ws() {
   cd $1
 }
 
-function create_website_ws() {
-  if [ -z "$1" ]; then
-    echo "Error: Need to provide a name for the workspace!"
-    echo "Usage: create_website_ws <name>"
-    return
-  fi
-  if get_gh_auth_status; then
-    user=$(get_gh_username)
-  else
-    return
-  fi
-  gh repo create $1 --template athackst/vscode_website_workspace --private --include-all-branches
-  gh repo clone $user/$1
-  cd $1
-}
-
 ########################
 # Local site generation
 ########################
