@@ -60,44 +60,22 @@ def save_meta(data: dict[str, Any]) -> None:
     META.write_text(json.dumps(data, indent=2) + '\n')
 
 
-def branch_head(branch: str) -> str:
-    return run(['git', 'rev-parse', branch])
-
-
-def merge_base(a: str, b: str) -> str:
-    return run(['git', 'merge-base', a, b])
-
-
-def list_conflicted_files() -> list[str]:
-    out = run(['git', 'diff', '--name-only', '--diff-filter=U'], check=False)
-    return [line for line in out.splitlines() if line.strip()]
-
-
-def fetch_base(base: str) -> None:
-    remote, _, branch = base.partition('/')
-    if remote and branch:
-        run(['git', 'fetch', remote, branch], capture=False)
-
-
-def topological_chain(meta: dict[str, Any], start: str | None = None) -> list[str]:
+def topological_chains(meta: dict[str, Any]) -> list[list[str]]:
+    """Return every root-to-leaf chain in a managed PR forest."""
     branches = meta.get('branches', {})
-    if not branches:
-        return []
+    base = meta.get('base', 'origin/main')
+    roots = sorted(name for name, data in branches.items() if data.get('parent') == base)
+    chains: list[list[str]] = []
 
-    if start is None:
-        roots = [name for name, data in branches.items() if data.get('parent') == meta.get('base', 'origin/main')]
-        if len(roots) != 1:
-            roots = sorted(roots)
-        start = roots[0]
+    def walk(name: str, path: list[str]) -> None:
+        next_path = [*path, name]
+        children = branches.get(name, {}).get('children', [])
+        if not children:
+            chains.append(next_path)
+            return
+        for child in children:
+            walk(child, next_path)
 
-    ordered: list[str] = []
-    cur = start
-    seen: set[str] = set()
-    while cur:
-        if cur in seen:
-            raise RuntimeError(f'cycle detected at {cur}')
-        seen.add(cur)
-        ordered.append(cur)
-        children = branches.get(cur, {}).get('children', [])
-        cur = children[0] if children else None
-    return ordered
+    for root in roots:
+        walk(root, [])
+    return chains

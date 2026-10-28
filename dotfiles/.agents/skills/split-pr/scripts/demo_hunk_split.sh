@@ -76,14 +76,15 @@ from pathlib import Path
 first = Path(sys.argv[1]).read_text()
 second = Path(sys.argv[2]).read_text()
 plan = {
-    "version": 2,
+    "version": 3,
     "base": "main",
     "branches": [
         {
-            "name": "stack/001-first-hunk",
+            "name": "doc/example/first-hunk",
             "title": "Update first example line",
             "description": "Applies only the first hunk in docs/example.txt.",
-            "parents": ["main"],
+            "parent": "main",
+            "stack_key": "example",
             "include": [],
             "patches": [
                 {
@@ -95,10 +96,11 @@ plan = {
             "validation": ["git diff --check HEAD~1 HEAD"],
         },
         {
-            "name": "stack/002-second-hunk",
+            "name": "doc/example/second-hunk",
             "title": "Update second example line",
             "description": "Applies only the second hunk in docs/example.txt.",
-            "parents": ["stack/001-first-hunk"],
+            "parent": "doc/example/first-hunk",
+            "stack_key": "example",
             "include": [],
             "patches": [
                 {
@@ -118,9 +120,9 @@ git stash push -q -u -m "demo generated hunk patches" -- first-hunk.patch second
 python3 "$script_dir/materialize_stack.py" --plan .git/pr-stack/plan.json --base main >"$meta_out"
 git stash pop -q
 
-test "$(git rev-list --count main..stack/001-first-hunk)" = "1"
-test "$(git rev-list --count stack/001-first-hunk..stack/002-second-hunk)" = "1"
-git diff --quiet source stack/002-second-hunk
+test "$(git rev-list --count main..doc/example/first-hunk)" = "1"
+test "$(git rev-list --count doc/example/first-hunk..doc/example/second-hunk)" = "1"
+git diff --quiet source doc/example/second-hunk
 
 echo "demo repo: $repo"
 echo "plan: $repo/.git/pr-stack/plan.json"

@@ -1,12 +1,13 @@
 {
-  "version": 2,
+  "version": 3,
   "base": "main",
   "branches": [
     {
-      "name": "stack/001-first-hunk",
+      "name": "doc/example/first-hunk",
       "title": "Update first example line",
       "description": "Applies only the first hunk in docs/example.txt.",
-      "parents": ["main"],
+      "parent": "main",
+      "stack_key": "example",
       "include": [],
       "patches": [
         {
@@ -20,10 +21,11 @@
       ]
     },
     {
-      "name": "stack/002-second-hunk",
+      "name": "doc/example/second-hunk",
       "title": "Update second example line",
       "description": "Applies only the second hunk in docs/example.txt.",
-      "parents": ["stack/001-first-hunk"],
+      "parent": "doc/example/first-hunk",
+      "stack_key": "example",
       "include": [],
       "patches": [
         {
