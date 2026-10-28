@@ -56,9 +56,9 @@ def patch_label(entry: dict[str, Any], idx: int) -> str:
 
 
 def patch_text(entry: dict[str, Any], idx: int) -> str:
-    text = entry.get('patch', entry.get('diff'))
+    text = entry.get('patch')
     if not isinstance(text, str) or not text.strip():
-        raise PlanError(f'patch[{idx}] must contain a non-empty "patch" or "diff" string')
+        raise PlanError(f'patch[{idx}] must contain a non-empty "patch" string')
     return text if text.endswith('\n') else text + '\n'
 
 
@@ -88,17 +88,15 @@ def normalize_include(spec: dict[str, Any]) -> list[str]:
 
 
 def normalize_patches(spec: dict[str, Any]) -> list[dict[str, Any]]:
-    patches = spec.get('patches', spec.get('hunks', spec.get('patch_entries', [])))
+    patches = spec.get('patches', [])
     if patches is None:
         return []
     if not isinstance(patches, list):
         raise PlanError(f'{spec.get("name", "<unnamed>")}: patches must be a list')
     normalized: list[dict[str, Any]] = []
     for idx, entry in enumerate(patches):
-        if isinstance(entry, str):
-            entry = {'patch': entry}
-        elif not isinstance(entry, dict):
-            raise PlanError(f'{spec.get("name", "<unnamed>")}: patch[{idx}] must be an object or string')
+        if not isinstance(entry, dict):
+            raise PlanError(f'{spec.get("name", "<unnamed>")}: patch[{idx}] must be an object')
         patch_text(entry, idx)
         normalized.append(entry)
     return normalized
@@ -115,6 +113,17 @@ def validate_branch_spec(spec: dict[str, Any], idx: int) -> None:
     validation = spec.get('validation', [])
     if not isinstance(validation, list) or not any(isinstance(item, str) and item.strip() for item in validation):
         raise PlanError(f'{spec["name"]}: validation must contain at least one targeted command')
+    stack_key = spec.get('stack_key')
+    if stack_key is not None and (not isinstance(stack_key, str) or not stack_key.strip()):
+        raise PlanError(f'{spec["name"]}: stack_key must be a non-empty string or null')
+
+
+def branch_parent(spec: dict[str, Any]) -> str:
+    """Return the explicit parent required by the v3 plan schema."""
+    parent = spec.get('parent')
+    if not isinstance(parent, str) or not parent.strip():
+        raise PlanError(f'{spec["name"]}: parent must be a non-empty string')
+    return parent.strip()
 
 
 def commit_if_needed(title: str, description: str) -> None:
@@ -126,7 +135,7 @@ def commit_if_needed(title: str, description: str) -> None:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description='Materialize a stacked PR plan into branches.')
+    parser = argparse.ArgumentParser(description='Materialize a PR forest plan into branches.')
     parser.add_argument('--plan', required=True, help='Path to plan JSON')
     parser.add_argument('--base', default=None, help='Override base ref from the plan')
     args = parser.parse_args()
@@ -134,24 +143,35 @@ def main() -> int:
     ensure_git_repo()
     ensure_clean_worktree('materialize')
     plan = json.loads(Path(args.plan).read_text())
+    if plan.get('version') != 3:
+        raise PlanError('plan version must be 3')
     base = args.base or plan.get('base', 'origin/main')
     branches = plan.get('branches', [])
     if not branches:
         raise RuntimeError('plan has no branches')
     if not isinstance(branches, list):
         raise PlanError('plan "branches" must be a list')
+    names: set[str] = set()
+    resolved_parents: list[str] = []
     for idx, spec in enumerate(branches):
         if not isinstance(spec, dict):
             raise PlanError(f'branches[{idx}] must be an object')
         validate_branch_spec(spec, idx)
+        name = spec['name']
+        if name in names:
+            raise PlanError(f'duplicate branch name: {name}')
+        parent = branch_parent(spec)
+        if parent != base and parent not in names:
+            raise PlanError(f'{name}: parent {parent!r} must be the base or an earlier branch')
+        names.add(name)
+        resolved_parents.append(parent)
 
     meta = load_meta()
     meta['base'] = base
     meta['branches'] = {}
-    meta['plan_version'] = max(int(meta.get('plan_version', 1)), 2)
+    meta['plan_version'] = 3
 
     source_ref = run(['git', 'rev-parse', 'HEAD'])
-    parent_ref = base
     for idx, spec in enumerate(branches):
         name = spec['name']
         title = spec['title']
@@ -159,6 +179,8 @@ def main() -> int:
         include = normalize_include(spec)
         patches = normalize_patches(spec)
         validation = spec.get('validation', [])
+        stack_key = spec.get('stack_key')
+        parent_ref = resolved_parents[idx]
         applied_entries: list[str] = []
 
         run(['git', 'checkout', '-B', name, parent_ref], capture=False)
@@ -191,13 +213,15 @@ def main() -> int:
         head = run(['git', 'rev-parse', 'HEAD'])
         meta['branches'][name] = {
             'parent': parent_ref,
-            'children': [branches[idx + 1]['name']] if idx + 1 < len(branches) else [],
+            'children': [],
+            'stack_key': stack_key,
             'title': title,
             'head': head,
             'validation': validation,
             'entries': applied_entries,
         }
-        parent_ref = name
+        if parent_ref in meta['branches']:
+            meta['branches'][parent_ref]['children'].append(name)
 
     save_meta(meta)
     print(json.dumps(meta, indent=2))
