@@ -85,23 +85,49 @@ function create_ros2_ws() {
 ########################
 # Local site generation
 ########################
+function _docker_site_serve() (
+  local container_port=$1 host_port=$2
+  local container address
+  shift 2
+
+  container=$(docker run --rm -dit -p "${host_port}:${container_port}" "$@") || return
+  # Keep cleanup local to this subshell, including when attachment is interrupted.
+  trap 'docker stop "$container" >/dev/null 2>&1 || true' EXIT
+  trap 'exit 130' INT
+  trap 'exit 143' TERM
+
+  address=$(docker port "$container" "${container_port}/tcp") || return
+  address=${address%%$'\n'*}
+  printf '\nOpen: http://localhost:%s\n\n' "${address##*:}"
+  docker attach "$container"
+)
+
 function mkdocs_docker_serve() {
-  local port=${1:-"8000"}
-  docker run --rm -p ${port}:8000 -v ${PWD}:/docs -e INPUT_THEME=material -it althack/mkdocs-simple-plugin:latest
+  _docker_site_serve 8000 "${1:-}" \
+    -v "$PWD:/docs" -e INPUT_THEME=material \
+    althack/mkdocs-simple-plugin:latest
 }
 
-function mkdocs_docker_build() {
-  docker run --rm -v ${PWD}:/docs -w /docs --user $(id -u):$(id -g) -e INPUT_THEME=material althack/mkdocs-simple-plugin:latest mkdocs_simple_gen --build
+alias mkdocs-docker-build='docker run --rm -v ${PWD}:/docs -w /docs --user $(id -u):$(id -g) althack/mkdocs-simple-plugin:latest mkdocs_simple_gen --build'
+alias mkdocs-docker='docker run --rm -v ${PWD}:/docs -w /docs --user $(id -u):$(id -g) -it althack/mkdocs-simple-plugin:latest /bin/bash'
+
+# Remove previous aliases so this file can also be sourced in an existing shell.
+unalias mkdocs-preset-serve jekyll-preset-serve 2>/dev/null || true
+
+function mkdocs-preset-serve() {
+  _docker_site_serve 8000 "${1:-}" \
+    --pull always --user "$(id -u):$(id -g)" \
+    -v "$PWD:/github/workspace" ghcr.io/athackst/ci/mkdocs-preset:main serve
 }
 
-function mkdocs_docker() {
-  docker run --rm -v ${PWD}:/docs -w /docs --user $(id -u):$(id -g) -it althack/mkdocs-simple-plugin:latest /bin/bash
-}
-
-alias mkdocs-preset-serve='docker run --rm -it --pull always --user "$(id -u):$(id -g)" -p 8000:8000 -v "$PWD:/github/workspace" ghcr.io/athackst/ci/mkdocs-preset:main serve'
 alias mkdocs-preset-build='docker run --rm -it --pull always --user "$(id -u):$(id -g)" -v "$PWD:/github/workspace" ghcr.io/athackst/ci/mkdocs-preset:main build'
 
-alias jekyll-preset-serve='docker run --rm -it --pull always --user "$(id -u):$(id -g)" -p 4000:4000 -v "$PWD:/github/workspace" ghcr.io/athackst/ci/jekyll-preset:main serve'
+function jekyll-preset-serve() {
+  _docker_site_serve 4000 "${1:-}" \
+    --pull always --user "$(id -u):$(id -g)" \
+    -v "$PWD:/github/workspace" ghcr.io/athackst/ci/jekyll-preset:main serve
+}
+
 alias jekyll-preset-build='docker run --rm -it --pull always --user "$(id -u):$(id -g)" -v "$PWD:/github/workspace" ghcr.io/athackst/ci/jekyll-preset:main build'
 
 ########################

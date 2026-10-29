@@ -35,18 +35,24 @@ newly cloned repository.
 ### Site gen helpers
 
 - `mkdocs_docker_serve [port]` serves the current directory from the
-  `althack/mkdocs-simple-plugin:latest` container. The default port is `8000`.
-- `mkdocs_docker_build` builds the current directory with
+  `althack/mkdocs-simple-plugin:latest` container.
+- `mkdocs-docker-build` builds the current directory with
   `mkdocs_simple_gen --build` as the current user.
-- `mkdocs_docker` opens an interactive shell in the MkDocs container.
-- `mkdocs-preset-serve` serves the current directory with the managed MkDocs
-  preset on port `8000`.
+- `mkdocs-docker` opens an interactive shell in the MkDocs container.
+- `mkdocs-preset-serve [port]` serves the current directory with the managed
+  MkDocs preset.
 - `mkdocs-preset-build` builds the current directory with the managed MkDocs
   preset.
-- `jekyll-preset-serve` serves the current directory with the managed Jekyll
-  preset on port `4000`.
+- `jekyll-preset-serve [port]` serves the current directory with the managed
+  Jekyll preset.
 - `jekyll-preset-build` builds the current directory with the managed Jekyll
   preset.
+
+All three serve commands let Docker choose an available host port by default
+and print a clickable `http://localhost:<port>` URL before attaching to the
+server output. Pass a port to select it explicitly, for example
+`mkdocs-preset-serve 8001`. The URL may appear before the server is ready.
+Exiting or interrupting the attached session stops and removes the container.
 
 ### GitHub completion
 
