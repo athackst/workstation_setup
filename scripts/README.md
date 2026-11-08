@@ -6,8 +6,21 @@ This folder contains scripts and installable programs that I find useful.
 
 ```bash
 ├─ bin/ # installed into ~/.local/bin by install.sh
+├─ tests/ # Python command tests
 └─ utils/ # not installed; run from repo only
 ```
+
+## Tests
+
+Run the Python command tests from the repository root:
+
+```sh
+python3 -m unittest discover -s scripts/tests -v
+```
+
+The tests use Python's standard library; completion checks also require Bash.
+The `python-tests` job in `.github/workflows/test.yml` runs this command on
+pull requests and manual workflow runs. The `complete` job requires it to pass.
 
 ## Authoring conventions
 

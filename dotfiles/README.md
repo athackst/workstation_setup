@@ -85,10 +85,10 @@ completion definitions.
 ### Account-specific aliases
 
 - `rm` moves removed files to Trash through `trash -v`.
-- `ci-bot-athackst` runs `ci-bot setup` with
-  `~/.config/tokens/athackst_ci_bot.token`.
-- `ci-bot-althack` runs `ci-bot setup` with
-  `~/.config/tokens/althack_ci_bot.token`.
+- `ci-bot-athackst` runs `ci-bot repo add` with the
+  `athackst` token.
+- `ci-bot-althack` runs `ci-bot repo add` with the
+  `althack` token.
 - `git-use-athackst` and `git-use-althack` select the corresponding GitHub SSH
   account and set its repository-local email.
 

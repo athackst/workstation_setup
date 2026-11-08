@@ -192,8 +192,8 @@ function htmlproofer_action() {
 # Aliases
 ##########################
 alias rm='trash -v'
-alias ci-bot-athackst='ci-bot setup --token-file "$HOME/.config/tokens/athackst_ci_bot.token"'
-alias ci-bot-althack='ci-bot setup --token-file "$HOME/.config/tokens/althack_ci_bot.token"'
+alias ci-bot-athackst='ci-bot repo add --token-name athackst'
+alias ci-bot-althack='ci-bot repo add --token-name althack'
 alias git-use-althack='git-use althack 73732028+althack@users.noreply.github.com'
 alias git-use-athackst='git-use athackst 6098197+athackst@users.noreply.github.com'
 
