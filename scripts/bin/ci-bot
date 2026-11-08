@@ -1,52 +1,122 @@
 #!/usr/bin/env python3
-"""Manage CI template setup and token distribution for GitHub repositories."""
+"""Manage templates and tokens for repositories using the managed CI workflows."""
 
 # md
 # ## ci-bot
 #
-# Manage CI template setup and token distribution for GitHub repositories.
+# Manage CI templates and token distribution for repositories that opt into
+# the managed CI workflows.
 #
-# `ci-bot` can apply/update Copier-based CI templates, store token files, refresh GitHub
-# secrets, and track repository settings in a local JSON registry.
+# Each repository has one tracked CI token association. Assigning a different
+# token or secret scope replaces that association. Use this registry for the
+# tokens and repositories that participate in those workflows.
 #
-# The registry defaults to `~/.config/ci_bot/repos.json`; token files default to
-# `~/.config/tokens/<name>.token`.
+# Tokens are stored in `~/.config/tokens/TOKEN_NAME.token`. The registry is
+# `~/.config/ci_bot/repos.json`. The default Actions secret is `CI_BOT_TOKEN`;
+# use `--secret-name` to choose another name. Append `--help` to any command
+# for its options.
 #
-# ### Usage
+# In the examples, replace *`TOKEN_NAME`* with a saved token name,
+# *`OWNER/REPO`* with a GitHub repository, and *`ORG`* with an organization name.
+# Press Tab to complete saved token names.
 #
-# ```sh
-# ci-bot --help
-# ```
+# ### Setup
 #
-# ### Commands
-#
-# - `setup`: Apply template, set secret, and register a repository
-# - `update`: Run template updates for a registered repository
-# - `token`: Add/list/show local CI token files and refresh GitHub secrets
-# - `repo`: List/add/remove/rename repos and set per-repo secret tokens
-# - `org token`: Set an organization-level secret for selected repositories
-#
-# For example, after an owner transfer, update the local registry and reapply
-# the repository secret with:
+# From a repository checkout, apply the CI template, set a repository secret,
+# and register the repository:
 #
 # ```sh
-# ci-bot repo rename old-owner/repo new-owner/repo
-# ci-bot repo token --repo new-owner/repo --token-name ci_bot
+# ci-bot setup --repo OWNER/REPO --token-name TOKEN_NAME
 # ```
 #
-# `repo rename` updates the local registry only; it does not transfer the
-# GitHub repository or change its Actions secret.
+# Interactive setup lets you select or save a token. To apply the template
+# without setting a secret, use `--skip-secret`.
+#
+# ### Update
+#
+# Update a registered repository's CI template:
+#
+# ```sh
+# ci-bot update --repo OWNER/REPO
+# ```
+#
+# The command uses the saved checkout path and template version. Use `--path`
+# or `--template-ref` to override them.
+#
+# ### Tokens
+#
+# Save, list, display, rename, or refresh CI workflow tokens:
+#
+# ```sh
+# ci-bot token add TOKEN_NAME
+# ci-bot token list
+# ci-bot token show TOKEN_NAME
+# ci-bot token rename TOKEN_NAME NEW_NAME
+# ci-bot token refresh TOKEN_NAME
+# ```
+#
+# For a new token, `add` prompts for the value. `rename` moves the file to
+# `NEW_NAME.token` and updates its registered references; if you omit
+# *`NEW_NAME`*, it prompts for the new name. `refresh` prompts for a new value
+# and updates all registered GitHub secrets that use the token.
+#
+# Use `token add` or interactive setup to save a new token value locally.
+# Other selectors offer saved tokens only.
+#
+# ### Repositories
+#
+# Manage repository registrations and apply saved tokens to repository secrets:
+#
+# ```sh
+# ci-bot repo list
+# ci-bot repo add --repo OWNER/REPO --token-name TOKEN_NAME
+# ci-bot repo remove --repo OWNER/REPO
+# ci-bot repo rename OLD_OWNER/REPO NEW_OWNER/REPO
+# ci-bot repo token TOKEN_NAME --repo OWNER/REPO
+# ```
+#
+# `add`, `remove`, and `rename` change local registrations. After a repository
+# transfer, replace *`OLD_OWNER`* and *`NEW_OWNER`* with the old and new owners.
+# `token` applies the saved value to a repository secret without changing the
+# local token. These commands work with user-owned and organization-owned
+# repositories.
+#
+# ### Organizations
+#
+# Manage organization secret registrations and repository access:
+#
+# ```sh
+# ci-bot org list
+# ci-bot org add --org ORG --repos REPO_A,REPO_B --token-name TOKEN_NAME
+# ci-bot org remove --org ORG
+# ci-bot org rename OLD_ORG NEW_ORG
+# ci-bot org token TOKEN_NAME --org ORG --repos REPO_A,REPO_B
+# ```
+#
+# Replace *`REPO_A,REPO_B`* with comma-separated repository names in the
+# organization. `add` registers settings locally. `token` applies the saved
+# token to the GitHub secret and registers the settings in one step.
+# If you omit `--repos`, it reuses the registered list; supplying `--repos`
+# replaces that list. If multiple secrets are registered, use `--secret-name`
+# to select one.
+#
+# `remove` clears local organization secret tracking and token associations,
+# keeping repository checkout settings. To update registrations after an
+# organization rename, replace *`OLD_ORG`* and *`NEW_ORG`* with its old and new
+# names. `rename` updates local organization references and repository slugs.
 # /md
 
 from __future__ import annotations
 
 import argparse
+import copy
 import json
 import os
 import shlex
 import shutil
 import subprocess
 import sys
+import tempfile
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
@@ -64,7 +134,6 @@ DEFAULT_SECRET_NAME = "CI_BOT_TOKEN"
 DEFAULT_TOKEN_FILE = Path("~/.config/tokens/ci_bot.token").expanduser()
 DEFAULT_TOKEN_DIR = Path("~/.config/tokens").expanduser()
 DEFAULT_REGISTRY_PATH = Path("~/.config/ci_bot/repos.json").expanduser()
-SECRET_SCOPES = ("repo", "org")
 
 
 class CIBotError(Exception):
@@ -132,8 +201,6 @@ class SetupOptions:
     source: str
     template_ref: str
     secret_name: str
-    secret_scope: str
-    secret_org: str | None
     token_file: str | None
     skip_secret: bool
     copier_interactive: bool
@@ -151,6 +218,20 @@ def now_utc() -> str:
 
 def echo(msg: str = "", err: bool = False) -> None:
     print(msg, file=sys.stderr if err else sys.stdout, flush=True)
+
+
+def write_text_atomic(path: Path, contents: str) -> None:
+    """Replace a file only after its contents are written, with owner-only access."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temporary_path: Path | None = None
+    try:
+        with tempfile.NamedTemporaryFile(mode="w", encoding="utf-8", dir=path.parent, delete=False) as temporary:
+            temporary_path = Path(temporary.name)
+            temporary.write(contents)
+        temporary_path.replace(path)
+    finally:
+        if temporary_path is not None:
+            temporary_path.unlink(missing_ok=True)
 
 
 class Shell:
@@ -260,6 +341,22 @@ def token_file_for_name(name: str) -> Path:
     return DEFAULT_TOKEN_DIR / f"{normalize_token_name(name)}.token"
 
 
+def token_name_from_file(token_file: str | None) -> str | None:
+    if not token_file:
+        return None
+    path = Path(token_file).expanduser()
+    if path.parent == DEFAULT_TOKEN_DIR and path.suffix == ".token":
+        return path.stem
+    return None
+
+
+def require_token_name_from_file(token_file: Path) -> str:
+    name = token_name_from_file(str(token_file))
+    if name is None:
+        raise CIBotError(f"Token files must use {DEFAULT_TOKEN_DIR}/<name>.token: {token_file}")
+    return normalize_token_name(name)
+
+
 def split_repo(repo: str) -> tuple[str, str]:
     parts = repo.split("/", 1)
     if len(parts) != 2 or not parts[0] or not parts[1]:
@@ -267,11 +364,11 @@ def split_repo(repo: str) -> tuple[str, str]:
     return parts[0], parts[1]
 
 
-def normalize_secret_scope(scope: str | None) -> str:
-    normalized = (scope or "repo").strip().lower()
-    if normalized not in SECRET_SCOPES:
-        raise CIBotError(f"Secret scope must be one of: {', '.join(SECRET_SCOPES)}")
-    return normalized
+def normalize_org(org: str) -> str:
+    name = org.strip()
+    if not name or any(char.isspace() or char in "/\\" for char in name):
+        raise CIBotError("Organization must be a nonempty name without spaces or path separators.")
+    return name
 
 
 def repo_name_for_org(repo: str, org: str) -> str:
@@ -326,8 +423,7 @@ class Registry:
         return data
 
     def save(self) -> None:
-        self.path.parent.mkdir(parents=True, exist_ok=True)
-        self.path.write_text(json.dumps(self.data, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+        write_text_atomic(self.path, json.dumps(self.data, indent=2, sort_keys=True) + "\n")
 
     def repo(self, repo: str) -> RepoConfig | None:
         data = self.data["repos"].get(repo)
@@ -344,6 +440,8 @@ class Registry:
     def upsert_repo(self, config: RepoConfig) -> None:
         existing = self.data["repos"].get(config.repo, {})
         merged = {**existing, **config.to_patch()}
+        if config.secret_scope == "repo":
+            merged.pop("secret_org", None)
         self.data["repos"][config.repo] = merged
 
     def remove_repo(self, repo: str) -> None:
@@ -359,26 +457,90 @@ class Registry:
             raise CIBotError(f"Repo '{new_repo}' is already registered.")
         self.data["repos"][new_repo] = self.data["repos"].pop(old_repo)
 
-    def register_token_file(self, token_file: Path, name: str | None = None) -> None:
+    def register_token_file(self, token_file: Path) -> None:
+        require_token_name_from_file(token_file)
         token_path = str(token_file.expanduser())
-        existing = self.data.setdefault("tokens", {}).get(token_path, {})
-        token_data = {
-            **existing,
-            "path": token_path,
-            "added_at": existing.get("added_at", now_utc()),
-        }
-        if name:
-            token_data["name"] = normalize_token_name(name)
+        token_data = self.data.setdefault("tokens", {}).get(token_path, {}).copy()
+        token_data.pop("path", None)
+        token_data.pop("name", None)
+        token_data.setdefault("added_at", now_utc())
         self.data["tokens"][token_path] = token_data
 
     def token_label(self, token_file: str | None) -> str:
         if not token_file:
             return "-"
-        token_data = self.data.get("tokens", {}).get(token_file, {})
-        return token_data.get("name") or token_file
+        return token_name_from_file(token_file) or "-"
+
+    def token_files(self) -> dict[str, str]:
+        """Return known token paths and names, including missing files."""
+        tokens = self.data.get("tokens", {})
+        paths = set(tokens)
+        for section in ("repos", "org_secrets"):
+            paths.update(data["token_file"] for data in self.data.get(section, {}).values() if data.get("token_file"))
+        return {
+            path: name for path in sorted(paths)
+            if (name := token_name_from_file(path)) is not None
+        }
+
+    def require_token_file(self, token_file: Path) -> None:
+        if str(token_file) not in self.token_files():
+            raise CIBotError(f"Token file is not registered: {token_file}")
+        if not token_file.is_file():
+            raise CIBotError(f"Token file does not exist: {token_file}")
 
     def org_secret_key(self, org: str, secret_name: str) -> str:
         return f"{org}/{secret_name}"
+
+    def org_repos(self, org: str) -> dict[str, dict[str, Any]]:
+        return {
+            repo: data for repo, data in self.data["repos"].items()
+            if data.get("secret_scope") == "org" and (data.get("secret_org") or split_repo(repo)[0]) == org
+        }
+
+    def org_names(self) -> list[str]:
+        names = {key.split("/", 1)[0] for key in self.data.get("org_secrets", {})}
+        names.update(
+            data.get("secret_org") or split_repo(repo)[0]
+            for repo, data in self.data["repos"].items() if data.get("secret_scope") == "org"
+        )
+        return sorted(names)
+
+    def remove_org(self, org: str) -> None:
+        if org not in self.org_names():
+            raise CIBotError(f"Organization '{org}' is not registered.")
+        secrets = self.data.get("org_secrets", {})
+        for key in list(secrets):
+            if key.split("/", 1)[0] == org:
+                del secrets[key]
+        for data in self.org_repos(org).values():
+            for field in ("secret_scope", "secret_org", "token_file", "last_token_refresh_at"):
+                data.pop(field, None)
+
+    def rename_org(self, old_org: str, new_org: str) -> None:
+        if old_org == new_org:
+            raise CIBotError("Source and destination organizations are the same.")
+        if old_org not in self.org_names():
+            raise CIBotError(f"Organization '{old_org}' is not registered.")
+        if new_org in self.org_names():
+            raise CIBotError(f"Organization '{new_org}' is already registered.")
+        moves = {
+            repo: f"{new_org}/{split_repo(repo)[1]}"
+            for repo in self.data["repos"] if split_repo(repo)[0] == old_org
+        }
+        for destination in moves.values():
+            if destination in self.data["repos"]:
+                raise CIBotError(f"Repo '{destination}' is already registered.")
+        for data in self.org_repos(old_org).values():
+            data["secret_org"] = new_org
+        for old_repo, new_repo in moves.items():
+            self.data["repos"][new_repo] = self.data["repos"].pop(old_repo)
+        secrets = self.data.get("org_secrets", {})
+        for key in list(secrets):
+            org, secret_name = key.split("/", 1)
+            if org == old_org:
+                data = secrets.pop(key)
+                data["org"] = new_org
+                secrets[self.org_secret_key(new_org, secret_name)] = data
 
     def upsert_org_secret(
         self,
@@ -388,10 +550,12 @@ class Registry:
         repos: list[str],
         visibility: str = "selected",
         last_token_refresh_at: str | None = None,
+        *,
+        replace_repos: bool = False,
     ) -> None:
         key = self.org_secret_key(org, secret_name)
         existing = self.data.setdefault("org_secrets", {}).get(key, {})
-        merged_repos = sorted(set(existing.get("repos", [])) | set(repos))
+        merged_repos = sorted(set(repos) if replace_repos else set(existing.get("repos", [])) | set(repos))
         org_secret = {
             **existing,
             "org": org,
@@ -405,6 +569,48 @@ class Registry:
         if last_token_refresh_at is not None:
             org_secret["last_token_refresh_at"] = last_token_refresh_at
         self.data["org_secrets"][key] = org_secret
+
+    def register_org_secret(
+        self,
+        org: str,
+        secret_name: str,
+        token_file: str | None,
+        repos: list[str],
+        last_token_refresh_at: str | None = None,
+        *,
+        replace_repos: bool = False,
+    ) -> None:
+        if replace_repos:
+            for repo, data in self.org_repos(org).items():
+                if data.get("secret_name", DEFAULT_SECRET_NAME) == secret_name and split_repo(repo)[1] not in repos:
+                    for field in ("secret_scope", "secret_org", "token_file", "last_token_refresh_at"):
+                        data.pop(field, None)
+        self.upsert_org_secret(
+            org=org,
+            secret_name=secret_name,
+            token_file=token_file,
+            repos=repos,
+            last_token_refresh_at=last_token_refresh_at,
+            replace_repos=replace_repos,
+        )
+        registered_repos = self.data["org_secrets"][self.org_secret_key(org, secret_name)]["repos"]
+        for repo_name in registered_repos:
+            full_repo = f"{org}/{repo_name}"
+            existing = self.repo(full_repo)
+            self.upsert_repo(
+                RepoConfig(
+                    repo=full_repo,
+                    source=existing.source if existing else DEFAULT_SOURCE,
+                    template_ref=existing.template_ref if existing else DEFAULT_TEMPLATE_REF,
+                    secret_name=secret_name,
+                    secret_scope="org",
+                    secret_org=org,
+                    path=existing.path if existing else None,
+                    token_file=token_file if token_file is not None else (existing.token_file if existing else None),
+                    added_at=existing.added_at if existing else now_utc(),
+                    last_token_refresh_at=last_token_refresh_at,
+                )
+            )
 
     def repos_using_token(self, token_file: Path) -> list[RepoConfig]:
         token_path = str(token_file.expanduser())
@@ -581,14 +787,25 @@ class Copier:
 
 
 class TokenStore:
+    def read(self, token_file: Path) -> TokenResult:
+        require_token_name_from_file(token_file)
+        if not token_file.is_file():
+            raise CIBotError(f"Saved token file does not exist: {token_file}. Run 'ci-bot token add NAME' first.")
+        value = normalize_token(token_file.read_text(encoding="utf-8"))
+        if not value:
+            raise CIBotError(f"Saved token is empty: {token_file}")
+        return TokenResult(value, str(token_file))
+
     def write(self, token_file: Path, token_value: str) -> str:
-        token_file.parent.mkdir(parents=True, exist_ok=True)
-        token_file.write_text(f"{token_value}\n", encoding="utf-8")
+        require_token_name_from_file(token_file)
+        write_text_atomic(token_file, f"{token_value}\n")
         echo(f"Saved token to {token_file}")
         return str(token_file)
 
     def resolve(self, token_file: str | None = None) -> TokenResult:
         requested_path = Path(token_file).expanduser() if token_file else None
+        if requested_path is not None:
+            require_token_name_from_file(requested_path)
 
         if requested_path and requested_path.is_file():
             return TokenResult(normalize_token(requested_path.read_text(encoding="utf-8")), str(requested_path))
@@ -609,6 +826,7 @@ class TokenStore:
 
     def resolve_supplied(self, token: str | None, token_file: Path) -> TokenResult:
         token_file = token_file.expanduser()
+        require_token_name_from_file(token_file)
         if token is not None:
             token_value = normalize_token(token)
             if not token_value:
@@ -623,18 +841,43 @@ class TokenStore:
         token_value = Prompts.token()
         return TokenResult(token_value, self.write(token_file, token_value))
 
-    def resolve_repo_token_file(self, registry: Registry, name: str | None) -> str:
-        if name:
-            token_name = normalize_token_name(name)
-        elif sys.stdin.isatty():
-            token_name = normalize_token_name(Prompts.required("Token name"))
-        else:
-            raise CIBotError("Provide --token-name or --token-file.")
-        token_file = token_file_for_name(token_name)
-        if not token_file.is_file():
-            self.resolve_supplied(None, token_file)
-        registry.register_token_file(token_file, token_name)
-        return str(token_file)
+    def rename(self, registry: Registry, source: Path, new_name: str) -> Path:
+        """Move a token and persist its references, restoring the file on save failure."""
+        new_name = normalize_token_name(new_name)
+        destination = token_file_for_name(new_name)
+        registry.require_token_file(source)
+        source_key, destination_key = str(source), str(destination)
+        if source == destination:
+            raise CIBotError("Source and destination tokens are the same.")
+        if destination.exists() or destination.is_symlink():
+            raise CIBotError(f"Destination token file already exists: {destination}")
+        if destination_key in registry.token_files():
+            raise CIBotError(f"Destination token file is already registered: {destination}")
+
+        previous_data = copy.deepcopy(registry.data)
+        moved = False
+        try:
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            source.rename(destination)
+            moved = True
+            token_data = registry.data.setdefault("tokens", {}).pop(source_key, {})
+            registry.data["tokens"][destination_key] = token_data
+            registry.register_token_file(destination)
+            for section in ("repos", "org_secrets"):
+                for data in registry.data.get(section, {}).values():
+                    if data.get("token_file") == source_key:
+                        data["token_file"] = destination_key
+            registry.save()
+        except OSError as exc:
+            registry.data = previous_data
+            if moved:
+                try:
+                    destination.rename(source)
+                except OSError as rollback_exc:
+                    raise CIBotError(f"Rename failed: {exc}. Could not restore token file; it remains at {destination}: {rollback_exc}") from exc
+            raise CIBotError(f"Could not rename token: {exc}") from exc
+        return destination
+
 
 
 class Services:
@@ -672,66 +915,37 @@ class Commands:
             return Prompts.required("Repository (owner/repo)", self.services.github.maybe_detect_repo())
         return self.services.github.detect_repo()
 
-    def token_file_or_prompt(
-        self,
-        name: str | None,
-        token_file: str | None,
-        default_token_file: str | None = None,
-    ) -> Path:
-        if token_file:
-            return Path(token_file).expanduser()
+    def token_file_or_prompt(self, name: str | None, default_token_file: str | None = None) -> Path:
         if name:
-            return token_file_for_name(name)
-        if sys.stdin.isatty():
-            return self.prompt_for_token_file("Select token", default_token_file)
-        raise CIBotError("Provide a token name or --token-file.")
-
-    def token_name_default_from_file(self, token_file: str | None) -> str | None:
-        if not token_file:
-            return None
-        path = Path(token_file).expanduser()
-        if path.parent != DEFAULT_TOKEN_DIR or path.suffix != ".token":
-            return None
-        return path.stem
+            token_file = token_file_for_name(name)
+        elif sys.stdin.isatty():
+            token_file = self.prompt_for_token_file("Select token", default_token_file)
+        else:
+            raise CIBotError("Provide a saved token name.")
+        if not token_file.is_file():
+            raise CIBotError(f"Saved token file does not exist: {token_file}. Run 'ci-bot token add NAME' first.")
+        return token_file
 
     def registered_token_choices(self, default_token_file: str | None = None) -> list[tuple[str, Path]]:
-        tokens = self.services.registry.data.get("tokens", {})
-        repo_token_paths: set[str] = set()
-        for repo_name in sorted(self.services.registry.data["repos"].keys()):
-            config = self.services.registry.repo(repo_name)
-            if config and config.token_file:
-                repo_token_paths.add(str(Path(config.token_file).expanduser()))
-        for org_secret in self.services.registry.data.get("org_secrets", {}).values():
-            token_file = org_secret.get("token_file")
-            if token_file:
-                repo_token_paths.add(str(Path(token_file).expanduser()))
-
-        all_token_paths = sorted(set(tokens) | repo_token_paths)
+        tokens = self.services.registry.token_files()
+        if token_name_from_file(default_token_file) is not None:
+            default_key = str(Path(default_token_file).expanduser())
+            tokens.setdefault(default_key, token_name_from_file(default_key))
         choices: list[tuple[str, Path]] = []
-        seen: set[str] = set()
-        for token_path in all_token_paths:
+        for token_path, name in tokens.items():
             path = Path(token_path).expanduser()
-            token_data = tokens.get(str(path), {})
-            name = token_data.get("name") or self.token_name_default_from_file(str(path))
             label = f"{name} ({path})" if name else str(path)
             choices.append((label, path))
-            seen.add(str(path))
-
-        if default_token_file:
-            default_path = Path(default_token_file).expanduser()
-            default_key = str(default_path)
-            if default_key not in seen:
-                default_name = self.token_name_default_from_file(default_key)
-                label = f"{default_name} ({default_path})" if default_name else str(default_path)
-                choices.append((label, default_path))
-
         return choices
 
-    def prompt_for_token_file(self, prompt: str, default_token_file: str | None = None) -> Path:
+    def prompt_for_token_file(self, prompt: str, default_token_file: str | None = None, *, allow_create: bool = False) -> Path:
         default_path = Path(default_token_file).expanduser() if default_token_file else None
-        choices = self.registered_token_choices(default_token_file)
+        choices = [(label, path) for label, path in self.registered_token_choices(default_token_file) if path.is_file()]
+        if not choices and not allow_create:
+            raise CIBotError("No saved tokens are available. Run 'ci-bot token add NAME' first.")
         options = [label for label, _path in choices]
-        options.append("Add new token")
+        if allow_create:
+            options.append("Add new token")
 
         default_index: int | None = None
         if default_path is not None:
@@ -741,61 +955,28 @@ class Commands:
                     break
 
         selected = Prompts.choice(prompt, options, default_index)
-        if selected == len(choices):
-            return self.create_and_register_token(self.token_name_default_from_file(default_token_file))
+        if allow_create and selected == len(choices):
+            return self.create_and_register_token(token_name_from_file(default_token_file))
         return choices[selected][1]
 
     def create_and_register_token(self, default_name: str | None = None) -> Path:
-        token_name = normalize_token_name(Prompts.required("Token name", default_name))
-        token_file = token_file_for_name(token_name)
-        self.services.tokens.resolve_supplied(None, token_file)
-        self.services.registry.register_token_file(token_file, token_name)
+        name = Prompts.required("Token name", default_name)
+        return self.add_token(name)
+
+    def add_token(self, name: str, value: str | None = None) -> Path:
+        token_file = token_file_for_name(name)
+        self.services.tokens.resolve_supplied(value, token_file)
+        self.services.registry.register_token_file(token_file)
         self.services.registry.save()
         echo(f"Registered token file {token_file}")
         return token_file
 
     def register_selected_token_file(self, token_file: Path) -> str:
         expanded = token_file.expanduser()
-        self.services.registry.register_token_file(expanded, self.token_name_default_from_file(str(expanded)))
+        self.services.registry.register_token_file(expanded)
         return str(expanded)
 
-    def secret_scope_from_args(self, args: argparse.Namespace, existing: RepoConfig | None = None) -> str:
-        return normalize_secret_scope(getattr(args, "secret_scope", None) or (existing.secret_scope if existing else "repo"))
-
-    def secret_org_for_repo(self, repo: str, scope: str, requested_org: str | None, existing: RepoConfig | None = None) -> str | None:
-        if scope != "org":
-            return None
-        if requested_org:
-            return requested_org
-        if existing and existing.secret_org:
-            return existing.secret_org
-        owner, _name = split_repo(repo)
-        return owner
-
-    def set_secret_for_repo(
-        self,
-        repo: str,
-        secret_name: str,
-        scope: str,
-        org: str | None,
-        token: TokenResult,
-        timestamp: str,
-    ) -> None:
-        if scope == "org":
-            if not org:
-                raise CIBotError("Organization secret scope requires --org.")
-            org_repo = repo_name_for_org(repo, org)
-            echo(f"Using secret from {token.source_path or 'inline value'} to set org secret '{secret_name}' on {org} for {org_repo}")
-            self.services.github.set_org_secret(org, secret_name, token.value, [org_repo])
-            self.services.registry.upsert_org_secret(
-                org=org,
-                secret_name=secret_name,
-                token_file=token.source_path,
-                repos=[org_repo],
-                last_token_refresh_at=timestamp,
-            )
-            return
-
+    def set_repo_secret(self, repo: str, secret_name: str, token: TokenResult) -> None:
         echo(f"Using secret from {token.source_path or 'inline value'} to set repo secret '{secret_name}' on {repo}")
         self.services.github.set_secret(repo, secret_name, token.value)
 
@@ -828,24 +1009,20 @@ class Commands:
             if walkthrough and not skip_secret
             else DEFAULT_SECRET_NAME
         )
-        secret_scope = normalize_secret_scope(args.secret_scope)
-        secret_org = self.secret_org_for_repo(repo, secret_scope, args.org)
 
         copier_interactive = args.interactive
         if not copier_interactive and walkthrough:
             copier_interactive = Prompts.confirm("Prompt for Copier template values?", False)
 
-        token_file = str(Path(args.token_file).expanduser()) if args.token_file else None
+        token_file = str(token_file_for_name(args.token_name)) if args.token_name else None
         if not token_file and walkthrough and not skip_secret:
-            token_file = str(self.prompt_for_token_file("Select token", str(DEFAULT_TOKEN_FILE)))
+            token_file = str(self.prompt_for_token_file("Select token", str(DEFAULT_TOKEN_FILE), allow_create=True))
 
         return SetupOptions(
             repo=repo,
             source=source,
             template_ref=template_ref,
             secret_name=secret_name,
-            secret_scope=secret_scope,
-            secret_org=secret_org,
             token_file=token_file,
             skip_secret=skip_secret,
             copier_interactive=copier_interactive,
@@ -870,14 +1047,7 @@ class Commands:
             token = self.services.tokens.resolve(options.token_file)
             if token.source_path is not None:
                 self.register_selected_token_file(Path(token.source_path))
-            self.set_secret_for_repo(
-                options.repo,
-                options.secret_name,
-                options.secret_scope,
-                options.secret_org,
-                token,
-                now_utc(),
-            )
+            self.set_repo_secret(options.repo, options.secret_name, token)
         elif options.walkthrough:
             echo()
             echo("Step 2: Skip GitHub Actions secret")
@@ -894,8 +1064,7 @@ class Commands:
                 source=options.source,
                 template_ref=options.template_ref,
                 secret_name=options.secret_name,
-                secret_scope=options.secret_scope,
-                secret_org=options.secret_org,
+                secret_scope="repo",
                 path=options.cwd,
                 token_file=token.source_path if token else options.token_file,
                 added_at=existing.added_at if existing else timestamp,
@@ -926,30 +1095,16 @@ class Commands:
         echo(f"Updated registry for {repo}")
 
     def token_add(self, args: argparse.Namespace) -> None:
-        if args.token_file:
-            token_file = Path(args.token_file).expanduser()
-            if not token_file.is_file() or args.token is not None:
-                self.services.tokens.resolve_supplied(args.token, token_file)
-            self.services.registry.register_token_file(token_file, args.name)
-            self.services.registry.save()
-            echo(f"Registered token file {token_file}")
-            return
-
         if args.token is None and args.name is None and sys.stdin.isatty():
             self.create_and_register_token()
             return
 
-        name = args.name or self.prompt_or_error("Provide a token name or --token-file.", "Token name")
-        token_file = token_file_for_name(name)
-        self.services.tokens.resolve_supplied(args.token, token_file)
-        self.services.registry.register_token_file(token_file, name)
-        self.services.registry.save()
-        echo(f"Registered token file {token_file}")
+        name = args.name or self.prompt_or_error("Provide a token name.", "Token name")
+        self.add_token(name, args.token)
 
     def token_list(self, _args: argparse.Namespace) -> None:
         token_files: dict[str, list[str]] = {}
         org_token_files: dict[str, list[str]] = {}
-        registered_tokens = self.services.registry.data.get("tokens", {})
         for repo_name in sorted(self.services.registry.data["repos"].keys()):
             config = self.services.registry.repo(repo_name)
             if config and config.token_file:
@@ -959,37 +1114,43 @@ class Commands:
             if token_file:
                 org_token_files.setdefault(token_file, []).append(key)
 
-        all_token_paths = sorted(set(token_files) | set(org_token_files) | set(registered_tokens))
+        all_token_paths = self.services.registry.token_files()
         if not all_token_paths:
             echo("No token files registered.")
             return
         for token_file in all_token_paths:
             repos = token_files.get(token_file, [])
             org_secrets = org_token_files.get(token_file, [])
-            token_data = registered_tokens.get(token_file, {})
-            name = token_data.get("name")
+            name = token_name_from_file(token_file)
             name_part = f"name={name}\t" if name else ""
             echo(f"{token_file}\t{name_part}{len(repos)} repo(s)\t{len(org_secrets)} org secret(s)")
 
+    def token_rename(self, args: argparse.Namespace) -> None:
+        old_name = normalize_token_name(args.old_name)
+        registry = self.services.registry
+        source = token_file_for_name(old_name)
+        registry.require_token_file(source)
+        new_name = normalize_token_name(args.new_name if args.new_name is not None else Prompts.required("New token name"))
+        destination = self.services.tokens.rename(registry, source, new_name)
+        echo(f"Renamed token '{old_name}' to '{new_name}': {source} -> {destination}")
+
     def token_show(self, args: argparse.Namespace) -> None:
-        token_file = self.token_file_or_prompt(args.name, args.token_file)
-        if not token_file.is_file():
-            raise CIBotError(f"Token file does not exist: {token_file}")
+        token_file = self.token_file_or_prompt(args.name)
         echo(normalize_token(token_file.read_text(encoding="utf-8")))
 
     def token_refresh(self, args: argparse.Namespace) -> None:
-        token_file = self.token_file_or_prompt(args.name, args.token_file)
-        if args.token is not None:
-            token = self.services.tokens.resolve_supplied(args.token, token_file)
-        elif token_file.is_file() and sys.stdin.isatty() and Prompts.confirm("Save a new token value before refreshing repos?", False):
-            token_value = Prompts.token()
-            token = TokenResult(token_value, self.services.tokens.write(token_file, token_value))
-        else:
-            token = self.services.tokens.resolve_supplied(None, token_file)
+        if args.new_token is not None and args.token is not None:
+            raise CIBotError("Supply the new token as a positional argument or with --token, not both.")
+        token_file = self.token_file_or_prompt(args.name)
         repo_targets = self.services.registry.repos_using_token(token_file)
         org_targets = self.services.registry.org_secrets_using_token(token_file)
         if not repo_targets and not org_targets:
             raise CIBotError(f"No registered repos use token file: {token_file}")
+
+        token_value = args.new_token if args.new_token is not None else args.token
+        if token_value is None:
+            token_value = Prompts.token()
+        token = self.services.tokens.resolve_supplied(token_value, token_file)
 
         timestamp = now_utc()
         refreshed_org_keys: set[str] = set()
@@ -1062,19 +1223,11 @@ class Commands:
         source = args.source or (Prompts.text("Copier template source", DEFAULT_SOURCE) if sys.stdin.isatty() else DEFAULT_SOURCE)
         template_ref = args.template_ref or (Prompts.text("Copier template ref", DEFAULT_TEMPLATE_REF) if sys.stdin.isatty() else DEFAULT_TEMPLATE_REF)
         secret_name = args.secret_name or (Prompts.text("GitHub Actions secret name", DEFAULT_SECRET_NAME) if sys.stdin.isatty() else DEFAULT_SECRET_NAME)
-        secret_scope = self.secret_scope_from_args(args, existing)
-        secret_org = self.secret_org_for_repo(repo, secret_scope, args.org, existing)
         path = str(Path(args.path).expanduser()) if args.path else None
         if path is None and sys.stdin.isatty():
             path = Prompts.text("Local checkout path", existing.path if existing and existing.path else os.getcwd())
-        token_file = (
-            str(Path(args.token_file).expanduser())
-            if args.token_file
-            else self.services.tokens.resolve_repo_token_file(self.services.registry, args.token_name)
-            if args.token_name
-            else self.register_selected_token_file(
-                self.token_file_or_prompt(None, None, existing.token_file if existing else None)
-            )
+        token_file = self.register_selected_token_file(
+            self.token_file_or_prompt(args.token_name, existing.token_file if existing else None)
         )
         timestamp = now_utc()
         self.services.registry.upsert_repo(
@@ -1083,20 +1236,12 @@ class Commands:
                 source=source,
                 template_ref=template_ref,
                 secret_name=secret_name,
-                secret_scope=secret_scope,
-                secret_org=secret_org,
+                secret_scope="repo",
                 path=path if path is not None else (existing.path if existing else None),
                 token_file=token_file,
                 added_at=existing.added_at if existing else timestamp,
             )
         )
-        if secret_scope == "org" and token_file:
-            self.services.registry.upsert_org_secret(
-                org=secret_org or split_repo(repo)[0],
-                secret_name=secret_name,
-                token_file=token_file,
-                repos=[repo_name_for_org(repo, secret_org or split_repo(repo)[0])],
-            )
         self.services.registry.save()
         echo(f"Saved {repo} to {self.services.registry.path}")
 
@@ -1113,19 +1258,22 @@ class Commands:
         self.services.registry.save()
         echo(f"Renamed {args.old_repo} to {args.new_repo} in {self.services.registry.path}")
 
+    def resolve_secret_token(self, name: str | None, default_token_file: str | None = None) -> TokenResult:
+        if name:
+            selected = token_file_for_name(name)
+        elif sys.stdin.isatty():
+            selected = self.prompt_for_token_file("Select token", default_token_file, allow_create=False)
+        elif default_token_file:
+            selected = Path(default_token_file).expanduser()
+        else:
+            raise CIBotError("Provide a saved token name. Run 'ci-bot token add NAME' to create one.")
+        token = self.services.tokens.read(selected)
+        self.register_selected_token_file(selected)
+        return token
+
     def repo_token(self, args: argparse.Namespace) -> None:
         repo = self.repo_or_detect_or_prompt(args.repo)
         existing = self.services.registry.repo(repo)
-
-        selected_token_file: Path | None = None
-        if args.token_file:
-            selected_token_file = Path(args.token_file).expanduser()
-        elif args.token_name:
-            selected_token_file = token_file_for_name(args.token_name)
-        elif sys.stdin.isatty():
-            selected_token_file = self.prompt_for_token_file("Select token", existing.token_file if existing else None)
-        elif existing and existing.token_file:
-            selected_token_file = Path(existing.token_file).expanduser()
 
         secret_name_default = existing.secret_name if existing else DEFAULT_SECRET_NAME
         secret_name = args.secret_name or (
@@ -1133,29 +1281,18 @@ class Commands:
             if sys.stdin.isatty()
             else secret_name_default
         )
-        secret_scope = self.secret_scope_from_args(args, existing)
-        secret_org = self.secret_org_for_repo(repo, secret_scope, args.org, existing)
-
-        if selected_token_file:
-            self.register_selected_token_file(selected_token_file)
-            token = self.services.tokens.resolve_supplied(args.token, selected_token_file)
-        elif args.token is not None:
-            token_value = normalize_token(args.token)
-            if not token_value:
-                raise CIBotError("Token value is empty; refusing to continue.")
-            token = TokenResult(token_value, None)
-        else:
-            token = self.services.tokens.resolve(None)
+        token = self.resolve_secret_token(
+            args.name, existing.token_file if existing else None,
+        )
         timestamp = now_utc()
-        self.set_secret_for_repo(repo, secret_name, secret_scope, secret_org, token, timestamp)
+        self.set_repo_secret(repo, secret_name, token)
         self.services.registry.upsert_repo(
             RepoConfig(
                 repo=repo,
                 source=existing.source if existing else DEFAULT_SOURCE,
                 template_ref=existing.template_ref if existing else DEFAULT_TEMPLATE_REF,
                 secret_name=secret_name,
-                secret_scope=secret_scope,
-                secret_org=secret_org,
+                secret_scope="repo",
                 path=existing.path if existing else None,
                 token_file=token.source_path if token.source_path is not None else (existing.token_file if existing else None),
                 added_at=existing.added_at if existing else timestamp,
@@ -1165,62 +1302,83 @@ class Commands:
         self.services.registry.save()
         echo(f"Updated token for {repo}")
 
-    def org_token(self, args: argparse.Namespace) -> None:
-        org = args.org or self.prompt_or_error("Provide --org.", "Organization")
-        secret_name = args.secret_name or (
-            Prompts.text("GitHub Actions secret name", DEFAULT_SECRET_NAME)
-            if sys.stdin.isatty()
-            else DEFAULT_SECRET_NAME
-        )
+    def org_list(self, _args: argparse.Namespace) -> None:
+        registry = self.services.registry
+        names = registry.org_names()
+        if not names:
+            echo("No organizations registered.")
+            return
+        for org in names:
+            org_repos = registry.org_repos(org)
+            secrets = {
+                key.split("/", 1)[1]: data
+                for key, data in registry.data.get("org_secrets", {}).items()
+                if key.split("/", 1)[0] == org
+            }
+            repos = set(org_repos)
+            for data in secrets.values():
+                repos.update(f"{org}/{repo}" for repo in data.get("repos", []))
+            secret_names = sorted(set(secrets) | {data.get("secret_name", DEFAULT_SECRET_NAME) for data in org_repos.values()})
+            tokens = sorted({registry.token_label(data.get("token_file")) for data in [*secrets.values(), *org_repos.values()]})
+            echo(f"{org}\tsecrets={','.join(secret_names)}\ttokens={','.join(tokens)}\t{len(repos)} repo(s)")
+
+    def org_add(self, args: argparse.Namespace) -> None:
+        org = normalize_org(args.org or self.prompt_or_error("Provide --org.", "Organization"))
         repos = org_repo_names(args.repos or self.prompt_or_error("Provide --repos.", "Repos (comma separated)"), org)
+        registry = self.services.registry
+        existing = registry.data.get("org_secrets", {}).get(registry.org_secret_key(org, args.secret_name), {})
+        token_file = self.register_selected_token_file(
+            self.token_file_or_prompt(args.token_name, existing.get("token_file"))
+        )
+        registry.register_org_secret(org, args.secret_name, token_file, repos)
+        registry.save()
+        echo(f"Saved organization {org} to {registry.path}")
 
-        selected_token_file: Path | None = None
-        if args.token_file:
-            selected_token_file = Path(args.token_file).expanduser()
-        elif args.token_name:
-            selected_token_file = token_file_for_name(args.token_name)
-        elif sys.stdin.isatty():
-            existing = self.services.registry.data.get("org_secrets", {}).get(self.services.registry.org_secret_key(org, secret_name), {})
-            selected_token_file = self.prompt_for_token_file("Select token", existing.get("token_file"))
+    def org_remove(self, args: argparse.Namespace) -> None:
+        org = normalize_org(args.org or self.prompt_or_error("Provide --org.", "Organization"))
+        self.services.registry.remove_org(org)
+        self.services.registry.save()
+        echo(f"Removed organization {org} from {self.services.registry.path}")
 
-        if selected_token_file:
-            self.register_selected_token_file(selected_token_file)
-            token = self.services.tokens.resolve_supplied(args.token, selected_token_file)
-        elif args.token is not None:
-            token_value = normalize_token(args.token)
-            if not token_value:
-                raise CIBotError("Token value is empty; refusing to continue.")
-            token = TokenResult(token_value, None)
+    def org_rename(self, args: argparse.Namespace) -> None:
+        old_org = normalize_org(args.old_org)
+        new_org = normalize_org(args.new_org)
+        self.services.registry.rename_org(old_org, new_org)
+        self.services.registry.save()
+        echo(f"Renamed organization {old_org} to {new_org} in {self.services.registry.path}")
+
+    def org_token(self, args: argparse.Namespace) -> None:
+        org = normalize_org(args.org or self.prompt_or_error("Provide --org.", "Organization"))
+        registry = self.services.registry
+        registered_secrets = {
+            key.split("/", 1)[1]: data for key, data in registry.data.get("org_secrets", {}).items()
+            if key.split("/", 1)[0] == org
+        }
+        if args.secret_name:
+            secret_name = args.secret_name
+        elif len(registered_secrets) == 1:
+            secret_name = next(iter(registered_secrets))
+        elif len(registered_secrets) > 1:
+            raise CIBotError(f"Organization '{org}' has multiple registered secrets; provide --secret-name.")
         else:
-            token = self.services.tokens.resolve(None)
+            secret_name = DEFAULT_SECRET_NAME
+        existing_secret = registered_secrets.get(secret_name, {})
+        if args.repos is not None:
+            repos = org_repo_names(args.repos, org)
+        elif existing_secret.get("repos"):
+            repos = org_repo_names(",".join(existing_secret["repos"]), org)
+        else:
+            repos = org_repo_names(self.prompt_or_error(
+                f"No repositories registered for {org}/{secret_name}; provide --repos or run 'ci-bot org add'.",
+                "Repos (comma separated)",
+            ), org)
+
+        token = self.resolve_secret_token(args.name, existing_secret.get("token_file"))
 
         timestamp = now_utc()
         echo(f"Using secret from {token.source_path or 'inline value'} to set org secret '{secret_name}' on {org} for {len(repos)} repo(s)")
         self.services.github.set_org_secret(org, secret_name, token.value, repos)
-        self.services.registry.upsert_org_secret(
-            org=org,
-            secret_name=secret_name,
-            token_file=token.source_path,
-            repos=repos,
-            last_token_refresh_at=timestamp,
-        )
-        for repo_name in repos:
-            full_repo = f"{org}/{repo_name}"
-            existing = self.services.registry.repo(full_repo)
-            self.services.registry.upsert_repo(
-                RepoConfig(
-                    repo=full_repo,
-                    source=existing.source if existing else DEFAULT_SOURCE,
-                    template_ref=existing.template_ref if existing else DEFAULT_TEMPLATE_REF,
-                    secret_name=secret_name,
-                    secret_scope="org",
-                    secret_org=org,
-                    path=existing.path if existing else None,
-                    token_file=token.source_path if token.source_path is not None else (existing.token_file if existing else None),
-                    added_at=existing.added_at if existing else timestamp,
-                    last_token_refresh_at=timestamp,
-                )
-            )
+        self.services.registry.register_org_secret(org, secret_name, token.source_path, repos, timestamp, replace_repos=True)
         self.services.registry.save()
         echo(f"Updated org secret {org}/{secret_name}")
 
@@ -1232,12 +1390,7 @@ class Commands:
 def build_parser(commands: Commands) -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="ci-bot",
-        description="Manage CI template setup and token refreshes for repositories.",
-    )
-    parser.add_argument(
-        "--registry-file",
-        default=str(DEFAULT_REGISTRY_PATH),
-        help=f"Path to the ci-bot JSON registry. (default: {DEFAULT_REGISTRY_PATH})",
+        description="Manage templates and tokens for repositories using the managed CI workflows.",
     )
     subparsers = parser.add_subparsers(dest="command", required=True)
 
@@ -1246,9 +1399,7 @@ def build_parser(commands: Commands) -> argparse.ArgumentParser:
     setup.add_argument("--source", help=f"Copier template source. (default: {DEFAULT_SOURCE})")
     setup.add_argument("--template-ref", help=f"Copier template ref. (default: {DEFAULT_TEMPLATE_REF})")
     setup.add_argument("--secret-name", help=f"GitHub Actions secret name. (default: {DEFAULT_SECRET_NAME})")
-    setup.add_argument("--secret-scope", choices=SECRET_SCOPES, default="repo", help="Secret target scope. (default: repo)")
-    setup.add_argument("--org", help="Organization for --secret-scope org. Defaults to the repo owner.")
-    setup.add_argument("--token-file", help="Read token value from file.")
+    setup.add_argument("--token-name", help="Token name in ~/.config/tokens/<name>.token.")
     setup.add_argument("--skip-secret", action="store_true", help="Skip setting the GitHub secret.")
     setup.add_argument("-i", "--interactive", action="store_true", help="Prompt for Copier template values instead of using defaults.")
     setup.set_defaults(func=commands.setup)
@@ -1264,27 +1415,30 @@ def build_parser(commands: Commands) -> argparse.ArgumentParser:
     token_sub = token.add_subparsers(dest="token_command", required=True)
 
     token_add = token_sub.add_parser("add", help="Add a CI token file to the local token list")
-    token_add.add_argument("name", nargs="?", help="Token name. Uses ~/.config/tokens/<name>.token when --token-file is omitted.")
-    token_add.add_argument("--token-file", help="Token file to register or write.")
+    token_add.add_argument("name", nargs="?", help="Token name in ~/.config/tokens/<name>.token.")
     token_add.add_argument("--token", help="Token value to save. Prompts if omitted when writing a token file.")
     token_add.set_defaults(func=commands.token_add)
 
-    token_list = token_sub.add_parser("list", help="List token files referenced by registered repos")
+    token_list = token_sub.add_parser("list", help="List registered token files and repo/org secret references")
     token_list.set_defaults(func=commands.token_list)
 
     token_show = token_sub.add_parser("show", help="Print a local CI token")
-    token_show.add_argument("name", nargs="?", help="Token name. Uses ~/.config/tokens/<name>.token when --token-file is omitted. Prompts if needed.")
-    token_show.add_argument("--token-file", help="Token file to print.")
+    token_show.add_argument("name", nargs="?", help="Token name in ~/.config/tokens/<name>.token. Prompts to select a token if omitted.")
     token_show.set_defaults(func=commands.token_show)
+
+    token_rename = token_sub.add_parser("rename", help="Rename a local token file and update all registry references")
+    token_rename.add_argument("old_name", help="Existing token name.")
+    token_rename.add_argument("new_name", nargs="?", help="New token name. Prompts if omitted.")
+    token_rename.set_defaults(func=commands.token_rename)
 
     token_refresh = token_sub.add_parser(
         "refresh",
         help="Update GitHub Actions secrets for repos using a token file",
-        description="Updates GitHub Actions secrets for every registered repo that uses a given token file.",
+        description="Saves a supplied or prompted new token value locally and updates GitHub Actions secrets for every registered repo or organization secret using it.",
     )
-    token_refresh.add_argument("name", nargs="?", help="Token name. Uses ~/.config/tokens/<name>.token when --token-file is omitted. Prompts if needed.")
-    token_refresh.add_argument("--token-file", help="Token file to save and refresh from.")
-    token_refresh.add_argument("--token", help="Token value to save before refreshing repos. Prompts if omitted.")
+    token_refresh.add_argument("name", nargs="?", help="Token name in ~/.config/tokens/<name>.token. Prompts to select a token if omitted.")
+    token_refresh.add_argument("new_token", nargs="?", help="New token value. Prompts if neither this nor --token is supplied.")
+    token_refresh.add_argument("--token", help="Alternative to the positional new token value. Prompts if neither is supplied.")
     token_refresh.set_defaults(func=commands.token_refresh)
 
     repo = subparsers.add_parser("repo", help="Manage the local repo registry")
@@ -1298,11 +1452,8 @@ def build_parser(commands: Commands) -> argparse.ArgumentParser:
     repo_add.add_argument("--source", help=f"Copier template source. (default: {DEFAULT_SOURCE})")
     repo_add.add_argument("--template-ref", help=f"Copier template ref. (default: {DEFAULT_TEMPLATE_REF})")
     repo_add.add_argument("--secret-name", help=f"GitHub Actions secret name. (default: {DEFAULT_SECRET_NAME})")
-    repo_add.add_argument("--secret-scope", choices=SECRET_SCOPES, help="Secret target scope. (default: repo, or existing value)")
-    repo_add.add_argument("--org", help="Organization for --secret-scope org. Defaults to the repo owner.")
     repo_add.add_argument("--path", help="Optional local checkout path. Prompts if omitted.")
-    repo_add.add_argument("--token-name", help="Token name. Uses ~/.config/tokens/<name>.token when --token-file is omitted.")
-    repo_add.add_argument("--token-file", help="Optional token file for this repo. Prompts for --token-name behavior if omitted.")
+    repo_add.add_argument("--token-name", help="Token name in ~/.config/tokens/<name>.token.")
     repo_add.set_defaults(func=commands.repo_add)
 
     repo_remove = repo_sub.add_parser("remove", help="Remove a repo from the local registry")
@@ -1315,28 +1466,49 @@ def build_parser(commands: Commands) -> argparse.ArgumentParser:
     repo_rename.set_defaults(func=commands.repo_rename)
 
     repo_token = repo_sub.add_parser("token", help="Set a repo secret token without applying/updating templates")
+    repo_token.add_argument("name", nargs="?", help="Saved token name. Prompts to select an existing token if omitted.")
     repo_token.add_argument("--repo", help="Repository slug (owner/repo). Auto-detected or prompts if omitted.")
     repo_token.add_argument("--secret-name", help="Override the secret name (defaults to registered value; prompts if omitted).")
-    repo_token.add_argument("--secret-scope", choices=SECRET_SCOPES, help="Secret target scope. (default: repo, or existing value)")
-    repo_token.add_argument("--org", help="Organization for --secret-scope org. Defaults to the repo owner.")
-    repo_token.add_argument("--token-name", help="Token name. Uses ~/.config/tokens/<name>.token when --token-file is omitted.")
-    repo_token.add_argument("--token-file", help="Read/save token using this file.")
-    repo_token.add_argument("--token", help="Token value to save/use. Prompts if omitted.")
     repo_token.set_defaults(func=commands.repo_token)
 
     org = subparsers.add_parser("org", help="Manage organization-level secrets")
     org_sub = org.add_subparsers(dest="org_command", required=True)
 
+    org_list = org_sub.add_parser("list", help="List organizations in the local registry")
+    org_list.set_defaults(func=commands.org_list)
+
+    org_add = org_sub.add_parser("add", help="Register an organization secret and its repositories locally")
+    org_add.add_argument("--org", help="GitHub organization. Prompts if omitted.")
+    org_add.add_argument("--repos", help="Comma-separated repo names or owner/repo slugs. Prompts if omitted.")
+    org_add.add_argument("--secret-name", default=DEFAULT_SECRET_NAME, help=f"GitHub Actions secret name. (default: {DEFAULT_SECRET_NAME})")
+    org_add.add_argument("--token-name", help="Token name in ~/.config/tokens/<name>.token.")
+    org_add.set_defaults(func=commands.org_add)
+
+    org_remove = org_sub.add_parser("remove", help="Remove local organization secret tracking and repo associations")
+    org_remove.add_argument("--org", help="Registered organization. Prompts if omitted.")
+    org_remove.set_defaults(func=commands.org_remove)
+
+    org_rename = org_sub.add_parser("rename", help="Rename an organization and its repository references locally")
+    org_rename.add_argument("old_org", help="Existing organization name.")
+    org_rename.add_argument("new_org", help="New organization name.")
+    org_rename.set_defaults(func=commands.org_rename)
+
     org_token = org_sub.add_parser("token", help="Set an organization secret for selected repos")
+    org_token.add_argument("name", nargs="?", help="Saved token name. Prompts to select an existing token if omitted.")
     org_token.add_argument("--org", required=True, help="GitHub organization.")
-    org_token.add_argument("--repos", required=True, help="Comma-separated repo names or owner/repo slugs that can access the secret.")
-    org_token.add_argument("--secret-name", help=f"GitHub Actions secret name. (default: {DEFAULT_SECRET_NAME})")
-    org_token.add_argument("--token-name", help="Token name. Uses ~/.config/tokens/<name>.token when --token-file is omitted.")
-    org_token.add_argument("--token-file", help="Read/save token using this file.")
-    org_token.add_argument("--token", help="Token value to save/use. Prompts if omitted.")
+    org_token.add_argument("--repos", help="Override the registered repository list with comma-separated repo names or owner/repo slugs.")
+    org_token.add_argument("--secret-name", help=f"Registered secret name. Required if multiple secrets exist; defaults to the only registered secret or {DEFAULT_SECRET_NAME}.")
     org_token.set_defaults(func=commands.org_token)
 
     return parser
+
+
+def token_names_for_completion(*, existing_only: bool = False) -> list[str]:
+    try:
+        registry = Registry(DEFAULT_REGISTRY_PATH)
+    except (CIBotError, OSError):
+        return []
+    return sorted({name for path, name in registry.token_files().items() if not existing_only or Path(path).is_file()})
 
 
 def completion_items(words: list[str], cword: int) -> list[str]:
@@ -1345,59 +1517,57 @@ def completion_items(words: list[str], cword: int) -> list[str]:
 
     current = words[cword] if cword < len(words) else ""
     prev = words[cword - 1] if cword > 0 else ""
-    needs_path_value = {"--registry-file", "--token-file", "--path"}
-    needs_scalar_value = {"--repo", "--source", "--template-ref", "--secret-name", "--secret-scope", "--org", "--repos", "--token", "--token-name"}
-
-    if prev in needs_path_value:
-        return ["__FILE__"]
-    if prev in needs_scalar_value:
-        return []
+    needs_value = {"--path", "--repo", "--source", "--template-ref", "--secret-name", "--org", "--repos", "--token", "--token-name"}
 
     root_commands = ["setup", "update", "token", "repo", "org"]
-    root_options = ["-h", "--help", "--registry-file"]
-    setup_options = ["--repo", "--source", "--template-ref", "--secret-name", "--secret-scope", "--org", "--token-file", "--skip-secret", "-i", "--interactive"]
+    root_options = ["-h", "--help"]
+    setup_options = ["--repo", "--source", "--template-ref", "--secret-name", "--token-name", "--skip-secret", "-i", "--interactive"]
     update_options = ["--repo", "--path", "--template-ref", "-i", "--interactive"]
     token_options = ["-h", "--help"]
-    token_subcommands = ["add", "list", "show", "refresh"]
-    token_add_options = ["--token-file", "--token"]
-    token_show_options = ["--token-file"]
-    token_refresh_options = ["--token-file", "--token"]
+    token_subcommands = ["add", "list", "show", "rename", "refresh"]
+    token_add_options = ["--token"]
+    token_show_options = []
+    token_rename_options = []
+    token_refresh_options = ["--token"]
     repo_options = ["-h", "--help"]
     repo_subcommands = ["list", "add", "remove", "rename", "token"]
-    repo_add_options = ["--repo", "--source", "--template-ref", "--secret-name", "--secret-scope", "--org", "--path", "--token-name", "--token-file"]
+    repo_add_options = ["--repo", "--source", "--template-ref", "--secret-name", "--path", "--token-name"]
     repo_remove_options = ["--repo"]
     repo_rename_options = []
-    repo_token_options = ["--repo", "--secret-name", "--secret-scope", "--org", "--token-name", "--token-file", "--token"]
+    repo_token_options = ["--repo", "--secret-name"]
     org_options = ["-h", "--help"]
-    org_subcommands = ["token"]
-    org_token_options = ["--org", "--repos", "--secret-name", "--token-name", "--token-file", "--token"]
+    org_subcommands = ["list", "add", "remove", "rename", "token"]
+    org_add_options = ["--org", "--repos", "--secret-name", "--token-name"]
+    org_remove_options = ["--org"]
+    org_token_options = ["--org", "--repos", "--secret-name"]
 
+    subcommands = {"token": token_subcommands, "repo": repo_subcommands, "org": org_subcommands}
     state = "root"
     sub_cmd = None
     expect_value = False
+    token_positionals = 0
     for token in words[1:cword]:
         if expect_value:
             expect_value = False
             continue
-        if token in needs_path_value or token in needs_scalar_value:
+        if "=" in token and token.split("=", 1)[0] in needs_value:
+            continue
+        if token in needs_value:
             expect_value = True
             continue
         if state == "root":
             if token in root_commands:
                 state = token
-        elif state == "token":
-            if token in token_subcommands:
-                sub_cmd = token
-                state = f"token_{token}"
-        elif state == "repo":
-            if token in repo_subcommands:
-                sub_cmd = token
-                state = f"repo_{token}"
-        elif state == "org":
-            if token in org_subcommands:
-                sub_cmd = token
-                state = f"org_{token}"
+        elif token in subcommands.get(state, []):
+            sub_cmd = token
+            state = f"{state}_{token}"
+        elif state in {"token_rename", "token_refresh", "token_show", "repo_token", "org_token"} and not token.startswith("-"):
+            token_positionals += 1
 
+    if prev == "--token-name":
+        return token_names_for_completion()
+    if prev in needs_value:
+        return []
     if current.startswith("-"):
         return {
             "root": root_options,
@@ -1406,6 +1576,7 @@ def completion_items(words: list[str], cword: int) -> list[str]:
             "token": token_options,
             "token_add": token_add_options,
             "token_show": token_show_options,
+            "token_rename": token_rename_options,
             "token_refresh": token_refresh_options,
             "repo": repo_options,
             "repo_add": repo_add_options,
@@ -1413,6 +1584,10 @@ def completion_items(words: list[str], cword: int) -> list[str]:
             "repo_rename": repo_rename_options,
             "repo_token": repo_token_options,
             "org": org_options,
+            "org_list": [],
+            "org_add": org_add_options,
+            "org_remove": org_remove_options,
+            "org_rename": [],
             "org_token": org_token_options,
         }.get(state, [])
 
@@ -1424,21 +1599,17 @@ def completion_items(words: list[str], cword: int) -> list[str]:
         return repo_subcommands + repo_options
     if state == "org" and sub_cmd is None:
         return org_subcommands + org_options
+    if state in {"token_rename", "token_refresh", "token_show", "repo_token", "org_token"} and token_positionals == 0:
+        return token_names_for_completion(existing_only=state in {"repo_token", "org_token"})
     return []
 
 
 def emit_bash_source() -> None:
     script = r'''_ci_bot_completion() {
-  local IFS=$'\n'
-  local current_word="${COMP_WORDS[COMP_CWORD]}"
-  local output
-  output="$(_CI_BOT_COMPLETE=bash_complete COMP_WORDS="${COMP_WORDS[*]}" COMP_CWORD="$COMP_CWORD" ci-bot 2>/dev/null)"
-
-  if [[ "$output" == "__FILE__" ]]; then
-    COMPREPLY=( $(compgen -f -- "$current_word") )
-  else
-    COMPREPLY=( $(compgen -W "$output" -- "$current_word") )
-  fi
+  mapfile -t COMPREPLY < <(
+    _CI_BOT_COMPLETE=bash_complete COMP_CWORD="$COMP_CWORD" \
+      ci-bot "${COMP_WORDS[@]}" 2>/dev/null
+  )
 }
 complete -o default -F _ci_bot_completion ci-bot
 '''
@@ -1453,29 +1624,19 @@ def run_completion() -> int:
         emit_bash_source()
         return 0
     if mode == "bash_complete":
-        comp_words = os.environ.get("COMP_WORDS", "")
-        comp_cword = int(os.environ.get("COMP_CWORD", "0") or "0")
-        words = shlex.split(comp_words)
-        if not words:
-            words = ["ci-bot"]
-        print("\n".join(completion_items(words, comp_cword)), end="")
+        words = sys.argv[1:] or ["ci-bot"]
+        cword = int(os.environ.get("COMP_CWORD", "0") or "0")
+        prefix = words[cword] if cword < len(words) else ""
+        items = completion_items(words, cword)
+        print("\n".join(item for item in items if item.startswith(prefix)), end="")
         return 0
     return 1
-
-
-def normalize_compat_argv(argv: list[str]) -> list[str]:
-    if len(argv) >= 2 and argv[0] == "token" and argv[1] in {"set", "save"}:
-        updated = list(argv)
-        updated[1] = "add"
-        return updated
-    return argv
 
 
 def main(argv: list[str] | None = None) -> int:
     if run_completion() == 0:
         return 0
 
-    raw_argv = normalize_compat_argv(list(argv if argv is not None else sys.argv[1:]))
     services = Services(
         registry_path=DEFAULT_REGISTRY_PATH,
         github=GitHub(),
@@ -1486,8 +1647,7 @@ def main(argv: list[str] | None = None) -> int:
     parser = build_parser(commands)
 
     try:
-        args = parser.parse_args(raw_argv)
-        services.registry_path = Path(args.registry_file).expanduser()
+        args = parser.parse_args(argv)
         args.func(args)
         return 0
     except KeyboardInterrupt:
@@ -1495,6 +1655,9 @@ def main(argv: list[str] | None = None) -> int:
         return 130
     except CIBotError as exc:
         echo(str(exc), err=True)
+        return 1
+    except OSError as exc:
+        echo(f"File operation failed: {exc}", err=True)
         return 1
 
 
